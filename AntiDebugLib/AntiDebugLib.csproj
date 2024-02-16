@@ -56,7 +56,8 @@
     <Compile Include="Check\DebugFlags\DebuggerBreak.cs" />
     <Compile Include="Check\DebugFlags\DebugObjectCount.cs" />
     <Compile Include="Check\DebugFlags\HardwareRegisterBreakpoints.cs" />
-    <Compile Include="Check\DebugFlags\HeapFlagsApi.cs" />
+    <Compile Include="Check\DebugFlags\HeapFlagsRtlQueryProcessDebugInformation.cs" />
+    <Compile Include="Check\DebugFlags\HeapFlagsRtlQueryProcessHeapInformation.cs" />
     <Compile Include="Check\DebugFlags\HeapFlagsPeb.cs" />
     <Compile Include="Check\DebugFlags\IsDebuggerAttached.cs" />
     <Compile Include="Check\DebugFlags\IsDebuggerPresent.cs" />

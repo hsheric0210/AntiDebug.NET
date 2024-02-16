@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AntiDebugLib</RootNamespace>
     <AssemblyName>AntiDebugLib</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -38,7 +42,66 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckBase.cs" />
+    <Compile Include="CheckReliability.cs" />
+    <Compile Include="CheckTypes.cs" />
+    <Compile Include="Check\AntiHook\HookCheckBase.cs" />
+    <Compile Include="Check\AntiHook\Kernel32Check.cs" />
+    <Compile Include="Check\AntiHook\KernelBaseCheck.cs" />
+    <Compile Include="Check\AntiHook\NtDllCheck.cs" />
+    <Compile Include="Check\AntiHook\User32Check.cs" />
+    <Compile Include="Check\AntiHook\Win32UCheck.cs" />
+    <Compile Include="Check\DebugFlags\BeingDebuggedPeb.cs" />
+    <Compile Include="Check\DebugFlags\CheckRemoteDebuggerPresent.cs" />
+    <Compile Include="Check\DebugFlags\DebuggerBreak.cs" />
+    <Compile Include="Check\DebugFlags\DebugObjectCount.cs" />
+    <Compile Include="Check\DebugFlags\HardwareRegisterBreakpoints.cs" />
+    <Compile Include="Check\DebugFlags\HeapFlagsApi.cs" />
+    <Compile Include="Check\DebugFlags\HeapFlagsPeb.cs" />
+    <Compile Include="Check\DebugFlags\IsDebuggerAttached.cs" />
+    <Compile Include="Check\DebugFlags\IsDebuggerPresent.cs" />
+    <Compile Include="Check\DebugFlags\NtGlobalFlagPeb.cs" />
+    <Compile Include="Check\DebugFlags\OutputDebugString.cs" />
+    <Compile Include="Check\DebugFlags\ProcessDebugFlags.cs" />
+    <Compile Include="Check\DebugFlags\ProcessDebugObject.cs" />
+    <Compile Include="Check\DebugFlags\ProcessDebugPort.cs" />
+    <Compile Include="Check\System\DriverIntegrity.cs" />
+    <Compile Include="Check\System\Drivers.cs" />
+    <Compile Include="Check\Handle\CloseInvalidHandle.cs" />
+    <Compile Include="Check\Handle\CloseProtectedHandle.cs" />
+    <Compile Include="Check\Handle\LoadThenOpen.cs" />
+    <Compile Include="Check\Handle\ModuleFileOpen.cs" />
+    <Compile Include="Check\Handle\OpenCsrss.cs" />
+    <Compile Include="Check\System\KernelDebugger.cs" />
+    <Compile Include="Check\System\LoadedModules.cs" />
+    <Compile Include="Check\System\ModelName.cs" />
+    <Compile Include="Check\System\Processes.cs" />
+    <Compile Include="Check\System\Services.cs" />
+    <Compile Include="Check\Timing\GetTickCountVariance.cs" />
+    <Compile Include="Check\Timing\SleepDurationDecreased.cs" />
+    <Compile Include="Check\System\WmiPortConnectors.cs" />
+    <Compile Include="DummyLogger.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="LogExt.cs" />
+    <Compile Include="NativeCalls.cs" />
+    <Compile Include="NativeCalls.Win32Calls.cs" />
+    <Compile Include="NativeCalls.Win32Defs.cs" />
+    <Compile Include="NativeCalls.Win32Defs.PE.cs" />
+    <Compile Include="NativeCalls.Win32Defs.PEB.cs" />
+    <Compile Include="NativeCalls.Win32IndirectCalls.cs" />
+    <Compile Include="NativeCheckTypes.cs" />
+    <Compile Include="Prevention\AntiDbgBreakPoint.cs" />
+    <Compile Include="Prevention\AntiDbgUiRemoteBreakin.cs" />
+    <Compile Include="Prevention\Exploits\MalformedOutputDebugString.cs" />
+    <Compile Include="Prevention\Exploits\SandboxieCrasher.cs" />
+    <Compile Include="Prevention\Unhook\BasicUnhooker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\IntPtrExtension.cs" />
+    <Compile Include="Utils\SafeThreadHandle.cs" />
+    <Compile Include="Utils\StringUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Check\Memory\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

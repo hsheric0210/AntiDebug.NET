@@ -6,9 +6,13 @@ using static AntiDebugLib.Native.AntiDebugLibNative;
 namespace AntiDebugLib.Check.AntiHook
 {
     /// <summary>
-    /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/main/AntiCrack-DotNet/HooksDetection.cs
+    /// <list type="bullet">
+    /// <item>
+    /// AntiCrack-DotNet :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/main/AntiCrack-DotNet/HooksDetection.cs
+    /// </item>
+    /// </list>
     /// </summary>
-    internal abstract class HookCheckBase : CheckBase
+    internal abstract class TrampolineCheckBase : CheckBase
     {
         protected abstract string DllName { get; }
 

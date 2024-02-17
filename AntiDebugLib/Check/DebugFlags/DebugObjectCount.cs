@@ -18,6 +18,9 @@ namespace AntiDebugLib.Check.Exploits
     /// Anti-Debug-Collection :: https://github.com/MrakDev/Anti-Debug-Collection/blob/585e33cbe57aa97725b3f98658944b01f1844562/src/Hook/IsBadNumberObject.cs#L47
     /// </item>
     /// <item>
+    /// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/NtQueryObject_AllTypesInformation.cpp
+    /// </item>
+    /// <item>
     /// https://www.codeproject.com/Articles/30815/An-Anti-Reverse-Engineering-Guide#NtQueryObject
     /// </item>
     /// </list>

@@ -7,6 +7,9 @@ namespace AntiDebugLib.Check
     /// <item>
     /// AntiCrack-DotNet :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L113
     /// </item>
+    /// <item>
+    /// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiVM/KVM.cpp
+    /// </item>
     /// </list>
     /// </summary>
     internal class Services : CheckBase
@@ -31,7 +34,27 @@ namespace AntiDebugLib.Check
             "vmicshutdown",
             "vmictimesync",
             "vmicvmsession",
-            "vmicvss"
+            "vmicvss",
+            "vioscsi",
+            "viostor",
+            "VirtIO-FS Service",
+            "VirtioSerial",
+            "Balloon",
+            "BalloonService",
+            "netkvm",
+            "VBoxWddm",
+            "VBoxSF",               //VirtualBox Shared Folders
+            "VBoxMouse",            //VirtualBox Guest Mouse
+            "VBoxGuest",            //VirtualBox Guest Driver
+            "vmci",                 //VMWare VMCI Bus Driver
+            "vmhgfs",               //VMWare Host Guest Control Redirector
+            "vmmouse",
+            "vmmemctl",             //VMWare Guest Memory Controller Driver
+            "vmusb",
+            "vmusbmouse",
+            "vmx_svga",
+            "vmxnet",
+            "vmx86"
         };
 
         public override bool CheckPassive()

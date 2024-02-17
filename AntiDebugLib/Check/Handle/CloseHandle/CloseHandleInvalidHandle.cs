@@ -21,6 +21,9 @@ namespace AntiDebugLib.Check.Exploits
     /// <item>
     /// Anti-Debug-Collection :: https://github.com/MrakDev/Anti-Debug-Collection/blob/585e33cbe57aa97725b3f98658944b01f1844562/src/ObjectHandles/CloseHandleTrick.cs#L11
     /// </item>
+    /// <item>
+    /// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/CloseHandle_InvalidHandle.cpp
+    /// </item>
     /// </list>
     /// </summary>
     public class CloseHandleInvalidHandle : CheckBase

@@ -14,6 +14,9 @@ namespace AntiDebugLib.Check.Exploits
     /// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_HandlesValidation.cpp#L4
     /// </item>
     /// <item>
+    /// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/SeDebugPrivilege.cpp
+    /// </item>
+    /// <item>
     /// https://ezbeat.tistory.com/219
     /// </item>
     /// </list>

@@ -21,6 +21,9 @@ namespace AntiDebugLib.Check
     /// <item>
     /// AntiCrack-DotNet (Wine) :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L68
     /// </item>
+    /// <item>
+    /// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiVM/Generic.cpp
+    /// </item>
     /// </list>
     /// </summary>
     internal class LoadedModules : CheckBase
@@ -31,11 +34,20 @@ namespace AntiDebugLib.Check
 
         private readonly string[] moduleNames = new string[]
         {
-            "SbieDll.dll", // Sandboxie
-            "cmdvrt32.dll", // Comodo Sandbox
-            "cmdvrt64.dll", // Comodo Sandbox
-            "SxIn.dll", // Qihoo 360 Sandbox
-            "cuckoomon.dll", // Cuckoo Sandbox
+            "SbieDll.dll",      // Sandboxie
+            "cmdvrt32.dll",     // Comodo Sandbox
+            "cmdvrt64.dll",     // Comodo Sandbox
+            "SxIn.dll",         // Qihoo 360 Sandbox
+            "cuckoomon.dll",    // Cuckoo Sandbox
+            "avghookx.dll",     // AVG
+            "avghooka.dll",     // AVG
+            "snxhk.dll",        // Avast
+            "dbghelp.dll",      // WindBG
+            "api_log.dll",      // iDefense Lab
+            "dir_watch.dll",    // iDefense Lab
+            "pstorec.dll",      // SunBelt Sandbox
+            "vmcheck.dll",      // Virtual PC
+            "wpespy.dll",       // WPE Pro
         };
 
         public override bool CheckActive()

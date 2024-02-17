@@ -3,19 +3,18 @@
     /// <summary>
     /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/main/AntiCrack-DotNet/HooksDetection.cs
     /// </summary>
-    internal class NtDllCheck : HookCheckBase
+    internal class Win32UCheck : TrampolineCheckBase
     {
-        public override string Name => "Hooking: ntdll";
+        public override string Name => "Hooking: win32u";
 
-        protected override string DllName => "ntdll.dll";
+        protected override string DllName => "win32u.dll";
 
         protected override string[] ProcNames => new string[]
         {
-            "NtQueryInformationProcess",
-            "NtSetInformationThread",
-            "NtClose",
-            "NtGetContextThread",
-            "NtQuerySystemInformation"
+            "NtUserBlockInput",
+            "NtUserFindWindowEx",
+            "NtUserQueryWindow",
+            "NtUserGetForegroundWindow"
         };
 
         protected override byte[] BadOpCodes => new byte[] { 255, 0x90, 0xE9 };

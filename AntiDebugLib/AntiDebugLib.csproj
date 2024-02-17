@@ -45,12 +45,13 @@
     <Compile Include="CheckBase.cs" />
     <Compile Include="CheckReliability.cs" />
     <Compile Include="CheckTypes.cs" />
-    <Compile Include="Check\AntiHook\HookCheckBase.cs" />
-    <Compile Include="Check\AntiHook\Kernel32Check.cs" />
-    <Compile Include="Check\AntiHook\KernelBaseCheck.cs" />
-    <Compile Include="Check\AntiHook\NtDllCheck.cs" />
-    <Compile Include="Check\AntiHook\User32Check.cs" />
-    <Compile Include="Check\AntiHook\Win32UCheck.cs" />
+    <Compile Include="Check\AntiHook\NtSetInformationThreadHookCheck.cs" />
+    <Compile Include="Check\AntiHook\Trampoline\TrampolineCheckBase.cs" />
+    <Compile Include="Check\AntiHook\Trampoline\Kernel32Check.cs" />
+    <Compile Include="Check\AntiHook\Trampoline\KernelBaseCheck.cs" />
+    <Compile Include="Check\AntiHook\Trampoline\NtDllCheck.cs" />
+    <Compile Include="Check\AntiHook\Trampoline\User32Check.cs" />
+    <Compile Include="Check\AntiHook\Trampoline\Win32UCheck.cs" />
     <Compile Include="Check\DebugFlags\BeingDebuggedPeb.cs" />
     <Compile Include="Check\DebugFlags\CheckRemoteDebuggerPresent.cs" />
     <Compile Include="Check\DebugFlags\DebuggerBreak.cs" />
@@ -69,7 +70,7 @@
     <Compile Include="Check\Handle\CloseHandle\CloseHandleInvalidHandle.cs" />
     <Compile Include="Check\Handle\CloseHandle\CloseHandleProtectedHandle.cs" />
     <Compile Include="Check\System\DriverIntegrity.cs" />
-    <Compile Include="Check\System\Drivers.cs" />
+    <Compile Include="Check\System\Files.cs" />
     <Compile Include="Check\Handle\CloseHandle\NtCloseInvalidHandle.cs" />
     <Compile Include="Check\Handle\CloseHandle\NtCloseProtectedHandle.cs" />
     <Compile Include="Check\Handle\LoadThenOpen.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Native\Kernel32+Indirect.cs" />
     <Compile Include="NativeCheckTypes.cs" />
     <Compile Include="Prevention\OverwriteDbgBreakPoint.cs" />
+    <Compile Include="Prevention\HideThreads.cs" />
     <Compile Include="Prevention\OverwriteDbgUiRemoteBreakin.cs" />
     <Compile Include="Prevention\OverwriteDbgUiConnectToDbg.cs" />
     <Compile Include="Prevention\Exploits\MalformedOutputDebugString.cs" />

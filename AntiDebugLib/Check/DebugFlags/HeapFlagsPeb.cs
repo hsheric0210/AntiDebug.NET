@@ -15,6 +15,12 @@ namespace AntiDebugLib.Check.DebugFlags
     /// <item>
     /// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_DebugFlags.cpp#L149
     /// </item>
+    /// <item>
+    /// al-khaser (Flags) :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/ProcessHeap_Flags.cpp
+    /// </item>
+    /// <item>
+    /// al-khaser (ForceFlags) :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/ProcessHeap_ForceFlags.cpp
+    /// </item>
     /// </list>
     /// </summary>
     public class HeapFlagsPeb : CheckBase

@@ -3,7 +3,7 @@
     /// <summary>
     /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/main/AntiCrack-DotNet/HooksDetection.cs
     /// </summary>
-    internal class User32Check : HookCheckBase
+    internal class User32Check : TrampolineCheckBase
     {
         public override string Name => "Hooking: user32";
 

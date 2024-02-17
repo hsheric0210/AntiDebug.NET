@@ -4,8 +4,11 @@ using System.Diagnostics;
 namespace AntiDebugLib.Check
 {
     /// <summary>
-    /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L182
-    /// todo: add more processes such as IDA, ProcessHacker, etc.
+    /// <list type="bullet">
+    /// <item>
+    /// AntiCrack-DotNet :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L182
+    /// </item>
+    /// </list>
     /// </summary>
     internal class Processes : CheckBase
     {

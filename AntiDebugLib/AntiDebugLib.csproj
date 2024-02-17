@@ -66,10 +66,12 @@
     <Compile Include="Check\DebugFlags\ProcessDebugFlags.cs" />
     <Compile Include="Check\DebugFlags\ProcessDebugObject.cs" />
     <Compile Include="Check\DebugFlags\ProcessDebugPort.cs" />
+    <Compile Include="Check\Handle\CloseHandle\CloseHandleInvalidHandle.cs" />
+    <Compile Include="Check\Handle\CloseHandle\CloseHandleProtectedHandle.cs" />
     <Compile Include="Check\System\DriverIntegrity.cs" />
     <Compile Include="Check\System\Drivers.cs" />
-    <Compile Include="Check\Handle\CloseInvalidHandle.cs" />
-    <Compile Include="Check\Handle\CloseProtectedHandle.cs" />
+    <Compile Include="Check\Handle\CloseHandle\NtCloseInvalidHandle.cs" />
+    <Compile Include="Check\Handle\CloseHandle\NtCloseProtectedHandle.cs" />
     <Compile Include="Check\Handle\LoadThenOpen.cs" />
     <Compile Include="Check\Handle\ModuleFileOpen.cs" />
     <Compile Include="Check\Handle\OpenCsrss.cs" />
@@ -84,18 +86,20 @@
     <Compile Include="DummyLogger.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="LogExt.cs" />
-    <Compile Include="NativeCalls.cs" />
-    <Compile Include="NativeCalls.Win32Calls.cs" />
-    <Compile Include="NativeCalls.Win32Defs.cs" />
-    <Compile Include="NativeCalls.Win32Defs.PE.cs" />
-    <Compile Include="NativeCalls.Win32Defs.PEB.cs" />
-    <Compile Include="NativeCalls.Win32IndirectCalls.cs" />
+    <Compile Include="Native\AntiDebugLibNative.cs" />
+    <Compile Include="Native\Kernel32+Direct.cs" />
+    <Compile Include="Native\User32+Indirect.cs" />
+    <Compile Include="Native\NtDll+Indirect.cs" />
+    <Compile Include="Native\NativeStructs.cs" />
+    <Compile Include="Native\NativeStructs+PE.cs" />
+    <Compile Include="Native\NativeStructs+PEB.cs" />
+    <Compile Include="Native\Kernel32+Indirect.cs" />
     <Compile Include="NativeCheckTypes.cs" />
-    <Compile Include="Prevention\AntiDbgBreakPoint.cs" />
-    <Compile Include="Prevention\AntiDbgUiRemoteBreakin.cs" />
+    <Compile Include="Prevention\OverwriteDbgBreakPoint.cs" />
+    <Compile Include="Prevention\OverwriteDbgUiRemoteBreakin.cs" />
+    <Compile Include="Prevention\OverwriteDbgUiConnectToDbg.cs" />
     <Compile Include="Prevention\Exploits\MalformedOutputDebugString.cs" />
     <Compile Include="Prevention\Exploits\SandboxieCrasher.cs" />
-    <Compile Include="Prevention\Unhook\BasicUnhooker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\IntPtrExtension.cs" />
     <Compile Include="Utils\SafeThreadHandle.cs" />
@@ -103,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Check\Memory\" />
+    <Folder Include="DynamicLoader\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,12 +1,27 @@
 ﻿using System;
-using static AntiDebugLib.NativeCalls;
+
+using static AntiDebugLib.Native.AntiDebugLibNative;
 
 namespace AntiDebugLib.Check
 {
     /// <summary>
-    /// Detect some sandbox DLLs  loaded in the current process.
-    /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs
-    /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L68
+    /// <list type="bullet">
+    /// <item>
+    /// AntiCrack-DotNet (Sandboxie) :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L28
+    /// </item>
+    /// <item>
+    /// AntiCrack-DotNet (Comodo) :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L35
+    /// </item>
+    /// <item>
+    /// AntiCrack-DotNet (Qihoo360) :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L42
+    /// </item>
+    /// <item>
+    /// AntiCrack-DotNet (cuckoo) :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L49
+    /// </item>
+    /// <item>
+    /// AntiCrack-DotNet (Wine) :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L68
+    /// </item>
+    /// </list>
     /// </summary>
     internal class LoadedModules : CheckBase
     {

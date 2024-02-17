@@ -1,9 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using System;
 
-namespace AntiDebugLib
+namespace AntiDebugLib.Native
 {
-    internal static partial class NativeCalls
+    internal static partial class Kernel32
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern IntPtr LoadLibrary(string lpFileName);

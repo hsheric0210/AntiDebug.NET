@@ -1,17 +1,24 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using static AntiDebugLib.NativeCalls;
+
+using static AntiDebugLib.Native.Kernel32;
 
 namespace AntiDebugLib.Check.Exploits
 {
     /// <summary>
-    /// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_HandlesValidation.cpp#L4
-    /// https://ezbeat.tistory.com/219
+    /// <list type="bullet">
+    /// <item>
+    /// Checkpoint AntiDebug Research :: https://anti-debug.checkpoint.com/techniques/object-handles.html#createfile
+    /// </item>
+    /// <item>
+    /// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_HandlesValidation.cpp#L17
+    /// </item>
+    /// </list>
     /// </summary>
     public class ModuleFileOpen : CheckBase
     {
-        public override string Name => "Open myself";
+        public override string Name => "CreateFile (open myself)";
 
         public override CheckReliability Reliability => CheckReliability.Great;
 

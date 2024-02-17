@@ -1,9 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using System;
 
-namespace AntiDebugLib
+namespace AntiDebugLib.Native
 {
-    internal static partial class NativeCalls
+    internal static partial class NativeStructs
     {
         public const uint STATUS_INFO_LENGTH_MISMATCH = 0xC0000004;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using static AntiDebugLib.NativeCalls;
+
+using static AntiDebugLib.Native.AntiDebugLibNative;
 
 namespace AntiDebugLib.Check.AntiHook
 {

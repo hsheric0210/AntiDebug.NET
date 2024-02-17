@@ -1,11 +1,24 @@
 ﻿using System.Diagnostics;
-using static AntiDebugLib.NativeCalls;
+
+using static AntiDebugLib.Native.Kernel32;
 
 namespace AntiDebugLib.Check.DebugFlags
 {
     /// <summary>
-    /// Use <c>kernel32!CheckRemoteDebuggerPresent</c> to detect remote debugger presence.
-    /// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_DebugFlags.cpp#L11
+    /// <list type="bullet">
+    /// <item>
+    /// Checkpoint AntiDebug Research :: https://anti-debug.checkpoint.com/techniques/debug-flags.html#using-win32-api-checkremotedebuggerpresent
+    /// </item>
+    /// <item>
+    /// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_DebugFlags.cpp#L11
+    /// </item>
+    /// <item>
+    /// MinigamesAntiCheat :: https://github.com/AdvDebug/MinegamesAntiCheat/blob/60bc0894981cb531b8de4a085876e3503e9f79f0/MinegamesAntiCheat/MinegamesAntiCheat/AntiDebugging.cs#L54
+    /// </item>
+    /// <item>
+    /// Anti-Debug-Collection :: https://github.com/MrakDev/Anti-Debug-Collection/blob/585e33cbe57aa97725b3f98658944b01f1844562/src/Flags/IsRemoteDebuggerPresentFlag.cs#L12
+    /// </item>
+    /// </list>
     /// </summary>
     public class CheckRemoteDebuggerPresent : CheckBase
     {

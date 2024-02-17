@@ -1,9 +1,11 @@
 ﻿using System.Runtime.InteropServices;
 using System;
 
-namespace AntiDebugLib
+using static AntiDebugLib.Native.AntiDebugLibNative;
+
+namespace AntiDebugLib.Native
 {
-    internal static partial class NativeCalls
+    internal static partial class NativeStructs
     {
         /// <summary>
         /// https://www.geoffchappell.com/studies/windows/km/ntoskrnl/inc/api/pebteb/peb/index.htm

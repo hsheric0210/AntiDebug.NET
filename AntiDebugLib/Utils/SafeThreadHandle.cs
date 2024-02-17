@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32.SafeHandles;
+﻿using AntiDebugLib.Native;
+using Microsoft.Win32.SafeHandles;
 using System;
 
 namespace AntiDebugLib.Utils
@@ -15,6 +16,6 @@ namespace AntiDebugLib.Utils
 
         public SafeThreadHandle(IntPtr existingHandle, bool ownsHandle) : base(ownsHandle) => SetHandle(existingHandle);
 
-        protected override bool ReleaseHandle() => NativeCalls.CloseHandle(handle);
+        protected override bool ReleaseHandle() => Kernel32.CloseHandle(handle);
     }
 }

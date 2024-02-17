@@ -1,11 +1,15 @@
 ﻿using System.Diagnostics;
-using static AntiDebugLib.NativeCalls;
+
+using static AntiDebugLib.Native.NtDll;
 
 namespace AntiDebugLib.Check.DebugFlags
 {
     /// <summary>
-    /// Use <c>kernel32!NtQueryInformationProcess</c> with <c>PROCESSINFOCLASS.ProcessDebugFlags</c> to detect debugger flag presence.
-    /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiDebug.cs
+    /// <list type="bullet">
+    /// <item>
+    /// AntiCrack-DotNet :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiDebug.cs
+    /// </item>
+    /// </list>
     /// </summary>
     public class ProcessDebugFlags : CheckBase
     {

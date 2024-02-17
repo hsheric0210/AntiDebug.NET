@@ -1,11 +1,21 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using static AntiDebugLib.NativeCalls;
+
+using static AntiDebugLib.Native.AntiDebugLibNative;
+using static AntiDebugLib.Native.NativeStructs;
+using static AntiDebugLib.Native.Kernel32;
 
 namespace AntiDebugLib.Check.DebugFlags
 {
     /// <summary>
-    /// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_DebugFlags.cpp#L149
+    /// <list type="bullet">
+    /// <item>
+    /// Checkpoint AntiDebug Research :: https://anti-debug.checkpoint.com/techniques/debug-flags.html#manual-checks-heap-flags
+    /// </item>
+    /// <item>
+    /// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_DebugFlags.cpp#L149
+    /// </item>
+    /// </list>
     /// </summary>
     public class HeapFlagsPeb : CheckBase
     {

@@ -1,11 +1,14 @@
-﻿using static AntiDebugLib.NativeCalls;
+﻿using static AntiDebugLib.Native.NativeStructs;
+using static AntiDebugLib.Native.Kernel32;
 
 namespace AntiDebugLib.Check.DebugFlags
-{
-    /// <summary>
-    /// Detect hardware breakpoint register values. (DR1 -DR7)
-    /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiDebug.cs#L258
-    /// </summary>
+{    /// <summary>
+     /// <list type="bullet">
+     /// <item>
+     /// AntiCrack-DotNet :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiDebug.cs#L258
+     /// </item>
+     /// </list>
+     /// </summary>
     public class HardwareRegisterBreakpoints : CheckBase
     {
         public override string Name => "Hardware Register Breakpoints";

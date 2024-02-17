@@ -1,10 +1,16 @@
 ﻿using System.Runtime.InteropServices;
-using static AntiDebugLib.NativeCalls;
+
+using static AntiDebugLib.Native.NativeStructs;
+using static AntiDebugLib.Native.NtDll;
 
 namespace AntiDebugLib.Check.DebugFlags
 {
     /// <summary>
-    /// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_DebugFlags.cpp#L149
+    /// <list type="bullet">
+    /// <item>
+    /// Blackhat 2012 :: 
+    /// </item>
+    /// </list>
     /// </summary>
     public class HeapFlagsRtlQueryProcessHeapInformation : CheckBase
     {

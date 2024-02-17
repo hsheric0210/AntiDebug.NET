@@ -1,9 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace AntiDebugLib
+namespace AntiDebugLib.Native
 {
-    internal static partial class NativeCalls
+    internal static class AntiDebugLibNative
     {
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         internal delegate ulong DMyEntryPoint();
@@ -49,13 +49,15 @@ namespace AntiDebugLib
 
         internal static void Init(string libPath)
         {
-            var dll = LoadLibrary(libPath);
-            pfnMyEntryPoint = Marshal.GetDelegateForFunctionPointer<DMyEntryPoint>(GetProcAddress(dll, /*<cs_entrypoint>*/"AcmStartupObject"/*</cs_entrypoint>*/));
-            pfnMyGetProcAddress = Marshal.GetDelegateForFunctionPointer<DMyGetProcAddress>(GetProcAddress(dll, /*<cs_getmodulehandle>*/"EeGetComObject"/*</cs_getmodulehandle>*/));
-            pfnMyGetModuleHandle = Marshal.GetDelegateForFunctionPointer<DMyGetModuleHandle>(GetProcAddress(dll, /*<cs_getprocaddress>*/"EeInitializeCom"/*</cs_getprocaddress>*/));
-            pfnMyGetPeb = Marshal.GetDelegateForFunctionPointer<DMyGetPeb>(GetProcAddress(dll, /*<cs_getpeb>*/"EeGetVerifier"/*</cs_getpeb>*/));
+            var dll = Kernel32.LoadLibrary(libPath);
+            pfnMyEntryPoint = Marshal.GetDelegateForFunctionPointer<DMyEntryPoint>(Kernel32.GetProcAddress(dll, /*<cs_entrypoint>*/"AcmStartupObject"/*</cs_entrypoint>*/));
+            pfnMyGetProcAddress = Marshal.GetDelegateForFunctionPointer<DMyGetProcAddress>(Kernel32.GetProcAddress(dll, /*<cs_getmodulehandle>*/"EeGetComObject"/*</cs_getmodulehandle>*/));
+            pfnMyGetModuleHandle = Marshal.GetDelegateForFunctionPointer<DMyGetModuleHandle>(Kernel32.GetProcAddress(dll, /*<cs_getprocaddress>*/"EeInitializeCom"/*</cs_getprocaddress>*/));
+            pfnMyGetPeb = Marshal.GetDelegateForFunctionPointer<DMyGetPeb>(Kernel32.GetProcAddress(dll, /*<cs_getpeb>*/"EeGetVerifier"/*</cs_getpeb>*/));
 
-            InitIndirectCalls();
+            Kernel32.InitNatives();
+            NtDll.InitNatives();
+            User32.InitNatives();
         }
     }
 }

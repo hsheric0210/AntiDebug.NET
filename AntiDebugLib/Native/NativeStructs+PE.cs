@@ -1,8 +1,8 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace AntiDebugLib
+namespace AntiDebugLib.Native
 {
-    internal static partial class NativeCalls
+    internal static partial class NativeStructs
     {
         internal const ushort IMAGE_DOS_SIGNATURE = 0x5A4D;
         internal const uint IMAGE_NT_SIGNATURE = 0x00004550;

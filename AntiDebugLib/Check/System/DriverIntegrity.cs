@@ -1,12 +1,19 @@
 ﻿using System.Runtime.InteropServices;
-using static AntiDebugLib.NativeCalls;
+
+using static AntiDebugLib.Native.NativeStructs;
+using static AntiDebugLib.Native.NtDll;
 
 namespace AntiDebugLib.Check
 {
     /// <summary>
-    /// Check if unsigned driver is allowed or test-sign mode is enabled.
-    /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/OtherChecks.cs#L20
-    /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/OtherChecks.cs#L36
+    /// <list type="bullet">
+    /// <item>
+    /// AntiCrack-DotNet :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/OtherChecks.cs#L20
+    /// </item>
+    /// <item>
+    /// AntiCrack-DotNet :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/OtherChecks.cs#L36
+    /// </item>
+    /// </list>
     /// </summary>
     internal class DriverIntegrity : CheckBase
     {

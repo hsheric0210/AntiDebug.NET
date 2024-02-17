@@ -1,13 +1,17 @@
 ﻿using System;
 using System.IO;
 
-
 namespace AntiDebugLib.Check
 {
     /// <summary>
-    /// Check if there is any suspicious driver files are found on system directory. (/system32, /system32/drivers)
-    /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L96
-    /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L142
+    /// <list type="bullet">
+    /// <item>
+    /// AntiCrack-DotNet :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L96
+    /// </item>
+    /// <item>
+    /// AntiCrack-DotNet :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiVirtualization.cs#L142
+    /// </item>
+    /// </list>
     /// </summary>
     internal class Drivers : CheckBase
     {

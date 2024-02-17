@@ -1,13 +1,23 @@
-﻿using static AntiDebugLib.NativeCalls;
+﻿using static AntiDebugLib.Native.NativeStructs;
 
 namespace AntiDebugLib.Check.DebugFlags
 {
     /// <summary>
-    /// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_DebugFlags.cpp#L130
+    /// <list type="bullet">
+    /// <item>
+    /// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_DebugFlags.cpp#L130
+    /// </item>
+    /// <item>
+    /// aegis :: https://github.com/rafael-santiago/aegis/blob/e648ef933db02dce89a73ed7fceb03cfb0dcb59b/src/native/windows/aegis_native.c#L119
+    /// </item>
+    /// <item>
+    /// Anti-Debug-Collection :: https://github.com/MrakDev/Anti-Debug-Collection/blob/585e33cbe57aa97725b3f98658944b01f1844562/src/Flags/Manual/NtGlobalFlag.cs#L15
+    /// </item>
+    /// </list>
     /// </summary>
     public class NtGlobalFlagPeb : CheckBase
     {
-        public override string Name => "_PEB.NtGlobalFlag";
+        public override string Name => "PEB NtGlobalFlag";
 
         public override CheckReliability Reliability => CheckReliability.Okay;
 

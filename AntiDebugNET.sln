@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiDebugLib", "AntiDebugLi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AntiDebugLibNative", "AntiDebugLibNative\AntiDebugLibNative.vcxproj", "{7EB8CFF6-D74A-4FE0-A055-2B343376984D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiDebugSample", "AntiDebugSample\AntiDebugSample.csproj", "{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{7EB8CFF6-D74A-4FE0-A055-2B343376984D}.Release|x64.Build.0 = Release|x64
 		{7EB8CFF6-D74A-4FE0-A055-2B343376984D}.Release|x86.ActiveCfg = Release|Win32
 		{7EB8CFF6-D74A-4FE0-A055-2B343376984D}.Release|x86.Build.0 = Release|Win32
+		{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}.Debug|x64.Build.0 = Debug|Any CPU
+		{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}.Debug|x86.Build.0 = Debug|Any CPU
+		{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}.Release|x64.ActiveCfg = Release|Any CPU
+		{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}.Release|x64.Build.0 = Release|Any CPU
+		{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}.Release|x86.ActiveCfg = Release|Any CPU
+		{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

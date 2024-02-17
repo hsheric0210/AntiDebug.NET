@@ -1,12 +1,26 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using static AntiDebugLib.NativeCalls;
+
+using static AntiDebugLib.Native.NativeStructs;
+using static AntiDebugLib.Native.NtDll;
 
 namespace AntiDebugLib.Check.Exploits
 {
     /// <summary>
-    /// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_HandlesValidation.cpp#L51
+    /// <list type="bullet">
+    /// <item>
+    /// Checkpoint AntiDebug Research :: https://anti-debug.checkpoint.com/techniques/object-handles.html#ntqueryobject
+    /// </item>
+    /// <item>
+    /// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_HandlesValidation.cpp#L51
+    /// </item>
+    /// <item>
+    /// Anti-Debug-Collection :: https://github.com/MrakDev/Anti-Debug-Collection/blob/585e33cbe57aa97725b3f98658944b01f1844562/src/Hook/IsBadNumberObject.cs#L47
+    /// </item>
+    /// <item>
     /// https://www.codeproject.com/Articles/30815/An-Anti-Reverse-Engineering-Guide#NtQueryObject
+    /// </item>
+    /// </list>
     /// </summary>
     public class DebugObjectCount : CheckBase
     {

@@ -1,11 +1,16 @@
 ﻿using System.Runtime.InteropServices;
-using static AntiDebugLib.NativeCalls;
+
+using static AntiDebugLib.Native.NativeStructs;
+using static AntiDebugLib.Native.NtDll;
 
 namespace AntiDebugLib.Check
 {
     /// <summary>
-    /// Check if the kernel debugger is present by calling <c>ntdll!NtQuerySystemInformation</c> with <c>SystemKernelDebuggerInformation</c>.
-    /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/OtherChecks.cs#L52
+    /// <list type="bullet">
+    /// <item>
+    /// AntiCrack-DotNet :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/OtherChecks.cs#L52
+    /// </item>
+    /// </list>
     /// </summary>
     internal class KernelDebugger : CheckBase
     {

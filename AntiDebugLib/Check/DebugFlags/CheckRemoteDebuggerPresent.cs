@@ -21,6 +21,9 @@ namespace AntiDebugLib.Check.DebugFlags
     /// <item>
     /// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/CheckRemoteDebuggerPresent.cpp
     /// </item>
+    /// <item>
+    /// The "Ultimate" Anti-Debugging Reference (by Peter Ferrie) :: 7.D.i. CheckRemoteDebuggerPresent
+    /// </item>
     /// </list>
     /// </summary>
     public class CheckRemoteDebuggerPresent : CheckBase

@@ -10,6 +10,9 @@ namespace AntiDebugLib.Check.DebugFlags
     /// <item>
     /// Blackhat 2012 :: 
     /// </item>
+    /// <item>
+    /// The "Ultimate" Anti-Debugging Reference (by Peter Ferrie) :: 7.D.x. RtlQueryProcessHeapInformation
+    /// </item>
     /// </list>
     /// </summary>
     public class HeapFlagsRtlQueryProcessHeapInformation : CheckBase

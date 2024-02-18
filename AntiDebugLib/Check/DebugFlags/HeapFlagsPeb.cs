@@ -21,6 +21,9 @@ namespace AntiDebugLib.Check.DebugFlags
     /// <item>
     /// al-khaser (ForceFlags) :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/ProcessHeap_ForceFlags.cpp
     /// </item>
+    /// <item>
+    /// The "Ultimate" Anti-Debugging Reference (by Peter Ferrie) :: 2. Heap flags
+    /// </item>
     /// </list>
     /// </summary>
     public class HeapFlagsPeb : CheckBase

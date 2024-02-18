@@ -26,7 +26,7 @@ namespace AntiDebugLib.Check.Exploits
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "word.exe")
         };
 
-        public override CheckReliability Reliability => CheckReliability.Great;
+        public override CheckReliability Reliability => CheckReliability.Bad;
 
         public override bool CheckPassive()
         {

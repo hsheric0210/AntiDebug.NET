@@ -9,6 +9,9 @@ namespace AntiDebugLib.Prevention
     /// <item>
     /// AntiCrack-DotNet :: https://github.com/AdvDebug/AntiCrack-DotNet/blob/91872f71c5601e4b037b713f31327dfde1662481/AntiCrack-DotNet/AntiDebug.cs#L150
     /// </item>
+    /// <item>
+    /// The "Ultimate" Anti-Debugging Reference (by Peter Ferrie) :: 7.D.iv. DbgBreakPoint
+    /// </item>
     /// </list>
     /// </summary>
     public class OverwriteDbgBreakPoint : CheckBase

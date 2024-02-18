@@ -14,13 +14,16 @@ namespace AntiDebugLib.Check.Exploits
     /// <item>
     /// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_HandlesValidation.cpp#L17
     /// </item>
+    /// <item>
+    /// The "Ultimate" Anti-Debugging Reference (by Peter Ferrie) :: 7.B.iii. CreateFile
+    /// </item>
     /// </list>
     /// </summary>
     public class ModuleFileOpen : CheckBase
     {
         public override string Name => "CreateFile (open myself)";
 
-        public override CheckReliability Reliability => CheckReliability.Great;
+        public override CheckReliability Reliability => CheckReliability.Bad;
 
         public override bool CheckActive()
         {

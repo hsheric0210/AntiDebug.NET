@@ -17,6 +17,9 @@ namespace AntiDebugLib.Check.Exploits
     /// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/SeDebugPrivilege.cpp
     /// </item>
     /// <item>
+    /// The "Ultimate" Anti-Debugging Reference (by Peter Ferrie) :: 7.B.i. OpenProcess
+    /// </item>
+    /// <item>
     /// https://ezbeat.tistory.com/219
     /// </item>
     /// </list>

@@ -16,6 +16,9 @@ namespace AntiDebugLib.Check.DebugFlags
     /// <item>
     /// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/NtGlobalFlag.cpp
     /// </item>
+    /// <item>
+    /// The "Ultimate" Anti-Debugging Reference (by Peter Ferrie) :: 1. NtGlobalFlag
+    /// </item>
     /// </list>
     /// </summary>
     public class NtGlobalFlagPeb : CheckBase

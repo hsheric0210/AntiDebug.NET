@@ -24,6 +24,9 @@ namespace AntiDebugLib.Check.Exploits
     /// <item>
     /// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/CloseHandle_InvalidHandle.cpp
     /// </item>
+    /// <item>
+    /// The "Ultimate" Anti-Debugging Reference (by Peter Ferrie) :: 7.B.ii. CloseHandle
+    /// </item>
     /// </list>
     /// </summary>
     public class CloseHandleInvalidHandle : CheckBase

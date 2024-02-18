@@ -12,6 +12,9 @@ namespace AntiDebugLib.Check.DebugFlags
     /// <item>
     /// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/NtQueryInformationProcess_ProcessDebugFlags.cpp
     /// </item>
+    /// <item>
+    /// The "Ultimate" Anti-Debugging Reference (by Peter Ferrie) :: 7.D.viii.c. NtQueryInformationProcess ProcessDebugFlags
+    /// </item>
     /// </list>
     /// </summary>
     public class ProcessDebugFlags : CheckBase

@@ -11,6 +11,9 @@ namespace AntiDebugLib.Check.DebugFlags
     /// <item>
     /// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/HardwareBreakpoints.cpp
     /// </item>
+    /// <item>
+    /// The "Ultimate" Anti-Debugging Reference (by Peter Ferrie) :: 6.A. Hardware breakpoints
+    /// </item>
     /// </list>
     /// </summary>
     public class HardwareRegisterBreakpoints : CheckBase

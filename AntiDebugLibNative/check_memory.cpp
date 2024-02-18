@@ -1,43 +1,14 @@
 #include "pch.h"
-#include "memory_chk.h"
+#include "check_memory.h"
 #include "skCrypter.h"
 #include "safe_calls.h"
 #include "GetProcAddressSilent.h"
 #include <intrin.h>
 
-#pragma region INT3 scan 
-
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_MemoryChecks.cpp#L16
-
-bool mem_int3scan()
-{
-    return int3scan_scan_byte(0xCC, _ReturnAddress(), 1); // 0xCC = INT (Interrupt)
-}
-
-bool int3scan_scan_byte(BYTE cByte, PVOID pMemory, SIZE_T nMemorySize)
-{
-    auto pBytes = (PBYTE)pMemory;
-    for (SIZE_T i = 0; ; i++)
-    {
-        if (((nMemorySize > 0) && (i >= nMemorySize)) // bound check
-            || ((nMemorySize == 0) && (pBytes[i] == 0xC3))) // RETN
-            break;
-
-        if (pBytes[i] == cByte && pBytes[i - 1] != cByte && pBytes[i + 1] != cByte)
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-#pragma endregion
-
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_MemoryChecks.cpp#L45
 #pragma region Anti Step-over (then directly overwrite it with NOP)
 
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_MemoryChecks.cpp#L45
-
-bool mem_antistepover()
+bool check_memory_antistepover_direct()
 {
     PVOID pRetAddress = _ReturnAddress();
     bool bBpFound = *(PBYTE)pRetAddress == 0xCC; // 0xCC = INT (Interrupt)
@@ -55,11 +26,10 @@ bool mem_antistepover()
 
 #pragma endregion
 
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_MemoryChecks.cpp#L66
 #pragma region Anti Step-over (then overwrite with the original Op with ReadFile())
 
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_MemoryChecks.cpp#L66
-
-bool mem_antistepover_file()
+bool check_memory_antistepover_readfile()
 {
     PVOID pRetAddress = _ReturnAddress();
     bool bBpFound = *(PBYTE)pRetAddress == 0xCC; // 0xCC = INT (Interrupt)
@@ -83,13 +53,12 @@ bool mem_antistepover_file()
 
 #pragma endregion
 
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_MemoryChecks.cpp#L104
 #pragma region Anti Step-over (then overwrite with NOP using WriteProcessMemory())
-
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_MemoryChecks.cpp#L104
 
 const BYTE mem_antistepover_writeprocessmrmory_buffer[] = { 0x90 }; // NOP
 
-bool mem_antistepover_writeprocessmemory()
+bool check_memory_antistepover_writeprocessmemory()
 {
     PVOID pRetAddress = _ReturnAddress();
     bool bBpFound = *(PBYTE)pRetAddress == 0xCC; // 0xCC = INT (Interrupt)
@@ -107,13 +76,12 @@ bool mem_antistepover_writeprocessmemory()
 
 #pragma endregion
 
-#pragma region NtQueryVirtualMemory 
-
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_MemoryChecks.cpp#L202
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_MemoryChecks.cpp#L202
 // https://www.virusbulletin.com/virusbulletin/2012/12/journey-sirefef-packer-research-case-study
 // https://waliedassar1.rssing.com/chan-33272685/all_p2.html
+#pragma region NtQueryVirtualMemory 
 
-bool mem_ntqueryvirtualmemory()
+bool check_memory_ntqueryvirtualmemory()
 {
 #ifndef _WIN64
     auto pfnNtQueryVirtualMemory = (TNtQueryVirtualMemory)GetPr0cAddr3ss(GetModu1eH4ndle(skCrypt(L"ntdll.dll")), skCrypt("NtQueryVirtualMemory"));
@@ -156,9 +124,10 @@ bool mem_ntqueryvirtualmemory()
 
 #pragma endregion
 
+// Code Checksum Test :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_MemoryChecks.cpp#L411
+// TODO: move it to C# side. Protect all native Anti-Debug technique codes with it.
 #pragma region Code Checksum Test
 
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_MemoryChecks.cpp#L411
 
 #ifndef _WIN64
 static __declspec(naked) int code_checksum_test()
@@ -240,10 +209,10 @@ bool mem_code_checksum_check()
 
 #pragma endregion
 
+// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/MemoryBreakpoints_PageGuard.cpp
 #pragma region Page Guard Violation
 
-// https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/MemoryBreakpoints_PageGuard.cpp
-bool mem_pageguard()
+bool check_memory_pageguard()
 {
     SYSTEM_INFO SystemInfo = { 0 };
     DWORD OldProtect = 0;

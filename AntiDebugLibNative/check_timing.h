@@ -2,5 +2,5 @@
 
 #define LODWORD(_qw) ((DWORD)(_qw))
 
-bool timing_rdtsc_diff_locky();
-bool timing_rdtsc_diff_vmexit();
+bool check_timing_rdtsc_diff_locky();
+bool check_timing_rdtsc_diff_vmexit();

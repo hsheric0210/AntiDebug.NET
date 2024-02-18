@@ -1,13 +1,13 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 #include "GetProcAddressSilent.h"
-#include "assembler_chk.h"
-#include "exception_chk.h"
-#include "memory_chk.h"
-#include "timing_chk.h"
+#include "check_assembler.h"
+#include "check_exception.h"
+#include "check_memory.h"
+#include "check_timing.h"
 
 #define DLLEXPORT __declspec(dllexport)
-_IMAGE_OPTIONAL_HEADER
+
 extern "C" {
     // Feel free to rename this function, but I'd recommend to use 'RenameNativeFunctions.ps1'.
     // (It will automatically find markers and rename function names in both C++ and C# side)
@@ -17,34 +17,30 @@ extern "C" {
         ULONGLONG value = 0ULL;
         UINT16 i = 0;
 
-#ifndef _WIN64
-        mem_code_checksum_init();
-#endif
 
-        if (asm_int3()) value |= 1ULL << 0;
-        if (asm_int3_long()) value |= 1ULL << 1;
-        if (asm_int2d()) value |= 1ULL << 2;
-        if (asm_ice()) value |= 1ULL << 3;
-        if (asm_stack_segment_register()) value |= 1ULL << 4;
-        if (asm_instruction_counting()) value |= 1ULL << 5;
-        if (asm_popf_and_trap()) value |= 1ULL << 6;
-        if (asm_instruction_prefixes()) value |= 1ULL << 7;
-        if (asm_debug_registers_modification()) value |= 1ULL << 8;
+        if (check_assembler_int3()) value |= 1ULL << 0;
+        if (check_assembler_int3long()) value |= 1ULL << 1;
+        if (check_assembler_int2d()) value |= 1ULL << 2;
+        if (check_assembler_icebp()) value |= 1ULL << 3;
+        if (check_assembler_stack_segment_register()) value |= 1ULL << 4;
+        if (check_assembler_instruction_counting()) value |= 1ULL << 5;
+        if (check_assembler_popf_and_trap()) value |= 1ULL << 6;
+        if (check_assembler_instruction_prefixes()) value |= 1ULL << 7;
+        if (check_assembler_debug_registers_modification()) value |= 1ULL << 8;
 
-        if (exc_unhandled_seh()) value |= 1ULL << 9;
-        if (exc_raiseexception()) value |= 1ULL << 10;
-        if (exc_veh()) value |= 1ULL << 11;
+        if (check_exception_seh()) value |= 1ULL << 9;
+        if (check_exception_unhandledexceptionfilter()) value |= 1ULL << 10; // err
+        if (check_exception_raiseexception()) value |= 1ULL << 11;
+        if (check_exception_veh()) value |= 1ULL << 12;
+        if (check_exception_trapflag()) value |= 1ULL << 13;
 
-        if (mem_ntqueryvirtualmemory()) value |= 1ULL << 12;
-        if (mem_code_checksum_check()) value |= 1ULL << 13;
+        if (check_timing_rdtsc_diff_locky()) value |= 1ULL << 14;
+        if (check_timing_rdtsc_diff_vmexit()) value |= 1ULL << 15;
 
-        if (timing_rdtsc_diff_locky()) value |= 1ULL << 14;
-        if (timing_rdtsc_diff_vmexit()) value |= 1ULL << 15;
-
-        if (mem_int3scan()) value |= 1ULL << 16;
-        if (mem_antistepover()) value |= 1ULL << 17;
-        if (mem_antistepover_file()) value |= 1ULL << 18;
-        if (mem_antistepover_writeprocessmemory()) value |= 1ULL << 19;
+        if (check_memory_ntqueryvirtualmemory()) value |= 1ULL << 14;
+        if (check_memory_antistepover_direct()) value |= 1ULL << 17;
+        if (check_memory_antistepover_readfile()) value |= 1ULL << 18;
+        if (check_memory_antistepover_writeprocessmemory()) value |= 1ULL << 19;
 
         return value;
     }

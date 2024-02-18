@@ -1,9 +1,9 @@
 #include "pch.h"
-#include "timing_chk.h"
+#include "check_timing.h"
 #include <intrin.h>
 
-// https://github.com/LordNoteworthy/al-khaser/blob/0f31a3866bafdfa703d2ed1ee1a242ab31bf5ef0/al-khaser/TimingAttacks/timing.cpp#L151
-bool timing_rdtsc_diff_locky()
+// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/0f31a3866bafdfa703d2ed1ee1a242ab31bf5ef0/al-khaser/TimingAttacks/timing.cpp#L151
+bool check_timing_rdtsc_diff_locky()
 {
     const int retry_count = 50;
     ULONGLONG tsc1;
@@ -26,8 +26,8 @@ bool timing_rdtsc_diff_locky()
     return TRUE;
 }
 
-// https://github.com/LordNoteworthy/al-khaser/blob/0f31a3866bafdfa703d2ed1ee1a242ab31bf5ef0/al-khaser/TimingAttacks/timing.cpp#L189
-bool timing_rdtsc_diff_vmexit()
+// al-khaser :: https://github.com/LordNoteworthy/al-khaser/blob/0f31a3866bafdfa703d2ed1ee1a242ab31bf5ef0/al-khaser/TimingAttacks/timing.cpp#L189
+bool check_timing_rdtsc_diff_vmexit()
 {
     const int retry_count = 50;
     ULONGLONG tsc1 = 0;
@@ -38,7 +38,7 @@ bool timing_rdtsc_diff_vmexit()
     for (INT i = 0; i < retry_count; i++)
     {
         tsc1 = __rdtsc();
-        __cpuid(cpuInfo, 0);
+        __cpuid(cpuInfo, 0); // make vm exit
         tsc2 = __rdtsc();
 
         avg += (tsc2 - tsc1);

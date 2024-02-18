@@ -1,6 +1,7 @@
 #pragma once
 
-bool exc_unhandled_seh();
-bool exc_raiseexception();
-bool exc_veh();
-bool exc_trap_flag();
+bool check_exception_seh();
+bool check_exception_unhandledexceptionfilter();
+bool check_exception_raiseexception();
+bool check_exception_veh();
+bool check_exception_trapflag();

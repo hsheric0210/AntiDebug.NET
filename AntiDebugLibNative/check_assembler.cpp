@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "assembler_chk.h"
+#include "check_assembler.h"
 #include "hwbrk.h"
 #include "safe_calls.h"
 #include <intrin.h>
@@ -8,15 +8,15 @@
 extern "C" {
     void __int2d_64();
     void __icebp_64();
-    void __popf_trap();
+    void __popf_trap_64();
     void __div0_64();
 }
 #endif
 
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L5
 #pragma region INT3 (__debugbreak())
 
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L5
-bool asm_int3()
+bool check_assembler_int3()
 {
     __try
     {
@@ -33,9 +33,9 @@ bool asm_int3()
 
 #pragma endregion
 
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L24
 #pragma region INT3 (long)
 
-#ifndef _WIN64
 bool asm_int3_long_bDebugged = false;
 
 static int int3_long_seh(UINT code, PEXCEPTION_POINTERS ep)
@@ -44,37 +44,41 @@ static int int3_long_seh(UINT code, PEXCEPTION_POINTERS ep)
     return EXCEPTION_EXECUTE_HANDLER;
 }
 
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L24
-bool asm_int3_long()
+bool check_assembler_int3long()
 {
     __try
     {
-        // should we just allocate this to the memory and directly CALL it?
-        // VirtualAlloc -> Write -> convert to function pointer -> execute -> VirtualFree
+#if _WIN64
+        // Let's run some shellcode
+        BYTE asmcode[2] = { 0xCD, 0x03 };
+        PVOID buffer = VirtualAlloc(nullptr, 2, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        if (!buffer) return false;
+        RtlMoveMemory(buffer, asmcode, 2);
+        DWORD oldProtect;
+        if (VirtualProtect(buffer, 2, PAGE_EXECUTE_READWRITE, &oldProtect))
+            ((void(*)())buffer)();
+        VirtualFree(buffer, 0, MEM_RELEASE);
+#else
         __asm {
             __emit(0xCD);
             __emit(0x03);
         }
+#endif
     }
     __except (int3_long_seh(GetExceptionCode(), GetExceptionInformation()))
     {
         return asm_int3_long_bDebugged;
     }
-}
-#else
-// not available on x64 due to my lack of knowledge on Assembly
-bool asm_int3_long()
-{
+
     return false;
 }
-#endif
 
 #pragma endregion
 
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L43
 #pragma region INT 2D
 
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L43
-bool asm_int2d()
+bool check_assembler_int2d()
 {
     __try
     {
@@ -97,10 +101,10 @@ bool asm_int2d()
 
 #pragma endregion
 
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L59
 #pragma region ICEPB (INT 1)
 
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L59
-bool asm_ice()
+bool check_assembler_icebp()
 {
     __try
     {
@@ -121,10 +125,11 @@ bool asm_ice()
 
 #pragma endregion
 
-#pragma region Stack Segment Register
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L73
+// HackOvert/AntiDBG :: https://github.com/HackOvert/AntiDBG/blob/75de1f3d8e7d7488ff2e07244e3abda699d0528b/antidbg/AntiDBG.cpp#L553
+#pragma region Stack Segment Register (MOVSS)
 
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L73
-bool asm_stack_segment_register()
+bool check_assembler_stack_segment_register()
 {
     bool bTraced = false;
 
@@ -150,9 +155,8 @@ movss_not_being_debugged:
 
 #pragma endregion
 
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L130
 #pragma region Instruction Counting
-
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L130
 
 #ifndef _WIN64 // My lack of knowledge on Assembly language
 __declspec(naked) DWORD WINAPI instruction_counting_proc(LPVOID lpThreadParameter)
@@ -186,7 +190,7 @@ static LONG WINAPI instruction_counting_veh(PEXCEPTION_POINTERS pExceptionInfo)
 }
 #endif
 
-bool asm_instruction_counting()
+bool check_assembler_instruction_counting()
 {
     bool bDebugged = false;
 #ifndef _WIN64 // My lack of knowledge on Assembly language
@@ -239,15 +243,15 @@ bool asm_instruction_counting()
 
 #pragma endregion
 
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L179
 #pragma region Trap and Flag
 
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L179
-bool asm_popf_and_trap()
+bool check_assembler_popf_and_trap()
 {
     __try
     {
 #ifdef _WIN64
-        __popf_trap();
+        __popf_trap_64();
 #else
         __asm
         {
@@ -269,10 +273,10 @@ bool asm_popf_and_trap()
 
 #pragma endregion
 
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L201
 #pragma region Instruction Prefixes
 
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L201
-bool asm_instruction_prefixes()
+bool check_assembler_instruction_prefixes()
 {
     __try
     {
@@ -283,7 +287,7 @@ bool asm_instruction_prefixes()
             __asm __emit 0xF3
             __asm __emit 0x64
 
-            // One byte INT 1
+            // One byte ICEBP
             __asm __emit 0xF1
         }
         return true;
@@ -299,15 +303,13 @@ bool asm_instruction_prefixes()
 
 #pragma endregion
 
+// ShowStopper :: https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L236
 #pragma region Debug Register Manipulation
-
-// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/Technique_Assembler.cpp#L236
 
 static LONG debug_registers_manipulation_seh(PEXCEPTION_POINTERS pExceptionInfo)
 {
     bool bDebugged = false;
-    if (pExceptionInfo->ContextRecord->Dr0 != 0 || pExceptionInfo->ContextRecord->Dr1 != 0 ||
-        pExceptionInfo->ContextRecord->Dr2 != 0 || pExceptionInfo->ContextRecord->Dr3 != 0)
+    if (pExceptionInfo->ContextRecord->Dr0 != 0 || pExceptionInfo->ContextRecord->Dr1 != 0 || pExceptionInfo->ContextRecord->Dr2 != 0 || pExceptionInfo->ContextRecord->Dr3 != 0)
         bDebugged = true;
 
 #ifdef _WIN64
@@ -320,12 +322,10 @@ static LONG debug_registers_manipulation_seh(PEXCEPTION_POINTERS pExceptionInfo)
     pExceptionInfo->ContextRecord->Dr2 = 0;
     pExceptionInfo->ContextRecord->Dr3 = 0;
 
-    return bDebugged
-        ? EXCEPTION_CONTINUE_EXECUTION
-        : EXCEPTION_EXECUTE_HANDLER;
+    return bDebugged ? EXCEPTION_CONTINUE_EXECUTION : EXCEPTION_EXECUTE_HANDLER;
 }
 
-bool asm_debug_registers_modification()
+bool check_assembler_debug_registers_modification()
 {
     __try
     {
@@ -346,35 +346,6 @@ bool asm_debug_registers_modification()
     {
         return false;
     }
-}
-
-#pragma endregion
-
-#pragma region MOVSS
-
-// https://github.com/HackOvert/AntiDBG/blob/75de1f3d8e7d7488ff2e07244e3abda699d0528b/antidbg/AntiDBG.cpp#L553
-bool asm_movss()
-{
-#ifndef _WIN64 // Only works on x86
-    BOOL found = FALSE;
-
-    _asm
-    {
-        push ss;
-        pop ss;
-        pushfd;
-        test byte ptr[esp + 1], 1;
-        jne fnd;
-        jmp end;
-fnd:
-        mov found, 1;
-end:
-        nop;
-    }
-
-    return found;
-#endif
-    return false;
 }
 
 #pragma endregion

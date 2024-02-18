@@ -61,6 +61,7 @@
     <Compile Include="Check\DebugFlags\HeapFlagsRtlQueryProcessHeapInformation.cs" />
     <Compile Include="Check\DebugFlags\HeapFlagsPeb.cs" />
     <Compile Include="Check\DebugFlags\IsDebuggerAttached.cs" />
+    <Compile Include="Check\DebugFlags\KdDebuggerAttached.cs" />
     <Compile Include="Check\DebugFlags\IsDebuggerPresent.cs" />
     <Compile Include="Check\DebugFlags\NtGlobalFlagPeb.cs" />
     <Compile Include="Check\DebugFlags\OutputDebugString.cs" />

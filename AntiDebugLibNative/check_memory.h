@@ -36,12 +36,8 @@ typedef NTSTATUS(WINAPI *TNtQueryVirtualMemory)(
     PSIZE_T                  ReturnLength
     );
 
-bool mem_ntqueryvirtualmemory();
-
-void mem_code_checksum_init();
-bool mem_code_checksum_check();
-
-bool mem_int3scan();
-bool mem_antistepover();
-bool mem_antistepover_file();
-bool mem_antistepover_writeprocessmemory();
+bool check_memory_antistepover_direct();
+bool check_memory_antistepover_readfile();
+bool check_memory_antistepover_writeprocessmemory();
+bool check_memory_ntqueryvirtualmemory();
+bool check_memory_pageguard();

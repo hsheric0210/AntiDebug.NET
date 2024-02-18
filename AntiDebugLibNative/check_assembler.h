@@ -1,11 +1,11 @@
 #pragma once
 
-bool asm_int3();
-bool asm_int3_long();
-bool asm_int2d();
-bool asm_ice();
-bool asm_stack_segment_register();
-bool asm_instruction_counting();
-bool asm_popf_and_trap();
-bool asm_instruction_prefixes();
-bool asm_debug_registers_modification();
+bool check_assembler_int3();
+bool check_assembler_int3long();
+bool check_assembler_int2d();
+bool check_assembler_icebp();
+bool check_assembler_stack_segment_register();
+bool check_assembler_instruction_counting();
+bool check_assembler_popf_and_trap();
+bool check_assembler_instruction_prefixes();
+bool check_assembler_debug_registers_modification();

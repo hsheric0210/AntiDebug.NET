@@ -27,7 +27,7 @@ namespace AntiDebugLib.Check.Exploits
     /// </summary>
     public class DebugObjectCount : CheckBase
     {
-        public override string Name => "Count of DebugObject";
+        public override string Name => "Count of DebugObject (ntdll!NtQueryObject)";
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 

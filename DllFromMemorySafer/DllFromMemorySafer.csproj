@@ -41,7 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DllException.cs" />
+    <Compile Include="DLLFromMemory.PointerArithmetic.cs" />
+    <Compile Include="DLLFromMemory.NativeEnums.cs" />
     <Compile Include="DLLFromMemory.cs" />
+    <Compile Include="DLLFromMemory.NativeDefs.cs" />
+    <Compile Include="DLLFromMemory.NativeCalls.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

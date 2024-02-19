@@ -41,12 +41,9 @@
 
 using System;
 
-public partial class DLLFromMemory
+public class DllException : Exception
 {
-    public class DllException : Exception
-    {
-        public DllException() : base() { }
-        public DllException(string message) : base(message) { }
-        public DllException(string message, Exception innerException) : base(message, innerException) { }
-    }
+    public DllException() : base() { }
+    public DllException(string message) : base(message) { }
+    public DllException(string message, Exception innerException) : base(message, innerException) { }
 }

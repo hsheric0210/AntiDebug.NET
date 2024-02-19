@@ -1,6 +1,6 @@
 # DllFromMemory.Safer.NET :: Safer [DllFromMemory.Net](https://github.com/schellingb/DLLFromMemory-net/)
 
-This project is heavily based on (almost Ctrl-CV'd) from [DllFromMemory.Net](https://github.com/schellingb/DLLFromMemory-net/) project. But, I've added more protection and indirection layer to prevent API hooking and detection measures.
+This project is heavily based on (almost Ctrl-CV'd) from [DllFromMemory.Net](https://github.com/schellingb/DLLFromMemory-net/) project. But, I've added more protection and indirection layer to help further obfuscation and encryption.
 
 ## Original Readme
 

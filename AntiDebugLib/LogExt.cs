@@ -6,8 +6,6 @@ namespace AntiDebugLib
     /// </summary>
     public static class LogExt
     {
-        public static ILogger BaseLogger { get; set; } = new DummyLogger();
-
-        public static ILogger ForModule(string moduleName) => BaseLogger?.ForContext("Module", moduleName) ?? new DummyLogger();
+        internal static ILogger ForModule(string moduleName) => AntiDebug.Logger?.ForContext("Module", moduleName) ?? new DummyLogger();
     }
 }

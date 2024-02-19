@@ -29,7 +29,7 @@ extern "C" {
         if (check_assembler_debug_registers_modification()) value |= 1ULL << 8;
 
         if (check_exception_seh()) value |= 1ULL << 9;
-        if (check_exception_unhandledexceptionfilter()) value |= 1ULL << 10; // err
+        if (check_exception_unhandledexceptionfilter()) value |= 1ULL << 10;
         if (check_exception_raiseexception()) value |= 1ULL << 11;
         if (check_exception_veh()) value |= 1ULL << 12;
         if (check_exception_trapflag()) value |= 1ULL << 13;
@@ -37,7 +37,7 @@ extern "C" {
         if (check_timing_rdtsc_diff_locky()) value |= 1ULL << 14;
         if (check_timing_rdtsc_diff_vmexit()) value |= 1ULL << 15;
 
-        if (check_memory_ntqueryvirtualmemory()) value |= 1ULL << 14;
+        if (check_memory_ntqueryvirtualmemory()) value |= 1ULL << 16;
         if (check_memory_antistepover_direct()) value |= 1ULL << 17;
         if (check_memory_antistepover_readfile()) value |= 1ULL << 18;
         if (check_memory_antistepover_writeprocessmemory()) value |= 1ULL << 19;

@@ -86,6 +86,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>XCOPY /Y "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)$(TargetExt)*"</Command>
+      <Message>Copy output DLL to AntiDebugLib Resources directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -106,6 +110,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>XCOPY /Y "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)$(TargetExt)*"</Command>
+      <Message>Copy output DLL to AntiDebugLib Resources directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -122,6 +130,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>XCOPY /Y "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)$(TargetExt)*"</Command>
+      <Message>Copy output DLL to AntiDebugLib Resources directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -142,6 +154,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>XCOPY /Y "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)$(TargetExt)*"</Command>
+      <Message>Copy output DLL to AntiDebugLib Resources directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="check_assembler.h" />

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using static AntiDebugLib.Native.NativeStructs;
 using static AntiDebugLib.Native.NtDll;
 
-namespace AntiDebugLib.Check.Exploits
+namespace AntiDebugLib.Check.DebugFlags
 {
     /// <summary>
     /// <list type="bullet">

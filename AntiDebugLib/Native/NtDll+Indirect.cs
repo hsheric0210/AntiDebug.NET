@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 using System;
-using System.Text;
-using Microsoft.Win32.SafeHandles;
 
 using static AntiDebugLib.Native.AntiDebugLibNative;
 using static AntiDebugLib.Native.NativeStructs;

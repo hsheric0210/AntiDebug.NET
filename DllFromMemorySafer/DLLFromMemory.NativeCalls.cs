@@ -57,29 +57,32 @@ public partial class DLLFromMemory
         public const uint IMAGE_SCN_MEM_NOT_CACHED = 0x04000000;
         public const uint IMAGE_FILE_DLL = 0x2000;
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr VirtualAlloc(IntPtr lpAddress, UIntPtr dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
+        public delegate IntPtr DVirtualAlloc(IntPtr lpAddress, UIntPtr dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
+        public delegate IntPtr DLoadLibrary(IntPtr lpFileName);
+        public delegate bool DVirtualFree(IntPtr lpAddress, IntPtr dwSize, AllocationType dwFreeType);
+        public delegate bool DVirtualProtect(IntPtr lpAddress, IntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+        public delegate bool DFreeLibrary(IntPtr hModule);
+        public delegate void DGetNativeSystemInfo(out SYSTEM_INFO lpSystemInfo);
+
+        static bool nativeInitialized;
+        public static DLoadLibrary LoadLibrary;
+        public static DFreeLibrary FreeLibrary;
+        public static DVirtualAlloc VirtualAlloc;
+        public static DVirtualFree VirtualFree;
+        public static DVirtualProtect VirtualProtect;
+        public static DGetNativeSystemInfo GetNativeSystemInfo;
 
         [DllImport("msvcrt.dll", EntryPoint = "memset", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern IntPtr MemSet(IntPtr dest, int c, UIntPtr count);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, SetLastError = true)]
-        public static extern IntPtr LoadLibrary(IntPtr lpFileName);
+        internal static extern IntPtr MemSet(IntPtr dest, int c, UIntPtr count);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
-        public static extern IntPtr GetProcAddress(IntPtr hModule, IntPtr procName);
+        internal static extern IntPtr GetProcAddress(IntPtr hModule, IntPtr procName);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool VirtualFree(IntPtr lpAddress, IntPtr dwSize, AllocationType dwFreeType);
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+        internal static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool VirtualProtect(IntPtr lpAddress, IntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool FreeLibrary(IntPtr hModule);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern void GetNativeSystemInfo(out SYSTEM_INFO lpSystemInfo);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        internal static extern IntPtr GetModuleHandle(string lpModuleName);
 
         // Equivalent to the IMAGE_FIRST_SECTION macro
         public static IntPtr IMAGE_FIRST_SECTION(IntPtr pNTHeader, ushort ntheader_FileHeader_SizeOfOptionalHeader) => PtrAdd(pNTHeader, Of.IMAGE_NT_HEADERS_OptionalHeader + ntheader_FileHeader_SizeOfOptionalHeader);
@@ -91,6 +94,23 @@ public partial class DLLFromMemory
         public static IntPtr IMAGE_ORDINAL(IntPtr ordinal) => (IntPtr)(int)(unchecked((ulong)ordinal.ToInt64()) & 0xffff);
 
         // Equivalent to the IMAGE_SNAP_BY_ORDINAL32/64 macro
-        public static bool IMAGE_SNAP_BY_ORDINAL(IntPtr ordinal) => (IntPtr.Size == 8 ? (ordinal.ToInt64() < 0) : (ordinal.ToInt32() < 0));
+        public static bool IMAGE_SNAP_BY_ORDINAL(IntPtr ordinal) => IntPtr.Size == 8 ? (ordinal.ToInt64() < 0) : (ordinal.ToInt32() < 0);
+
+        internal static void InitNatives()
+        {
+            if (nativeInitialized)
+                return;
+
+            var kernel32 = GetModuleHandle("kernel32.dll");
+            var llaAddr = GetProcAddress(kernel32, "LoadLibraryA");
+            Console.WriteLine("LoadLibraryA available on " + llaAddr.ToInt64().ToString("X16"));
+            LoadLibrary = Marshal.GetDelegateForFunctionPointer<DLoadLibrary>(llaAddr);
+            FreeLibrary = Marshal.GetDelegateForFunctionPointer<DFreeLibrary>(GetProcAddress(kernel32, "FreeLibrary"));
+            VirtualAlloc = Marshal.GetDelegateForFunctionPointer<DVirtualAlloc>(GetProcAddress(kernel32, "VirtualAlloc"));
+            VirtualFree = Marshal.GetDelegateForFunctionPointer<DVirtualFree>(GetProcAddress(kernel32, "VirtualFree"));
+            VirtualProtect = Marshal.GetDelegateForFunctionPointer<DVirtualProtect>(GetProcAddress(kernel32, "VirtualProtect"));
+            GetNativeSystemInfo = Marshal.GetDelegateForFunctionPointer<DGetNativeSystemInfo>(GetProcAddress(kernel32, "GetNativeSystemInfo"));
+            nativeInitialized = true;
+        }
     }
 }

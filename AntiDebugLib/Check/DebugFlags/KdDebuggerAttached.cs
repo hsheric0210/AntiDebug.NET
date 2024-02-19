@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using static AntiDebugLib.Native.Kernel32;
 
 namespace AntiDebugLib.Check.DebugFlags
 {

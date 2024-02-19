@@ -44,6 +44,7 @@ FARPROC i_GetProcAddress(HMODULE hModule, LPCSTR lpProcName)
     if (pfnGetProcAddress)
         return pfnGetProcAddress(hModule, lpProcName);
 
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
     return nullptr;
 }
 
@@ -55,6 +56,7 @@ BOOL i_GetThreadContext(HANDLE hThread, LPCONTEXT lpContext)
     if (pfnGetThreadContext)
         return pfnGetThreadContext(hThread, lpContext);
 
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
     return FALSE;
 }
 
@@ -66,6 +68,7 @@ BOOL i_SetThreadContext(HANDLE hThread, const CONTEXT *lpContext)
     if (pfnSetThreadContext)
         return pfnSetThreadContext(hThread, lpContext);
 
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
     return FALSE;
 }
 
@@ -77,6 +80,7 @@ DWORD i_GetCurrentProcessId()
     if (pfnGetCurrentProcessId)
         return pfnGetCurrentProcessId();
 
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
     return 0;
 }
 
@@ -88,6 +92,7 @@ DWORD i_SuspendThread(HANDLE hThread)
     if (pfnSuspendThread)
         return pfnSuspendThread(hThread);
 
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
     return -1;
 }
 
@@ -99,6 +104,7 @@ DWORD i_ResumeThread(HANDLE hThread)
     if (pfnResumeThread)
         return pfnResumeThread(hThread);
 
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
     return -1;
 }
 
@@ -110,6 +116,7 @@ HANDLE i_GetCurrentThread()
     if (pfnGetCurrentThread)
         return pfnGetCurrentThread();
 
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
     return nullptr;
 }
 
@@ -121,6 +128,7 @@ DWORD i_GetCurrentThreadId()
     if (pfnGetCurrentThreadId)
         return pfnGetCurrentThreadId();
 
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
     return 0;
 }
 
@@ -132,6 +140,7 @@ HANDLE i_OpenThread(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwThreadId
     if (pfnOpenThread)
         return pfnOpenThread(dwDesiredAccess, bInheritHandle, dwThreadId);
 
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
     return nullptr;
 }
 
@@ -144,6 +153,7 @@ PVOID i_AddVectoredExceptionHandler(ULONG First, PVECTORED_EXCEPTION_HANDLER Han
     if (pfnAddVectoredExceptionHandler)
         return pfnAddVectoredExceptionHandler(First, Handler);
 
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
     return nullptr;
 }
 
@@ -156,6 +166,7 @@ ULONG i_RemoveVectoredExceptionHandler(PVOID Handler)
     if (pfnRemoveVectoredExceptionHandler)
         return pfnRemoveVectoredExceptionHandler(Handler);
 
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
     return 0;
 }
 
@@ -175,6 +186,9 @@ DWORD i_VirtualProtect(LPVOID lpAddress, SIZE_T dwSize, DWORD flNewProtect, PDWO
 
     if (pfnVirtualProtect)
         return pfnVirtualProtect(lpAddress, dwSize, flNewProtect, lpflOldProtect);
+
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
+    return 0;
 }
 
 BOOL i_WriteProcessMemory(HANDLE hProcess, LPVOID lpBaseAddress, LPCVOID lpBuffer, SIZE_T nSize, SIZE_T *lpNumberOfBytesWritten)
@@ -184,4 +198,7 @@ BOOL i_WriteProcessMemory(HANDLE hProcess, LPVOID lpBaseAddress, LPCVOID lpBuffe
 
     if (pfnWriteProcessMemory)
         return pfnWriteProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, lpNumberOfBytesWritten);
+
+    SetLastError(STATUS_ENTRYPOINT_NOT_FOUND);
+    return FALSE;
 }

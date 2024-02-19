@@ -200,7 +200,7 @@ bool check_assembler_instruction_counting()
 
     __try
     {
-        hVeh = safeAddVectoredExceptionHandler(TRUE, instruction_counting_veh);
+        hVeh = i_AddVectoredExceptionHandler(TRUE, instruction_counting_veh);
         if (!hVeh)
             __leave;
 
@@ -215,7 +215,7 @@ bool check_assembler_instruction_counting()
         for (size_t i = 0; i < 4; i++)
             m_hHwBps[i] = SetHardwareBreakpoint(hThread, HWBRK_TYPE_CODE, HWBRK_SIZE_1, (PVOID)((DWORD)m_pThreadAddr + 2 + i));
 
-        safeResumeThread(hThread);
+        i_ResumeThread(hThread);
         WaitForSingleObject(hThread, INFINITE);
 
         DWORD dwThreadExitCode;
@@ -234,7 +234,7 @@ bool check_assembler_instruction_counting()
         }
 
         if (hVeh)
-            safeRemoveVectoredExceptionHandler(hVeh);
+            i_RemoveVectoredExceptionHandler(hVeh);
     }
 #endif
 

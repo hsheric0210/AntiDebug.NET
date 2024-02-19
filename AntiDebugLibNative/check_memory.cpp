@@ -224,7 +224,7 @@ bool check_memory_pageguard()
     if (pAllocation == NULL)
         return FALSE;
 
-    RtlFillMemory(pAllocation, 1, 0xC3);
+    RtlFillMemory(pAllocation, 1, 0xC3); // Fill with 'ret'
 
     if (i_VirtualProtect(pAllocation, SystemInfo.dwPageSize, PAGE_EXECUTE_READWRITE | PAGE_GUARD, &OldProtect) == 0)
         return FALSE;

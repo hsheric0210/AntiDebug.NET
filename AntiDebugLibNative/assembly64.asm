@@ -33,9 +33,10 @@ __div0_64 endp
 __unhandled_exception_filter_64 proc
     xor rax, rax
     int 3 ; CC
-    inc rax ; 48 FF C0
+    jmp beingDebugged ; EB ??
     ret
-    ret
+beingDebugged:
+    inc rax
     ret
 __unhandled_exception_filter_64 endp
 

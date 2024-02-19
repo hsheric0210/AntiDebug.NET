@@ -42,7 +42,7 @@
     <ClInclude Include="hwbrk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="safe_calls.h">
+    <ClInclude Include="indirect_calls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="skCrypter.h">
@@ -80,7 +80,7 @@
     <ClCompile Include="hwbrk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="safe_calls.cpp">
+    <ClCompile Include="indirect_calls.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

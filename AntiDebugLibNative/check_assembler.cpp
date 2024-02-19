@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "check_assembler.h"
 #include "hwbrk.h"
-#include "safe_calls.h"
+#include "indirect_calls.h"
 #include <intrin.h>
 
 #ifdef _WIN64
@@ -55,7 +55,7 @@ bool check_assembler_int3long()
         if (!buffer) return false;
         RtlMoveMemory(buffer, asmcode, 2);
         DWORD oldProtect;
-        if (VirtualProtect(buffer, 2, PAGE_EXECUTE_READWRITE, &oldProtect))
+        if (i_VirtualProtect(buffer, 2, PAGE_EXECUTE_READWRITE, &oldProtect))
             ((void(*)())buffer)();
         VirtualFree(buffer, 0, MEM_RELEASE);
 #else

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "check_exception.h"
-#include "safe_calls.h"
+#include "indirect_calls.h"
 #include <intrin.h>
 
 #ifdef _WIN64
@@ -39,7 +39,6 @@ bool check_exception_seh()
 #pragma endregion
 
 // Checkpoint AntiDebug Research :: https://anti-debug.checkpoint.com/techniques/exceptions.html#unhandledexceptionfilter
-// Currently disabled because of errors
 #pragma region UnhandledExceptionFilter
 
 #ifndef _WIN64
@@ -51,8 +50,11 @@ __declspec(naked) BOOLEAN unhandled_exception_raiser()
     {
         xor eax, eax
         int 3 // CC
-        inc eax // 40
+        jmp beingDebugged // EB ??
         ret
+        beingDebugged :
+        inc eax
+            ret
     }
 }
 #endif
@@ -61,19 +63,16 @@ LONG unhandled_exception_filter(PEXCEPTION_POINTERS pExceptionInfo)
 {
     PCONTEXT ctx = pExceptionInfo->ContextRecord;
 #ifdef _WIN64
-    ctx->Rip += 4; // Skip: 'CC 48 FF C0'
+    ctx->Rip += 3; // Skip: 'CC EB ??'
 #else
-    ctx->Eip += 2; // Skip: 'CC 40'
+    ctx->Eip += 3; // Skip: 'CC EB ??'
 #endif
-    return EXCEPTION_CONTINUE_SEARCH;
+    return EXCEPTION_CONTINUE_EXECUTION;
 }
 
 bool check_exception_unhandledexceptionfilter()
 {
-    bool bDebugged = true;
     SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)unhandled_exception_filter);
-
-    return false;
 
 #ifdef _WIN64
     return __unhandled_exception_filter_64();
@@ -92,7 +91,7 @@ bool check_exception_raiseexception()
 {
     __try
     {
-        safeRaiseException(DBG_CONTROL_C, 0, 0, nullptr);
+        i_RaiseException(DBG_CONTROL_C, 0, 0, nullptr);
         return true;
     }
     __except (DBG_CONTROL_C == GetExceptionCode() ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH)
@@ -128,7 +127,7 @@ bool check_exception_veh()
     bool bDebugged = false;
     __try
     {
-        hExeptionHandler = safeAddVectoredExceptionHandler(1, my_veh);
+        hExeptionHandler = i_AddVectoredExceptionHandler(1, my_veh);
 
         __try
         {
@@ -143,7 +142,7 @@ bool check_exception_veh()
     __finally
     {
         if (hExeptionHandler)
-            safeRemoveVectoredExceptionHandler(hExeptionHandler);
+            i_RemoveVectoredExceptionHandler(hExeptionHandler);
     }
 
     return bDebugged;
@@ -169,7 +168,7 @@ static LONG CALLBACK trap_flag_veh(_In_ PEXCEPTION_POINTERS ExceptionInfo)
 
 bool check_exception_trapflag()
 {
-    PVOID Handle = safeAddVectoredExceptionHandler(1, trap_flag_veh);
+    PVOID Handle = i_AddVectoredExceptionHandler(1, trap_flag_veh);
     trap_flag_swallowed_exception = TRUE;
 
 #ifdef _WIN64
@@ -182,7 +181,7 @@ bool check_exception_trapflag()
     eflags |= 0x100; // Trap flag (single step)
     __writeeflags(eflags);
 
-    safeRemoveVectoredExceptionHandler(Handle);
+    i_RemoveVectoredExceptionHandler(Handle);
     return trap_flag_swallowed_exception;
 }
 

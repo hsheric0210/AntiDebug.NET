@@ -4,7 +4,7 @@
 
 #define _WIN32_WINNT _WIN32_WINNT_WINXP
 #include "hwbrk.h"
-#include "safe_calls.h"
+#include "indirect_calls.h"
 
 class HWBRK
 {
@@ -41,12 +41,12 @@ static DWORD WINAPI th(LPVOID lpParameter)
     int j = 0;
     int y = 0;
 
-    j = safeSuspendThread(h->hT);
+    j = i_SuspendThread(h->hT);
     y = GetLastError();
 
     CONTEXT ct = { 0 };
     ct.ContextFlags = CONTEXT_DEBUG_REGISTERS;
-    j = safeGetThreadContext(h->hT, &ct);
+    j = i_GetThreadContext(h->hT, &ct);
     y = GetLastError();
 
     int FlagBit = 0;
@@ -126,7 +126,7 @@ static DWORD WINAPI th(LPVOID lpParameter)
                     else
                     {
                         h->SUCC = false;
-                        j = safeResumeThread(h->hT);
+                        j = i_ResumeThread(h->hT);
                         y = GetLastError();
                         SetEvent(h->hEv);
                         return 0;
@@ -157,14 +157,14 @@ static DWORD WINAPI th(LPVOID lpParameter)
 
 
     ct.ContextFlags = CONTEXT_DEBUG_REGISTERS;
-    j = safeSetThreadContext(h->hT, &ct);
+    j = i_SetThreadContext(h->hT, &ct);
     y = GetLastError();
 
     ct.ContextFlags = CONTEXT_DEBUG_REGISTERS;
-    j = safeGetThreadContext(h->hT, &ct);
+    j = i_GetThreadContext(h->hT, &ct);
     y = GetLastError();
 
-    j = safeResumeThread(h->hT);
+    j = ResumeThread(h->hT);
     y = GetLastError();
 
     h->SUCC = true;
@@ -182,10 +182,10 @@ HANDLE SetHardwareBreakpoint(HANDLE hThread, HWBRK_TYPE Type, HWBRK_SIZE Size, v
     h->hT = hThread;
 
 
-    if (hThread == safeGetCurrentThread())
+    if (hThread == i_GetCurrentThread())
     {
-        DWORD pid = safeGetCurrentThreadId();
-        h->hT = safeOpenThread(THREAD_ALL_ACCESS, 0, pid);
+        DWORD pid = i_GetCurrentThreadId();
+        h->hT = i_OpenThread(THREAD_ALL_ACCESS, 0, pid);
     }
 
     h->hEv = CreateEvent(0, 0, 0, 0);
@@ -195,7 +195,7 @@ HANDLE SetHardwareBreakpoint(HANDLE hThread, HWBRK_TYPE Type, HWBRK_SIZE Size, v
     CloseHandle(h->hEv);
     h->hEv = 0;
 
-    if (hThread == safeGetCurrentThread())
+    if (hThread == i_GetCurrentThread())
     {
         CloseHandle(h->hT);
     }
@@ -223,10 +223,10 @@ bool RemoveHardwareBreakpoint(HANDLE hBrk)
         return false;
 
     bool C = false;
-    if (h->hT == safeGetCurrentThread())
+    if (h->hT == i_GetCurrentThread())
     {
-        DWORD pid = safeGetCurrentThreadId();
-        h->hT = safeOpenThread(THREAD_ALL_ACCESS, 0, pid);
+        DWORD pid = i_GetCurrentThreadId();
+        h->hT = i_OpenThread(THREAD_ALL_ACCESS, 0, pid);
         C = true;
     }
 

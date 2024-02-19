@@ -1,11 +1,12 @@
 #include "pch.h"
-#include "safe_calls.h"
+#include "indirect_calls.h"
 #include "skCrypter.h"
 #include "GetProcAddressSilent.h"
 
 ULONG_PTR kernel32_addr = NULL;
 ULONG_PTR ntdll_addr = NULL;
 
+// kernel32
 TGetProcAddress pfnGetProcAddress = nullptr;
 TGetThreadContext pfnGetThreadContext = nullptr;
 TSetThreadContext pfnSetThreadContext = nullptr;
@@ -18,6 +19,8 @@ TOpenThread  pfnOpenThread = nullptr;
 TAddVectoredExceptionHandler  pfnAddVectoredExceptionHandler = nullptr;
 TRemoveVectoredExceptionHandler pfnRemoveVectoredExceptionHandler = nullptr;
 TRaiseException pfnRaiseException = nullptr;
+TVirtualProtect pfnVirtualProtect = nullptr;
+TWriteProcessMemory pfnWriteProcessMemory = nullptr;
 
 ULONG_PTR findKernel32()
 {
@@ -33,7 +36,7 @@ ULONG_PTR findNtdll()
     return ntdll_addr;
 }
 
-FARPROC safeGetProcAddress(HMODULE hModule, LPCSTR  lpProcName)
+FARPROC i_GetProcAddress(HMODULE hModule, LPCSTR lpProcName)
 {
     if (!pfnGetProcAddress)
         pfnGetProcAddress = (TGetProcAddress)GetPr0cAddr3ss(findKernel32(), skCrypt("GetProcAddress"));
@@ -44,7 +47,7 @@ FARPROC safeGetProcAddress(HMODULE hModule, LPCSTR  lpProcName)
     return nullptr;
 }
 
-BOOL safeGetThreadContext(HANDLE hThread, LPCONTEXT lpContext)
+BOOL i_GetThreadContext(HANDLE hThread, LPCONTEXT lpContext)
 {
     if (!pfnGetThreadContext)
         pfnGetThreadContext = (TGetThreadContext)GetPr0cAddr3ss(findKernel32(), skCrypt("GetThreadContext"));
@@ -55,7 +58,7 @@ BOOL safeGetThreadContext(HANDLE hThread, LPCONTEXT lpContext)
     return FALSE;
 }
 
-BOOL safeSetThreadContext(HANDLE hThread, const CONTEXT *lpContext)
+BOOL i_SetThreadContext(HANDLE hThread, const CONTEXT *lpContext)
 {
     if (!pfnSetThreadContext)
         pfnSetThreadContext = (TSetThreadContext)GetPr0cAddr3ss(findKernel32(), skCrypt("SetThreadContext"));
@@ -66,10 +69,10 @@ BOOL safeSetThreadContext(HANDLE hThread, const CONTEXT *lpContext)
     return FALSE;
 }
 
-DWORD safeGetCurrentProcessId()
+DWORD i_GetCurrentProcessId()
 {
     if (!pfnGetCurrentProcessId)
-        pfnGetCurrentProcessId = (TGetCurrentProcessId)GetPr0cAddr3ss(findKernel32(), skCrypt("GetCurrentProcessId("));
+        pfnGetCurrentProcessId = (TGetCurrentProcessId)GetPr0cAddr3ss(findKernel32(), skCrypt("GetCurrentProcessId"));
 
     if (pfnGetCurrentProcessId)
         return pfnGetCurrentProcessId();
@@ -77,7 +80,7 @@ DWORD safeGetCurrentProcessId()
     return 0;
 }
 
-DWORD safeSuspendThread(HANDLE hThread)
+DWORD i_SuspendThread(HANDLE hThread)
 {
     if (!pfnSuspendThread)
         pfnSuspendThread = (TSuspendThread)GetPr0cAddr3ss(findKernel32(), skCrypt("SuspendThread"));
@@ -88,7 +91,7 @@ DWORD safeSuspendThread(HANDLE hThread)
     return -1;
 }
 
-DWORD safeResumeThread(HANDLE hThread)
+DWORD i_ResumeThread(HANDLE hThread)
 {
     if (!pfnResumeThread)
         pfnResumeThread = (TResumeThread)GetPr0cAddr3ss(findKernel32(), skCrypt("ResumeThread"));
@@ -99,7 +102,7 @@ DWORD safeResumeThread(HANDLE hThread)
     return -1;
 }
 
-HANDLE safeGetCurrentThread()
+HANDLE i_GetCurrentThread()
 {
     if (!pfnGetCurrentThread)
         pfnGetCurrentThread = (TGetCurrentThread)GetPr0cAddr3ss(findKernel32(), skCrypt("GetCurrentThread"));
@@ -110,7 +113,7 @@ HANDLE safeGetCurrentThread()
     return nullptr;
 }
 
-DWORD safeGetCurrentThreadId()
+DWORD i_GetCurrentThreadId()
 {
     if (!pfnGetCurrentThreadId)
         pfnGetCurrentThreadId = (TGetCurrentThreadId)GetPr0cAddr3ss(findKernel32(), skCrypt("GetCurrentThreadId"));
@@ -121,7 +124,7 @@ DWORD safeGetCurrentThreadId()
     return 0;
 }
 
-HANDLE safeOpenThread(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwThreadId)
+HANDLE i_OpenThread(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwThreadId)
 {
     if (!pfnOpenThread)
         pfnOpenThread = (TOpenThread)GetPr0cAddr3ss(findKernel32(), skCrypt("OpenThread"));
@@ -132,11 +135,11 @@ HANDLE safeOpenThread(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwThread
     return nullptr;
 }
 
-PVOID safeAddVectoredExceptionHandler(ULONG First, PVECTORED_EXCEPTION_HANDLER Handler)
+PVOID i_AddVectoredExceptionHandler(ULONG First, PVECTORED_EXCEPTION_HANDLER Handler)
 {
     // This procedure is broken. GetProcAddress and GetProcAddr3ss returns different value.
     if (!pfnAddVectoredExceptionHandler)
-        pfnAddVectoredExceptionHandler = (TAddVectoredExceptionHandler)safeGetProcAddress((HMODULE)findKernel32(), skCrypt("AddVectoredExceptionHandler"));
+        pfnAddVectoredExceptionHandler = (TAddVectoredExceptionHandler)i_GetProcAddress((HMODULE)findKernel32(), skCrypt("AddVectoredExceptionHandler"));
 
     if (pfnAddVectoredExceptionHandler)
         return pfnAddVectoredExceptionHandler(First, Handler);
@@ -144,11 +147,11 @@ PVOID safeAddVectoredExceptionHandler(ULONG First, PVECTORED_EXCEPTION_HANDLER H
     return nullptr;
 }
 
-ULONG safeRemoveVectoredExceptionHandler(PVOID Handler)
+ULONG i_RemoveVectoredExceptionHandler(PVOID Handler)
 {
     // This procedure is broken. GetProcAddress and GetProcAddr3ss returns different value.
     if (!pfnRemoveVectoredExceptionHandler)
-        pfnRemoveVectoredExceptionHandler = (TRemoveVectoredExceptionHandler)safeGetProcAddress((HMODULE)findKernel32(), skCrypt("RemoveVectoredExceptionHandler"));
+        pfnRemoveVectoredExceptionHandler = (TRemoveVectoredExceptionHandler)i_GetProcAddress((HMODULE)findKernel32(), skCrypt("RemoveVectoredExceptionHandler"));
 
     if (pfnRemoveVectoredExceptionHandler)
         return pfnRemoveVectoredExceptionHandler(Handler);
@@ -156,11 +159,29 @@ ULONG safeRemoveVectoredExceptionHandler(PVOID Handler)
     return 0;
 }
 
-void safeRaiseException(DWORD dwExceptionCode, DWORD dwExceptionFlags, DWORD nNumberOfArguments, const ULONG_PTR *lpArguments)
+void i_RaiseException(DWORD dwExceptionCode, DWORD dwExceptionFlags, DWORD nNumberOfArguments, const ULONG_PTR *lpArguments)
 {
     if (!pfnRaiseException)
         pfnRaiseException = (TRaiseException)GetPr0cAddr3ss(findKernel32(), skCrypt("RaiseException"));
 
     if (pfnRaiseException)
         return pfnRaiseException(dwExceptionCode, dwExceptionFlags, nNumberOfArguments, lpArguments);
+}
+
+DWORD i_VirtualProtect(LPVOID lpAddress, SIZE_T dwSize, DWORD flNewProtect, PDWORD lpflOldProtect)
+{
+    if (!pfnVirtualProtect)
+        pfnVirtualProtect = (TVirtualProtect)GetPr0cAddr3ss(findKernel32(), skCrypt("VirtualProtect"));
+
+    if (pfnVirtualProtect)
+        return pfnVirtualProtect(lpAddress, dwSize, flNewProtect, lpflOldProtect);
+}
+
+BOOL i_WriteProcessMemory(HANDLE hProcess, LPVOID lpBaseAddress, LPCVOID lpBuffer, SIZE_T nSize, SIZE_T *lpNumberOfBytesWritten)
+{
+    if (!pfnWriteProcessMemory)
+        pfnWriteProcessMemory = (TWriteProcessMemory)GetPr0cAddr3ss(findKernel32(), skCrypt("WriteProcessMemory"));
+
+    if (pfnWriteProcessMemory)
+        return pfnWriteProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, lpNumberOfBytesWritten);
 }

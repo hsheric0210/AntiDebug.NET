@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "check_memory.h"
 #include "skCrypter.h"
-#include "safe_calls.h"
+#include "indirect_calls.h"
 #include "GetProcAddressSilent.h"
 #include <intrin.h>
 
@@ -15,10 +15,10 @@ bool check_memory_antistepover_direct()
     if (bBpFound)
     {
         DWORD dwOldProtect;
-        if (VirtualProtect(pRetAddress, 1, PAGE_EXECUTE_READWRITE, &dwOldProtect))
+        if (i_VirtualProtect(pRetAddress, 1, PAGE_EXECUTE_READWRITE, &dwOldProtect))
         {
             *(PBYTE)pRetAddress = 0x90; // Replace with 0x90 (NOP)
-            VirtualProtect(pRetAddress, 1, dwOldProtect, &dwOldProtect);
+            i_VirtualProtect(pRetAddress, 1, dwOldProtect, &dwOldProtect);
         }
     }
     return bBpFound;
@@ -36,7 +36,7 @@ bool check_memory_antistepover_readfile()
     if (bBpFound)
     {
         DWORD dwOldProtect, dwRead;
-        if (VirtualProtect(pRetAddress, 1, PAGE_EXECUTE_READWRITE, &dwOldProtect))
+        if (i_VirtualProtect(pRetAddress, 1, PAGE_EXECUTE_READWRITE, &dwOldProtect))
         {
             CHAR szFilePath[MAX_PATH];
             if (GetModuleFileNameA(nullptr, szFilePath, MAX_PATH))
@@ -45,7 +45,7 @@ bool check_memory_antistepover_readfile()
                 if (INVALID_HANDLE_VALUE != hFile)
                     ReadFile(hFile, pRetAddress, 1, &dwRead, nullptr);
             }
-            VirtualProtect(pRetAddress, 1, dwOldProtect, &dwOldProtect);
+            i_VirtualProtect(pRetAddress, 1, dwOldProtect, &dwOldProtect);
         }
     }
     return bBpFound;
@@ -65,10 +65,10 @@ bool check_memory_antistepover_writeprocessmemory()
     if (bBpFound)
     {
         DWORD dwOldProtect;
-        if (VirtualProtect(pRetAddress, 1, PAGE_EXECUTE_READWRITE, &dwOldProtect))
+        if (i_VirtualProtect(pRetAddress, 1, PAGE_EXECUTE_READWRITE, &dwOldProtect))
         {
-            WriteProcessMemory(GetCurrentProcess(), pRetAddress, mem_antistepover_writeprocessmrmory_buffer, 1, nullptr);
-            VirtualProtect(pRetAddress, 1, dwOldProtect, &dwOldProtect);
+            i_WriteProcessMemory(GetCurrentProcess(), pRetAddress, mem_antistepover_writeprocessmrmory_buffer, 1, nullptr);
+            i_VirtualProtect(pRetAddress, 1, dwOldProtect, &dwOldProtect);
         }
     }
     return bBpFound;
@@ -226,7 +226,7 @@ bool check_memory_pageguard()
 
     RtlFillMemory(pAllocation, 1, 0xC3);
 
-    if (VirtualProtect(pAllocation, SystemInfo.dwPageSize, PAGE_EXECUTE_READWRITE | PAGE_GUARD, &OldProtect) == 0)
+    if (i_VirtualProtect(pAllocation, SystemInfo.dwPageSize, PAGE_EXECUTE_READWRITE | PAGE_GUARD, &OldProtect) == 0)
         return FALSE;
 
     __try

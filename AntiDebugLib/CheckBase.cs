@@ -21,27 +21,27 @@
         /// Only single execution of this function on the startup of the application is enough.
         /// </summary>
         /// <returns><c>true</c> if the action is successfully applied, <c>false</c> otherwise.</returns>
-        public virtual bool PreventPassive() => true;
+        public virtual bool PreventPassive() => false;
 
         /// <summary>
         /// Take action to prevent from being debugged.
         /// This function should be executed every seconds to have such effects.
         /// </summary>
         /// <returns><c>true</c> if the action is successfully applied, <c>false</c> otherwise.</returns>
-        public virtual bool PreventActive() => true;
+        public virtual bool PreventActive() => false;
 
         /// <summary>
         /// Check whether a debugger or similar behavior is present.
         /// Only single execution of this function on the startup of the application is enough.
         /// </summary>
         /// <returns><c>true</c> if debugging action is present, <c>false</c> otherwise.</returns>
-        public virtual bool CheckPassive() => true;
+        public virtual bool CheckPassive() => false;
 
         /// <summary>
         /// Check whether a debugger or similar behavior is present.
         /// This function should be executed every seconds to have such effects.
         /// </summary>
         /// <returns><c>true</c> if debugging action is present, <c>false</c> otherwise.</returns>
-        public virtual bool CheckActive() => true;
+        public virtual bool CheckActive() => false;
     }
 }

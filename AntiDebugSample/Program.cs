@@ -10,7 +10,7 @@ namespace AntiDebugSample
     {
         static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration().MinimumLevel.Verbose().WriteTo.Console(theme: AnsiConsoleTheme.Code).CreateLogger();
+            Log.Logger = new LoggerConfiguration().MinimumLevel.Verbose().WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] <{Module:lj}> {Message:lj}{NewLine}{Exception}", theme: AnsiConsoleTheme.Code).CreateLogger();
 
             Log.Information("Arguments provided: {args}", string.Join(" ", args));
 

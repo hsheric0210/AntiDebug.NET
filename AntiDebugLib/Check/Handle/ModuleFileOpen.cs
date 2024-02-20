@@ -27,12 +27,13 @@ namespace AntiDebugLib.Check.Exploits
 
         public override bool CheckActive()
         {
-            var builder = new StringBuilder(32768);
-            if (GetModuleFileNameW(IntPtr.Zero, builder, 32768) <= 0)
+            var builder = new StringBuilder(260);
+            if (GetModuleFileNameW(IntPtr.Zero, builder, 260) <= 0)
                 return false; // The path of myself is not available
 
             try
             {
+                Logger.Information("Location of myself: {path}", builder.ToString());
                 var stream = File.Open(builder.ToString(), FileMode.Open, FileAccess.Read, FileShare.None);
                 stream.Dispose();
                 return false;

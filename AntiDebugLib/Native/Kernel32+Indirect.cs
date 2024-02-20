@@ -65,7 +65,7 @@ namespace AntiDebugLib.Native
         internal delegate bool DCloseHandle(IntPtr handle);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate bool DIsWow64Process2(IntPtr process, out uint processMachine, out uint nativeMatchine);
+        internal delegate bool DIsWow64Process2(IntPtr process, out ushort processMachine, out ushort nativeMatchine);
 
         #endregion
 

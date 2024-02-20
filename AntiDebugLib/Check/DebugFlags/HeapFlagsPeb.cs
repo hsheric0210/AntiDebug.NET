@@ -42,6 +42,7 @@ namespace AntiDebugLib.Check.DebugFlags
                 Logger.Error("IsWow64Process2 failure. Win32 error {w32err}", Marshal.GetLastWin32Error());
 
             var isWow64 = processMachine != 0; // IMAGE_FILE_MACHINE_UNKNOWN
+            Logger.Information("Wow64 state: {state}", isWow64);
             var heapStruct = isWow64 ? Marshal.PtrToStructure<_HEAP>(GetPeb() + 0x1030) : Marshal.PtrToStructure<_HEAP>(_PEB.ParsePeb().ProcessHeap);
             return (heapStruct.Flags & ~HEAP_GROWABLE) != 0 || heapStruct.ForceFlags != 0;
         }

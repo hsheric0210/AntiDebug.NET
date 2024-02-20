@@ -8,6 +8,7 @@ using AntiDebugLib.Prevention;
 using AntiDebugLib.Prevention.Exploits;
 using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 
 namespace AntiDebugLib
@@ -90,10 +91,17 @@ namespace AntiDebugLib
             // run passive checks
             foreach (var check in checks)
             {
-                if (check.CheckPassive())
-                    DebuggerDetected?.Invoke(null, new DebuggerDetectedEventArgs(check.Name, check.Reliability));
+                try
+                {
+                    if (check.CheckPassive())
+                        DebuggerDetected?.Invoke(null, new DebuggerDetectedEventArgs(check.Name, check.Reliability));
 
-                check.PreventPassive();
+                    check.PreventPassive();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, "Error running the module {name}.", check.Name);
+                }
             }
 
             if (activeThread != null)
@@ -112,6 +120,7 @@ namespace AntiDebugLib
             public int checkPeriod;
         }
 
+        [HandleProcessCorruptedStateExceptions]
         static void ActiveCheckProc(object oparam)
         {
             var param = (ActiveCheckProcParameter)oparam;
@@ -119,10 +128,17 @@ namespace AntiDebugLib
             {
                 foreach (var check in param.activeChecks)
                 {
-                    if (check.CheckActive())
-                        DebuggerDetected?.Invoke(null, new DebuggerDetectedEventArgs(check.Name, check.Reliability));
+                    try
+                    {
+                        if (check.CheckActive())
+                            DebuggerDetected?.Invoke(null, new DebuggerDetectedEventArgs(check.Name, check.Reliability));
 
-                    check.PreventActive();
+                        check.PreventActive();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, "Error running the module {name}.", check.Name);
+                    }
                 }
 
                 Thread.Sleep(param.checkPeriod);

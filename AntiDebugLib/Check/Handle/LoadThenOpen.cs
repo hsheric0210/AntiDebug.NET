@@ -23,7 +23,8 @@ namespace AntiDebugLib.Check.Exploits
             Path.Combine(Environment.SystemDirectory, "calc.exe"),
             Path.Combine(Environment.SystemDirectory, "notepad.exe"),
             Path.Combine(Environment.SystemDirectory, "control.exe"),
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "word.exe")
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "write.exe"),
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "hh.exe")
         };
 
         public override CheckReliability Reliability => CheckReliability.Bad;

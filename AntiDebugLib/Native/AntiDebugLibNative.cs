@@ -31,21 +31,10 @@ namespace AntiDebugLib.Native
             if (dllBase == IntPtr.Zero)
                 throw new ArgumentException("dllBase is zero", nameof(dllBase));
 
-            var pfn = pfnMyGetProcAddress(dllBase, procName);
-            if (pfn == IntPtr.Zero)
-                throw new EntryPointNotFoundException("Procedure " + procName + " is not found.");
-
-            return pfn;
+            return pfnMyGetProcAddress(dllBase, procName);
         }
 
-        internal static IntPtr MyGetModuleHandle(string dllName)
-        {
-            var pfn = pfnMyGetModuleHandle(dllName);
-            if (pfn == IntPtr.Zero)
-                throw new EntryPointNotFoundException("DLL " + dllName + " is not loaded.");
-
-            return pfn;
-        }
+        internal static IntPtr MyGetModuleHandle(string dllName) => pfnMyGetModuleHandle(dllName);
 
         internal static IntPtr GetPeb() => pfnMyGetPeb();
 
@@ -61,11 +50,9 @@ namespace AntiDebugLib.Native
         {
             var mem = new DLLFromMemory(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
             pfnMyEntryPoint = mem.GetDelegateFromFuncName<DMyEntryPoint>(FixFunctionName(/*<cs_entrypoint>*/"AcmStartupObject"/*</cs_entrypoint>*/, 0));
-            pfnMyGetProcAddress = mem.GetDelegateFromFuncName<DMyGetProcAddress>(FixFunctionName(/*<cs_getmodulehandle>*/"EeGetComObject"/*</cs_getmodulehandle>*/, 4));
-            pfnMyGetModuleHandle = mem.GetDelegateFromFuncName<DMyGetModuleHandle>(FixFunctionName(/*<cs_getprocaddress>*/"EeInitializeCom"/*</cs_getprocaddress>*/, 8));
+            pfnMyGetProcAddress = mem.GetDelegateFromFuncName<DMyGetProcAddress>(FixFunctionName(/*<cs_getprocaddress>*/"EeInitializeCom"/*</cs_getprocaddress>*/, 8));
+            pfnMyGetModuleHandle = mem.GetDelegateFromFuncName<DMyGetModuleHandle>(FixFunctionName(/*<cs_getmodulehandle>*/"EeGetComObject"/*</cs_getmodulehandle>*/, 4));
             pfnMyGetPeb = mem.GetDelegateFromFuncName<DMyGetPeb>(FixFunctionName(/*<cs_getpeb>*/"EeGetVerifier"/*</cs_getpeb>*/, 0));
-
-            Thread.Sleep(600000);
 
             // initialize indirect calls
             Kernel32.InitNatives();

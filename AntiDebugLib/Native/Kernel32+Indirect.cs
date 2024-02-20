@@ -1,16 +1,17 @@
 ﻿using System.Runtime.InteropServices;
 using System;
 using System.Text;
-using Microsoft.Win32.SafeHandles;
-
 using static AntiDebugLib.Native.AntiDebugLibNative;
 using static AntiDebugLib.Native.NativeDefs;
 using AntiDebugLib.Utils;
+using Microsoft.Win32.SafeHandles;
 
 namespace AntiDebugLib.Native
 {
     internal static partial class Kernel32
     {
+        internal static IntPtr GetCurrentProcess() => new IntPtr(-1);
+
         #region Delegates
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
@@ -23,10 +24,10 @@ namespace AntiDebugLib.Native
         internal delegate bool DIsDebuggerPresent();
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate bool DCheckRemoteDebuggerPresent(SafeProcessHandle processHandle, out bool CheckBool);
+        internal delegate bool DCheckRemoteDebuggerPresent(IntPtr processHandle, out bool CheckBool);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate bool DWriteProcessMemory(SafeProcessHandle ProcHandle, IntPtr BaseAddress, byte[] Buffer, uint size, int NumOfBytes);
+        internal delegate bool DWriteProcessMemory(IntPtr ProcHandle, IntPtr BaseAddress, byte[] Buffer, uint size, int NumOfBytes);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         internal delegate SafeThreadHandle DOpenThread(uint DesiredAccess, bool InheritHandle, int ThreadId);

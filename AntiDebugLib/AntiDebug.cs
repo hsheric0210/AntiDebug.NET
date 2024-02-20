@@ -100,7 +100,9 @@ namespace AntiDebugLib
             {
                 try
                 {
-                    preventResults.Add(prevention.PreventPassive());
+                    var result = prevention.PreventPassive();
+                    if (result.Type != PreventionResultType.NotImplemented)
+                        preventResults.Add(result);
                 }
                 catch (Exception ex)
                 {
@@ -117,7 +119,8 @@ namespace AntiDebugLib
                 try
                 {
                     var result = check.CheckPassive();
-                    checkResults.Add(result);
+                    if (result.Type != CheckResultType.NotImplemented)
+                        checkResults.Add(result);
                     if (result.Type == CheckResultType.DebuggerDetected)
                         DebuggerDetected?.Invoke(null, new DebuggerDetectedEventArgs(result));
                 }
@@ -158,7 +161,9 @@ namespace AntiDebugLib
                 {
                     try
                     {
-                        preventResults.Add(prevention.PreventActive());
+                        var result = prevention.PreventActive();
+                        if (result.Type != PreventionResultType.NotImplemented)
+                            preventResults.Add(result);
                     }
                     catch (Exception ex)
                     {
@@ -175,7 +180,8 @@ namespace AntiDebugLib
                     try
                     {
                         var result = check.CheckActive();
-                        checkResults.Add(result);
+                        if (result.Type != CheckResultType.NotImplemented)
+                            checkResults.Add(result);
                         if (result.Type == CheckResultType.DebuggerDetected)
                             DebuggerDetected?.Invoke(null, new DebuggerDetectedEventArgs(result));
                     }

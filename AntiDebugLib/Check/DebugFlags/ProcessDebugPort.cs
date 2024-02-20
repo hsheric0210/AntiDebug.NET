@@ -3,6 +3,7 @@ using System.Diagnostics;
 
 using static AntiDebugLib.Native.NativeDefs;
 using static AntiDebugLib.Native.NtDll;
+using static AntiDebugLib.Native.Kernel32;
 
 namespace AntiDebugLib.Check.DebugFlags
 {
@@ -32,7 +33,7 @@ namespace AntiDebugLib.Check.DebugFlags
         {
             const uint ProcessDebugPort = 0x7; // https://ntdoc.m417z.com/processinfoclass
             var size = (uint)(sizeof(uint) * (Environment.Is64BitProcess ? 2 : 1));
-            var status = NtQueryInformationProcess_uint(Process.GetCurrentProcess().SafeHandle, ProcessDebugPort, out var port, size, 0);
+            var status = NtQueryInformationProcess_uint(GetCurrentProcess(), ProcessDebugPort, out var port, size, 0);
             if (!NT_SUCCESS(status))
             {
                 Logger.Warning("Unable to query ProcessDebugPort process information. NtQueryInformationProcess returned NTSTATUS {status}.", status);

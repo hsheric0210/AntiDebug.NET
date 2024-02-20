@@ -18,7 +18,7 @@ namespace AntiDebugLib.Prevention
                 return Win32Error("VirtualProtect");
             }
 
-            if (!WriteProcessMemory(Process.GetCurrentProcess().SafeHandle, proc, instr, length, 0))
+            if (!WriteProcessMemory(GetCurrentProcess(), proc, instr, length, 0))
             {
                 Logger.Warning("Failed to overwrite address {address} RWX. WriteProcessMemory returned Win32 error {error}.", proc.ToHex(), Marshal.GetLastWin32Error());
                 return Win32Error("WriteProcessMemory");

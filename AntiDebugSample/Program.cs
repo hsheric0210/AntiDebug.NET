@@ -51,9 +51,6 @@ namespace AntiDebugSample
 
             foreach (var result in e.Results)
             {
-                if (result.Type == CheckResultType.NotImplemented)
-                    continue;
-
                 if (result.Reliability == CheckReliability.Perfect)
                     Console.ForegroundColor = ConsoleColor.Green;
                 else if (result.Reliability == CheckReliability.Great)
@@ -105,9 +102,6 @@ namespace AntiDebugSample
 
             foreach (var result in e.Results)
             {
-                if (result.Type == PreventionResultType.NotImplemented)
-                    continue;
-
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write(result.PreventionName);
 

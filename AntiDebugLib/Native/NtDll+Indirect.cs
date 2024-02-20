@@ -3,6 +3,7 @@ using System;
 
 using static AntiDebugLib.Native.AntiDebugLibNative;
 using static AntiDebugLib.Native.NativeDefs;
+using AntiDebugLib.Utils;
 
 namespace AntiDebugLib.Native
 {
@@ -14,16 +15,16 @@ namespace AntiDebugLib.Native
         internal delegate NTSTATUS DNtClose(IntPtr Handle);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate NTSTATUS DNtSetInformationThread(SafeHandle ThreadHandle, uint ThreadInformationClass, IntPtr ThreadInformation, int ThreadInformationLength);
+        internal delegate NTSTATUS DNtSetInformationThread(SafeThreadHandle ThreadHandle, uint ThreadInformationClass, IntPtr ThreadInformation, int ThreadInformationLength);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate NTSTATUS DNtQueryInformationProcess_uint(SafeHandle hProcess, uint ProcessInfoClass, out uint ProcessInfo, uint nSize, uint ReturnLength);
+        internal delegate NTSTATUS DNtQueryInformationProcess_uint(IntPtr hProcess, uint ProcessInfoClass, out uint ProcessInfo, uint nSize, uint ReturnLength);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate NTSTATUS DNtQueryInformationProcess_IntPtr(SafeHandle hProcess, uint ProcessInfoClass, out IntPtr ProcessInfo, uint nSize, uint ReturnLength);
+        internal delegate NTSTATUS DNtQueryInformationProcess_IntPtr(IntPtr hProcess, uint ProcessInfoClass, out IntPtr ProcessInfo, uint nSize, uint ReturnLength);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate NTSTATUS DNtQueryInformationProcess_ProcessBasicInfo(SafeHandle hProcess, uint ProcessInfoClass, ref PROCESS_BASIC_INFORMATION ProcessInfo, uint nSize, uint ReturnLength);
+        internal delegate NTSTATUS DNtQueryInformationProcess_ProcessBasicInfo(IntPtr hProcess, uint ProcessInfoClass, ref PROCESS_BASIC_INFORMATION ProcessInfo, uint nSize, uint ReturnLength);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         internal delegate NTSTATUS DNtQuerySystemInformation_CodeIntegrityInfo(uint SystemInformationClass, ref SYSTEM_CODEINTEGRITY_INFORMATION SystemInformation, uint SystemInformationLength, out uint ReturnLength);

@@ -33,10 +33,10 @@ namespace AntiDebugLib.Check.DebugFlags
 
         private const uint HEAP_GROWABLE = 0x00000002;
 
-        private bool Check(_HEAP heap)
+        private bool Check(int flags, int forceFlags)
         {
-            Logger.Debug("Heap Flags: {flags:X}, ForceFlags: {forceFlags:X}", heap.Flags, heap.ForceFlags);
-            return (heap.Flags & ~HEAP_GROWABLE) != 0 || heap.ForceFlags != 0;
+            Logger.Debug("Heap Flags: {flags:X}, ForceFlags: {forceFlags:X}", flags, forceFlags);
+            return (flags & ~HEAP_GROWABLE) != 0 || forceFlags != 0;
         }
 
         public override bool CheckActive()
@@ -46,13 +46,15 @@ namespace AntiDebugLib.Check.DebugFlags
                 var wow64heap = GetPeb() + 0x1030;
                 Logger.Debug("WOW64 _HEAP is located at {address:X}.", wow64heap.ToInt64());
 
-                if (Check(Marshal.PtrToStructure<_HEAP>(wow64heap)))
+                if (Check(Marshal.ReadInt32(wow64heap + 0x40), Marshal.ReadInt32(wow64heap + 0x44)))
                     return true;
             }
 
             var heapAddress = _PEB.ParsePeb().ProcessHeap;
             Logger.Debug("_HEAP address is located at {address:X}.", heapAddress.ToInt64());
-            return Check(Marshal.PtrToStructure<_HEAP>(heapAddress));
+            var flagsOffset = Environment.Is64BitProcess ? 0x70 : 0x40;
+            var forceFlagsOffset = Environment.Is64BitProcess ? 0x74 : 0x44;
+            return Check(Marshal.ReadInt32(heapAddress + flagsOffset), Marshal.ReadInt32(heapAddress + forceFlagsOffset));
         }
     }
 }

@@ -43,52 +43,7 @@ namespace AntiDebugLib.Native
             public uint NumberOfProcessors;
             public uint NtGlobalFlag;
 
-            public static _PEB ParsePeb()
-            {
-                var pebAddr = GetPeb();
-                AntiDebug.Logger.Debug("PEB address: {address:X}", pebAddr.ToInt64());
-                return Marshal.PtrToStructure<_PEB>(pebAddr);
-            }
-        }
-
-        /// <summary>
-        /// Below Vista: https://systemroot.gitee.io/pages/apiexplorer/d5/d5/struct__HEAP.html#o2
-        /// Vista or Later: https://www.nirsoft.net/kernel_struct/vista/HEAP.html
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct _HEAP
-        {
-            public _HEAP_ENTRY Entry;
-            public uint SegmentSignature;
-            public uint SegmentFlags;
-            public _LIST_ENTRY SegmentListEntry;
-            public IntPtr Heap;
-            public IntPtr BaseAddress;
-            public uint NumberOfPages;
-            public IntPtr FirstEntry;
-            public IntPtr LastValidEntry;
-            public uint NumberOfUnCommittedPages;
-            public uint NumberOfUnCommittedRanges;
-            public ushort SegmentAllocatorBackTraceIndex;
-            public ushort Reserved;
-            public _LIST_ENTRY UCRSegmentList;
-            public uint Flags;
-            public uint ForceFlags;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct _HEAP_ENTRY
-        {
-            public ushort Size;
-            public ushort Flags;
-            public ushort SmallTagIndex;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct _LIST_ENTRY
-        {
-            public IntPtr Flink; // Forward Link
-            public IntPtr Blink; // Backward Link
+            public static _PEB ParsePeb() => Marshal.PtrToStructure<_PEB>(GetPeb());
         }
     }
 }

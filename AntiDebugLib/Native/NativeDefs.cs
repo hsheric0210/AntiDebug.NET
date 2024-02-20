@@ -3,7 +3,7 @@ using System;
 
 namespace AntiDebugLib.Native
 {
-    internal static partial class NativeStructs
+    internal static partial class NativeDefs
     {
         public const uint STATUS_INFO_LENGTH_MISMATCH = 0xC0000004;
 
@@ -105,22 +105,42 @@ namespace AntiDebugLib.Native
             public IntPtr BackTraceInformation;
             public IntPtr HeapInformation;
             public IntPtr LockInformation;
+            public IntPtr Reserved1;
+            public IntPtr Reserved2;
+            public IntPtr Reserved3;
+            public IntPtr Reserved4;
+            public IntPtr Reserved5;
+            public IntPtr Reserved6;
+            public IntPtr Reserved7;
+            public IntPtr Reserved8;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct DEBUG_HEAP_INFORMATION
+        public unsafe struct RTL_PROCESS_HEAPS
         {
-            public uint Base; // 0×00
-            public uint Flags; // 0×04
-            public ushort Granularity; // 0×08
-            public ushort Unknown; // 0x0A
-            public uint Allocated; // 0x0C
-            public uint Committed; // 0×10
-            public uint TagCount; // 0×14
-            public uint BlockCount; // 0×18
-            public fixed uint Reserved[7]; // 0x1C
-            public IntPtr Tags; // 0×38
-            public IntPtr Blocks; // 0x3C
+            public uint NumberOfHeaps;
+            public RTL_HEAP_INFORMATION[] Heaps;
+        }
+
+        /// <summary>
+        /// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/NtDll.h#L101
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public unsafe struct RTL_HEAP_INFORMATION
+        {
+            public IntPtr BaseAddress;
+            public uint Flags;
+            public ushort EntryOverhead;
+            public ushort CreatorBackTraceIndex;
+            public uint BytesAllocated;
+            public uint BytesCommitted;
+            public uint NumberOfTags;
+            public uint NumberOfEntries;
+            public uint NumberOfPseudoTags;
+            public uint PseudoTagGranularity;
+            public fixed uint Reserved[5];
+            public IntPtr Tags;
+            public IntPtr Entries;
         }
     }
 }

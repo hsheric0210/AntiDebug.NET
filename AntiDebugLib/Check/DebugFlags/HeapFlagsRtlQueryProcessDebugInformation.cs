@@ -1,7 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-using static AntiDebugLib.Native.NativeStructs;
+using static AntiDebugLib.Native.NativeDefs;
 using static AntiDebugLib.Native.NtDll;
 
 namespace AntiDebugLib.Check.DebugFlags
@@ -27,17 +28,41 @@ namespace AntiDebugLib.Check.DebugFlags
 
         private const uint HEAP_GROWABLE = 0x00000002;
 
-        public override bool CheckPassive()
+        public override bool CheckActive()
         {
-            var buffer = RtlCreateQueryDebugBuffer(0, false);
-            if (RtlQueryProcessDebugInformation((uint)Process.GetCurrentProcess().Id, PDI_HEAPS | PDI_HEAP_BLOCKS, buffer) != 0)
-                return false;
+            var buffer = IntPtr.Zero;
 
-            var debug = Marshal.PtrToStructure<DEBUG_BUFFER>(buffer);
-            var heapFlags = Marshal.PtrToStructure<DEBUG_HEAP_INFORMATION>(debug.HeapInformation + 1).Flags;
-            RtlDestroyQueryDebugBuffer(buffer);
+            try
+            {
+                buffer = RtlCreateQueryDebugBuffer(0, false);
+                if (buffer == IntPtr.Zero)
+                {
+                    Logger.Warning("Unable to allocate debug buffer.");
+                    return false;
+                }
 
-            return (heapFlags & ~HEAP_GROWABLE) != 0;
+                var status = RtlQueryProcessDebugInformation((uint)Process.GetCurrentProcess().Id, PDI_HEAPS | PDI_HEAP_BLOCKS, buffer);
+                if (!NT_SUCCESS(status))
+                {
+                    Logger.Warning("Unable to query process debug information. RtlQueryProcessDebugInformation returned NTSTATUS {status}.", status);
+                    return false;
+                }
+
+                var debug = Marshal.PtrToStructure<DEBUG_BUFFER>(buffer);
+                var heapFlags = Marshal.PtrToStructure<RTL_HEAP_INFORMATION>(new IntPtr(buffer.ToInt64() + debug.HeapInformation.ToInt64() + 8)).Flags; // 8: RTL_PROCESS_HEAPS.NumberOfHeaps
+
+                Logger.Debug("Heap Flags: {flags:X}", heapFlags);
+                return (heapFlags & ~HEAP_GROWABLE) != 0;
+            }
+            finally
+            {
+                if (buffer != IntPtr.Zero)
+                {
+                    var status = RtlDestroyQueryDebugBuffer(buffer);
+                    if (!NT_SUCCESS(status))
+                        Logger.Warning("Unable to destroy debug buffer. RtlDestroyQueryDebugBuffer returned NTSTATUS {status}.", status);
+                }
+            }
         }
     }
 }

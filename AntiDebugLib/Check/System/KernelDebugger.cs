@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-using static AntiDebugLib.Native.NativeStructs;
+using static AntiDebugLib.Native.NativeDefs;
 using static AntiDebugLib.Native.NtDll;
 
 namespace AntiDebugLib.Check
@@ -31,10 +31,21 @@ namespace AntiDebugLib.Check
                 KernelDebuggerNotPresent = true
             };
 
-            NtQuerySystemInformation_KernelDebuggerInfo(SystemKernelDebuggerInformation, ref KernelDebugInfo, (uint)Marshal.SizeOf(KernelDebugInfo), out var returnLength);
+            var status = NtQuerySystemInformation_KernelDebuggerInfo(SystemKernelDebuggerInformation, ref KernelDebugInfo, (uint)Marshal.SizeOf(KernelDebugInfo), out var returnLength);
+            if (!NT_SUCCESS(status))
+            {
+                Logger.Warning("Unable to query SystemKernelDebuggerInformation system information. NtQuerySystemInformation returned NTSTATUS {status}.", status);
+                return false;
+            }
+            var expectedReturnLength = (uint)Marshal.SizeOf(KernelDebugInfo);
+            if (returnLength != expectedReturnLength)
+            {
+                Logger.Warning("Return length mismatched. Expected {expected}, got {actual}.", expectedReturnLength, returnLength);
+                return true;
+            }
 
-            return returnLength == (uint)Marshal.SizeOf(KernelDebugInfo)
-                && (KernelDebugInfo.KernelDebuggerEnabled || !KernelDebugInfo.KernelDebuggerNotPresent);
+            Logger.Debug("KernelDebuggerEnabled = {enabled}, KernelDebuggerNotPresent = {notpresent}", KernelDebugInfo.KernelDebuggerEnabled, KernelDebugInfo.KernelDebuggerNotPresent);
+            return KernelDebugInfo.KernelDebuggerEnabled || !KernelDebugInfo.KernelDebuggerNotPresent;
         }
     }
 }

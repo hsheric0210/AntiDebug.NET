@@ -36,13 +36,16 @@ namespace AntiDebugLib.Check.AntiHook
                     foreach (var badOps in BadOpCodes)
                     {
                         if (ops[0] == badOps)
+                        {
+                            Logger.Debug("Found bad opcode {op} from function {name}.", badOps.ToString("X2"), proc);
                             return true;
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Logger.Information(ex, "Failed to check procedure hooking for dll: {dllName}", DllName);
+                Logger.Warning(ex, "Failed to check procedure hooking for dll: {dllName}", DllName);
             }
 
             return false;

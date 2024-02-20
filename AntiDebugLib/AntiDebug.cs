@@ -86,6 +86,7 @@ namespace AntiDebugLib
             };
         }
 
+        [HandleProcessCorruptedStateExceptions]
         public static void BeginChecks(int checkPeriod = 3000)
         {
             // run passive checks

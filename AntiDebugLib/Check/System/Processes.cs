@@ -82,7 +82,7 @@ namespace AntiDebugLib.Check
                 {
                     if (string.Equals(process.ProcessName, name, StringComparison.OrdinalIgnoreCase))
                     {
-                        Logger.Information("Bad process {name} found.", name);
+                        Logger.Information("Bad process {name} is running.", name);
                         return true;
                     }
                 }

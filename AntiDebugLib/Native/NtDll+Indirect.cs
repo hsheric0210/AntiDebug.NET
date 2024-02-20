@@ -2,7 +2,7 @@
 using System;
 
 using static AntiDebugLib.Native.AntiDebugLibNative;
-using static AntiDebugLib.Native.NativeStructs;
+using static AntiDebugLib.Native.NativeDefs;
 
 namespace AntiDebugLib.Native
 {
@@ -11,43 +11,43 @@ namespace AntiDebugLib.Native
         #region Delegates
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate uint DNtClose(IntPtr Handle);
+        internal delegate NTSTATUS DNtClose(IntPtr Handle);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate uint DNtSetInformationThread(SafeHandle ThreadHandle, uint ThreadInformationClass, IntPtr ThreadInformation, int ThreadInformationLength);
+        internal delegate NTSTATUS DNtSetInformationThread(SafeHandle ThreadHandle, uint ThreadInformationClass, IntPtr ThreadInformation, int ThreadInformationLength);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate uint DNtQueryInformationProcess_uint(SafeHandle hProcess, uint ProcessInfoClass, out uint ProcessInfo, uint nSize, uint ReturnLength);
+        internal delegate NTSTATUS DNtQueryInformationProcess_uint(SafeHandle hProcess, uint ProcessInfoClass, out uint ProcessInfo, uint nSize, uint ReturnLength);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate uint DNtQueryInformationProcess_IntPtr(SafeHandle hProcess, uint ProcessInfoClass, out IntPtr ProcessInfo, uint nSize, uint ReturnLength);
+        internal delegate NTSTATUS DNtQueryInformationProcess_IntPtr(SafeHandle hProcess, uint ProcessInfoClass, out IntPtr ProcessInfo, uint nSize, uint ReturnLength);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate uint DNtQueryInformationProcess_ProcessBasicInfo(SafeHandle hProcess, uint ProcessInfoClass, ref PROCESS_BASIC_INFORMATION ProcessInfo, uint nSize, uint ReturnLength);
+        internal delegate NTSTATUS DNtQueryInformationProcess_ProcessBasicInfo(SafeHandle hProcess, uint ProcessInfoClass, ref PROCESS_BASIC_INFORMATION ProcessInfo, uint nSize, uint ReturnLength);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate uint DNtQuerySystemInformation_CodeIntegrityInfo(uint SystemInformationClass, ref SYSTEM_CODEINTEGRITY_INFORMATION SystemInformation, uint SystemInformationLength, out uint ReturnLength);
+        internal delegate NTSTATUS DNtQuerySystemInformation_CodeIntegrityInfo(uint SystemInformationClass, ref SYSTEM_CODEINTEGRITY_INFORMATION SystemInformation, uint SystemInformationLength, out uint ReturnLength);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate uint DNtQuerySystemInformation_KernelDebuggerInfo(uint SystemInformationClass, ref SYSTEM_KERNEL_DEBUGGER_INFORMATION SystemInformation, uint SystemInformationLength, out uint ReturnLength);
+        internal delegate NTSTATUS DNtQuerySystemInformation_KernelDebuggerInfo(uint SystemInformationClass, ref SYSTEM_KERNEL_DEBUGGER_INFORMATION SystemInformation, uint SystemInformationLength, out uint ReturnLength);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         internal delegate uint DCsrGetProcessId();
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate uint DNtQueryObject(IntPtr Handle, uint ObjectInformationClass, IntPtr ObjectInformation, uint ObjectInformationLength, out uint ReturnLength);
+        internal delegate NTSTATUS DNtQueryObject(IntPtr Handle, uint ObjectInformationClass, IntPtr ObjectInformation, uint ObjectInformationLength, out uint ReturnLength);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         internal delegate IntPtr DRtlCreateQueryDebugBuffer(uint size, [MarshalAs(UnmanagedType.Bool)] bool eventPair);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate ulong DRtlQueryProcessHeapInformation(IntPtr debugBuffer);
+        internal delegate NTSTATUS DRtlQueryProcessHeapInformation(IntPtr debugBuffer);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate ulong DRtlQueryProcessDebugInformation(uint processId, uint DebugInfoClassMask, IntPtr debugBuffer);
+        internal delegate NTSTATUS DRtlQueryProcessDebugInformation(uint processId, uint DebugInfoClassMask, IntPtr debugBuffer);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate ulong DRtlDestroyQueryDebugBuffer(IntPtr debugBuffer);
+        internal delegate NTSTATUS DRtlDestroyQueryDebugBuffer(IntPtr debugBuffer);
 
         #endregion
 

@@ -1,4 +1,4 @@
-﻿using static AntiDebugLib.Native.NativeStructs;
+﻿using static AntiDebugLib.Native.NativeDefs;
 
 namespace AntiDebugLib.Check.DebugFlags
 {

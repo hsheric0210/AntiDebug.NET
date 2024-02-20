@@ -93,9 +93,7 @@ public partial class DLLFromMemory : IDisposable
     {
         if (!typeof(Delegate).IsAssignableFrom(typeof(TDelegate)))
             throw new ArgumentException(typeof(TDelegate).Name + " is not a delegate");
-        var ptr = GetPtrFromFuncName(funcName);
-        //Console.WriteLine("Found function " + funcName + " at " + ptr.ToInt64().ToString("X16"));
-        if (!(Marshal.GetDelegateForFunctionPointer(ptr, typeof(TDelegate)) is TDelegate res))
+        if (!(Marshal.GetDelegateForFunctionPointer(GetPtrFromFuncName(funcName), typeof(TDelegate)) is TDelegate res))
             throw new DllException("Unable to get managed delegate");
         return res;
     }

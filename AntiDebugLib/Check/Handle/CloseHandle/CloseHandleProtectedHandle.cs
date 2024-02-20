@@ -29,7 +29,7 @@ namespace AntiDebugLib.Check.Exploits
             var hMutex = CreateMutexA(IntPtr.Zero, false, StringUtils.RandomString(random.Next(15, 256), random));
             if (!SetHandleInformation(hMutex, HANDLE_FLAG_PROTECT_FROM_CLOSE, HANDLE_FLAG_PROTECT_FROM_CLOSE))
             {
-                Logger.Warning("Failed to call kernel32!SetHandleInformation. Win32 error {errorcode}.", Marshal.GetLastWin32Error());
+                Logger.Warning("Failed to protect the handle {handle:X}. SetHandleInformation returned win32 error {errorcode}.", hMutex.ToInt64(), Marshal.GetLastWin32Error());
                 return false;
             }
 
@@ -45,7 +45,7 @@ namespace AntiDebugLib.Check.Exploits
 
             // Don't forget to clean up!
             if (!SetHandleInformation(hMutex, HANDLE_FLAG_PROTECT_FROM_CLOSE, 0) || !CloseHandle(hMutex))
-                Logger.Warning("Failed to unprotect and close the handle. Win32 error {errorcode}.", Marshal.GetLastWin32Error());
+                Logger.Warning("Failed to unprotect and close the handle {handle:X}. SetHandleInformation or CloseHandle returned win32 error {errorcode}.", hMutex.ToInt64(), Marshal.GetLastWin32Error());
 
             return beingDebugged;
         }

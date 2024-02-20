@@ -5,7 +5,7 @@ using static AntiDebugLib.Native.AntiDebugLibNative;
 
 namespace AntiDebugLib.Native
 {
-    internal static partial class NativeStructs
+    internal static partial class NativeDefs
     {
         /// <summary>
         /// https://www.geoffchappell.com/studies/windows/km/ntoskrnl/inc/api/pebteb/peb/index.htm
@@ -43,7 +43,12 @@ namespace AntiDebugLib.Native
             public uint NumberOfProcessors;
             public uint NtGlobalFlag;
 
-            public static _PEB ParsePeb() => Marshal.PtrToStructure<_PEB>(GetPeb());
+            public static _PEB ParsePeb()
+            {
+                var pebAddr = GetPeb();
+                AntiDebug.Logger.Debug("PEB address: {address:X}", pebAddr.ToInt64());
+                return Marshal.PtrToStructure<_PEB>(pebAddr);
+            }
         }
 
         /// <summary>

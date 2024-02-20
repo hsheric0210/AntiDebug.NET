@@ -23,12 +23,11 @@ namespace AntiDebugLib.Check
             {
                 foreach (var Item in ObjectItems)
                 {
-                    var ManufacturerString = Item["Manufacturer"].ToString();
-                    var ModelName = Item["Model"].ToString();
-                    if (string.Equals(Item["Manufacturer"].ToString(), "Microsoft Corporation", StringComparison.OrdinalIgnoreCase)
-                        && ModelName.IndexOf("Virtual", StringComparison.OrdinalIgnoreCase) >= 0
-                        || ManufacturerString.IndexOf("vmware", StringComparison.OrdinalIgnoreCase) >= 0)
+                    var manufacturer = Item["Manufacturer"].ToString();
+                    var model = Item["Model"].ToString();
+                    if (string.Equals(manufacturer, "Microsoft Corporation", StringComparison.OrdinalIgnoreCase) && model.IndexOf("Virtual", StringComparison.OrdinalIgnoreCase) >= 0 || manufacturer.IndexOf("vmware", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
+                        Logger.Information("Suspicious computor manufacturer {manufacturer} and model name {name}.", manufacturer, model);
                         return true;
                     }
                 }

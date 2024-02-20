@@ -39,13 +39,14 @@ namespace AntiDebugLib.Check.Exploits
                 var handle = OpenProcess(PROCESS_ALL_ACCESS, false, CsrGetProcessId());
                 if (handle != IntPtr.Zero)
                 {
+                    Logger.Debug("CSRSS successfully opened. Handle {handle:X}.", handle.ToInt64());
                     CloseHandle(handle);
                     return true;
                 }
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Error calling CsrGetProcessId and OpenProcess. It is likely to something is blocking the call.");
+                Logger.Warning(ex, "Error calling CsrGetProcessId and OpenProcess. It is likely to something is blocking the call.");
                 return true;
             }
 

@@ -133,11 +133,12 @@
     <Compile Include="LogExt.cs" />
     <Compile Include="Native\AntiDebugLibNative.cs" />
     <Compile Include="Native\Kernel32+Direct.cs" />
+    <Compile Include="Native\NativeDefs+NTSTATUS.cs" />
     <Compile Include="Native\User32+Indirect.cs" />
     <Compile Include="Native\NtDll+Indirect.cs" />
-    <Compile Include="Native\NativeStructs.cs" />
-    <Compile Include="Native\NativeStructs+PE.cs" />
-    <Compile Include="Native\NativeStructs+PEB.cs" />
+    <Compile Include="Native\NativeDefs.cs" />
+    <Compile Include="Native\NativeDefs+PE.cs" />
+    <Compile Include="Native\NativeDefs+PEB.cs" />
     <Compile Include="Native\Kernel32+Indirect.cs" />
     <Compile Include="NativeCheckTypes.cs" />
     <Compile Include="Prevention\OverwriteDbgBreakPoint.cs" />

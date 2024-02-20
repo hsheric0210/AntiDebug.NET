@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-using static AntiDebugLib.Native.NativeStructs;
+using static AntiDebugLib.Native.NativeDefs;
 using static AntiDebugLib.Native.NtDll;
 
 namespace AntiDebugLib.Check
@@ -27,16 +27,24 @@ namespace AntiDebugLib.Check
 
         public override bool CheckPassive()
         {
-            var CodeIntegrityInfo = new SYSTEM_CODEINTEGRITY_INFORMATION
+            var CodeIntegrityInfo = new SYSTEM_CODEINTEGRITY_INFORMATION { Length = (uint)Marshal.SizeOf(typeof(SYSTEM_CODEINTEGRITY_INFORMATION)) };
+
+            var status = NtQuerySystemInformation_CodeIntegrityInfo(SystemCodeIntegrityInformation, ref CodeIntegrityInfo, (uint)Marshal.SizeOf(CodeIntegrityInfo), out var returnLength);
+            if (!NT_SUCCESS(status))
             {
-                Length = (uint)Marshal.SizeOf(typeof(SYSTEM_CODEINTEGRITY_INFORMATION))
-            };
+                Logger.Warning("Unable to query SystemCodeIntegrityInformation system information. NtQuerySystemInformation returned NTSTATUS {status}.", status);
+                return false;
+            }
 
-            NtQuerySystemInformation_CodeIntegrityInfo(SystemCodeIntegrityInformation, ref CodeIntegrityInfo, (uint)Marshal.SizeOf(CodeIntegrityInfo), out var returnLength);
+            var expectedReturnLength = (uint)Marshal.SizeOf(CodeIntegrityInfo);
+            if (returnLength != expectedReturnLength)
+            {
+                Logger.Warning("Return length mismatched. Expected {expected}, got {actual}.", expectedReturnLength, returnLength);
+                return true;
+            }
 
-            return returnLength != (uint)Marshal.SizeOf(CodeIntegrityInfo)
-                || (CodeIntegrityInfo.CodeIntegrityOptions & CODEINTEGRITY_OPTION_ENABLED) == 0
-                || (CodeIntegrityInfo.CodeIntegrityOptions & CODEINTEGRITY_OPTION_TESTSIGN) != 0;
+            Logger.Debug("SYSTEM_CODEINTEGRITY_INFORMATION->CodeIntegrityOptions is {value:X}.", CodeIntegrityInfo.CodeIntegrityOptions);
+            return (CodeIntegrityInfo.CodeIntegrityOptions & CODEINTEGRITY_OPTION_ENABLED) == 0 || (CodeIntegrityInfo.CodeIntegrityOptions & CODEINTEGRITY_OPTION_TESTSIGN) != 0;
         }
     }
 }

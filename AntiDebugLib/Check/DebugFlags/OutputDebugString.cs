@@ -29,7 +29,10 @@ namespace AntiDebugLib.Check.DebugFlags
         {
             var random = new Random();
             OutputDebugStringA(StringUtils.RandomString(random.Next(512), random));
-            return Marshal.GetLastWin32Error() != 0;
+
+            var err = Marshal.GetLastWin32Error();
+            Logger.Debug("Received win32 error {error}.", err);
+            return err != 0;
         }
     }
 }

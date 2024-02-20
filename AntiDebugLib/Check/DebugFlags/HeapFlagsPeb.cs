@@ -1,9 +1,7 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 using static AntiDebugLib.Native.AntiDebugLibNative;
-using static AntiDebugLib.Native.NativeStructs;
-using static AntiDebugLib.Native.Kernel32;
+using static AntiDebugLib.Native.NativeDefs;
 using System;
 
 namespace AntiDebugLib.Check.DebugFlags
@@ -35,18 +33,26 @@ namespace AntiDebugLib.Check.DebugFlags
 
         private const uint HEAP_GROWABLE = 0x00000002;
 
-        private bool Check(_HEAP heap) => (heap.Flags & ~HEAP_GROWABLE) != 0 || heap.ForceFlags != 0;
+        private bool Check(_HEAP heap)
+        {
+            Logger.Debug("Heap Flags: {flags:X}, ForceFlags: {forceFlags:X}", heap.Flags, heap.ForceFlags);
+            return (heap.Flags & ~HEAP_GROWABLE) != 0 || heap.ForceFlags != 0;
+        }
 
         public override bool CheckActive()
         {
-            // Don't care if the OS version is lower than Vista
+            if (Environment.Is64BitOperatingSystem && !Environment.Is64BitProcess) // WOW64
+            {
+                var wow64heap = GetPeb() + 0x1030;
+                Logger.Debug("WOW64 _HEAP is located at {address:X}.", wow64heap.ToInt64());
 
-            var isWow64 = Environment.Is64BitOperatingSystem && !Environment.Is64BitProcess;
-            Logger.Information("Wow64 state: {state}", isWow64);
-            if (isWow64 && Check(Marshal.PtrToStructure<_HEAP>(GetPeb() + 0x1030)))
-                return true;
+                if (Check(Marshal.PtrToStructure<_HEAP>(wow64heap)))
+                    return true;
+            }
 
-            return Check(Marshal.PtrToStructure<_HEAP>(_PEB.ParsePeb().ProcessHeap));
+            var heapAddress = _PEB.ParsePeb().ProcessHeap;
+            Logger.Debug("_HEAP address is located at {address:X}.", heapAddress.ToInt64());
+            return Check(Marshal.PtrToStructure<_HEAP>(heapAddress));
         }
     }
 }

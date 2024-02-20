@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 
+using static AntiDebugLib.Native.NativeDefs;
 using static AntiDebugLib.Native.NtDll;
 
 namespace AntiDebugLib.Check.DebugFlags
@@ -26,7 +27,14 @@ namespace AntiDebugLib.Check.DebugFlags
         public override bool CheckActive()
         {
             const uint ProcessDebugFlags = 0x1F; // https://ntdoc.m417z.com/processinfoclass
-            NtQueryInformationProcess_uint(Process.GetCurrentProcess().SafeHandle, ProcessDebugFlags, out var flag, sizeof(uint), 0);
+            var status = NtQueryInformationProcess_uint(Process.GetCurrentProcess().SafeHandle, ProcessDebugFlags, out var flag, sizeof(uint), 0);
+            if (!NT_SUCCESS(status))
+            {
+                Logger.Warning("Unable to query ProcessDebugFlags process information. NtQueryInformationProcess returned NTSTATUS {status}.", status);
+                return false;
+            }
+
+            Logger.Debug("ProcessDebugFlags is {value}.", flag);
             return flag == 0;
         }
     }

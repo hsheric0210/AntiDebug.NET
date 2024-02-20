@@ -23,6 +23,8 @@ namespace AntiDebugSample
             while (true)
             {
                 var line = Console.ReadLine();
+                if (line == "gc")
+                    GC.Collect();
                 Console.WriteLine("User entered: " + line);
             }
         }

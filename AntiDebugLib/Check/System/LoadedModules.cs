@@ -56,14 +56,14 @@ namespace AntiDebugLib.Check
             {
                 if (MyGetModuleHandle(name) != IntPtr.Zero)
                 {
-                    Logger.Information("Bad module {name} found.", name);
+                    Logger.Information("Bad module {name} is currently loaded to this process.", name);
                     return true;
                 }
             }
 
             if (MyGetProcAddress(MyGetModuleHandle("kernel32.dll"), "wine_get_unix_file_name") != IntPtr.Zero)
             {
-                Logger.Information("Detected wine.");
+                Logger.Information("Wine export is detected.");
                 return true;
             }
 

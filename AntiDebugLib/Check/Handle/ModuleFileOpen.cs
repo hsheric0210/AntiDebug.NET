@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 
 using static AntiDebugLib.Native.Kernel32;
@@ -34,7 +33,7 @@ namespace AntiDebugLib.Check.Exploits
 
             try
             {
-                Logger.Verbose("Location of myself: {path}", builder.ToString());
+                Logger.Debug("Location of myself is {path}.", builder.ToString());
                 var stream = File.Open(builder.ToString(), FileMode.Open, FileAccess.Read, FileShare.None);
                 stream.Dispose();
                 return false;

@@ -4,9 +4,8 @@ using System.Text;
 using Microsoft.Win32.SafeHandles;
 
 using static AntiDebugLib.Native.AntiDebugLibNative;
-using static AntiDebugLib.Native.NativeStructs;
+using static AntiDebugLib.Native.NativeDefs;
 using AntiDebugLib.Utils;
-using static AntiDebugLib.Native.Kernel32;
 
 namespace AntiDebugLib.Native
 {

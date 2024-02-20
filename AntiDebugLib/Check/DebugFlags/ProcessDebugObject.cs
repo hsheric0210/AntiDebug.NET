@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
+using static AntiDebugLib.Native.NativeDefs;
 using static AntiDebugLib.Native.NtDll;
 
 namespace AntiDebugLib.Check.DebugFlags
@@ -31,7 +32,14 @@ namespace AntiDebugLib.Check.DebugFlags
         {
             const uint ProcessDebugObjectHandle = 0x1E; // https://ntdoc.m417z.com/processinfoclass
             var size = (uint)(sizeof(uint) * (Environment.Is64BitProcess ? 2 : 1));
-            NtQueryInformationProcess_IntPtr(Process.GetCurrentProcess().SafeHandle, ProcessDebugObjectHandle, out var dbgObject, size, 0);
+            var status = NtQueryInformationProcess_IntPtr(Process.GetCurrentProcess().SafeHandle, ProcessDebugObjectHandle, out var dbgObject, size, 0);
+            if (!NT_SUCCESS(status) && status != NTSTATUS.STATUS_PORT_NOT_SET)
+            {
+                Logger.Warning("Unable to query ProcessDebugFlags process information. NtQueryInformationProcess returned NTSTATUS {status}.", status);
+                return false;
+            }
+
+            Logger.Debug("ProcessDebugFlags is {value:X}.", dbgObject.ToInt64());
             return dbgObject != IntPtr.Zero;
         }
     }

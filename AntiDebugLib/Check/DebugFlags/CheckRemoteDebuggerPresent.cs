@@ -28,7 +28,7 @@ namespace AntiDebugLib.Check.DebugFlags
     /// </summary>
     public class CheckRemoteDebuggerPresent : CheckBase
     {
-        public override string Name => "kernel32!CheckRemoteDebuggerPresent()";
+        public override string Name => "kernel32!CheckRemoteDebuggerPresent";
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 

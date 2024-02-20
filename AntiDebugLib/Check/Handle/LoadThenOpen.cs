@@ -36,6 +36,7 @@ namespace AntiDebugLib.Check.Exploits
             try
             {
                 lib = LoadLibrary(path);
+                Logger.Debug("LoadLibrary'd the binary {path} to {address:X}.", path, lib.ToInt64());
 
                 var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.None);
                 stream.Dispose();

@@ -2,6 +2,7 @@ using AntiDebugLib.Properties;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AntiDebugLib.Native
 {
@@ -10,10 +11,10 @@ namespace AntiDebugLib.Native
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         internal delegate ulong DMyEntryPoint();
 
-        [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+        [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
         internal delegate IntPtr DMyGetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
 
-        [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+        [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode)]
         internal delegate IntPtr DMyGetModuleHandle([MarshalAs(UnmanagedType.LPWStr)] string moduleName);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
@@ -38,7 +39,9 @@ namespace AntiDebugLib.Native
 
         internal static IntPtr GetPeb() => pfnMyGetPeb();
 
-        private static string FixFunctionName(string name, int paramSize)
+        private static DLLFromMemory nativeModule; // Prevent DLL from get garbage collected
+
+        private static string DecorateFunctionName(string name, int paramSize)
         {
             if (Environment.Is64BitProcess)
                 return name;
@@ -48,11 +51,12 @@ namespace AntiDebugLib.Native
 
         internal static void Init()
         {
-            var mem = new DLLFromMemory(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
-            pfnMyEntryPoint = mem.GetDelegateFromFuncName<DMyEntryPoint>(FixFunctionName(/*<cs_entrypoint>*/"AcmStartupObject"/*</cs_entrypoint>*/, 0));
-            pfnMyGetProcAddress = mem.GetDelegateFromFuncName<DMyGetProcAddress>(FixFunctionName(/*<cs_getprocaddress>*/"EeInitializeCom"/*</cs_getprocaddress>*/, 8));
-            pfnMyGetModuleHandle = mem.GetDelegateFromFuncName<DMyGetModuleHandle>(FixFunctionName(/*<cs_getmodulehandle>*/"EeGetComObject"/*</cs_getmodulehandle>*/, 4));
-            pfnMyGetPeb = mem.GetDelegateFromFuncName<DMyGetPeb>(FixFunctionName(/*<cs_getpeb>*/"EeGetVerifier"/*</cs_getpeb>*/, 0));
+            AntiDebug.Logger.Information("Will use {bit}-bit native library.", Environment.Is64BitProcess ? 64 : 32);
+            nativeModule = new DLLFromMemory(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
+            pfnMyEntryPoint = nativeModule.GetDelegateFromFuncName<DMyEntryPoint>(DecorateFunctionName(/*<cs_entrypoint>*/"AcmStartupObject"/*</cs_entrypoint>*/, 0));
+            pfnMyGetProcAddress = nativeModule.GetDelegateFromFuncName<DMyGetProcAddress>(DecorateFunctionName(/*<cs_getprocaddress>*/"EeInitializeCom"/*</cs_getprocaddress>*/, 8));
+            pfnMyGetModuleHandle = nativeModule.GetDelegateFromFuncName<DMyGetModuleHandle>(DecorateFunctionName(/*<cs_getmodulehandle>*/"EeGetComObject"/*</cs_getmodulehandle>*/, 4));
+            pfnMyGetPeb = nativeModule.GetDelegateFromFuncName<DMyGetPeb>(DecorateFunctionName(/*<cs_getpeb>*/"EeGetVerifier"/*</cs_getpeb>*/, 0));
 
             // initialize indirect calls
             Kernel32.InitNatives();

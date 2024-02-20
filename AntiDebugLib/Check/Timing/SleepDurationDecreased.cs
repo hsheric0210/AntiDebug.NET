@@ -23,7 +23,10 @@ namespace AntiDebugLib.Check.Timing
         {
             var prev = Environment.TickCount;
             Thread.Sleep(500);
-            return Environment.TickCount - prev < 500L;
+
+            var delta = Environment.TickCount - prev;
+            Logger.Debug("Time delta between 500ms-delayed Environment.TickCount call: {delta}", delta);
+            return delta < 500L;
         }
     }
 }

@@ -18,7 +18,9 @@ namespace AntiDebugLib.Check.Timing
         public override bool CheckActive()
         {
             var start = GetTickCount();
-            return GetTickCount() - start > 0x10;
+            var delta = GetTickCount() - start;
+            Logger.Debug("Time delta between simultaneous GetTickCount call: {delta}", delta);
+            return delta > 0x10;
         }
     }
 }

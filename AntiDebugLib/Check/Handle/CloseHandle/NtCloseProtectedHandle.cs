@@ -41,9 +41,12 @@ namespace AntiDebugLib.Check.Exploits
                 beingDebugged = true;
             }
 
+            uint status = 0x0u;
             // Don't forget to clean up!
-            if (!SetHandleInformation(hMutex, HANDLE_FLAG_PROTECT_FROM_CLOSE, 0) || !NtClose(hMutex))
-                Logger.Warning("Failed to unprotect and close the handle. Win32 error {errorcode}.", Marshal.GetLastWin32Error());
+            if (!SetHandleInformation(hMutex, HANDLE_FLAG_PROTECT_FROM_CLOSE, 0))
+                Logger.Warning("Failed to unprotect the handle. Win32 error {errorcode}.", Marshal.GetLastWin32Error());
+            else if ((status = NtClose(hMutex)) != 0x0) // STATUS_SUCCESS
+                Logger.Warning("Failed to close the handle. NTSTATUS {errorcode}.", status);
 
             return beingDebugged;
         }

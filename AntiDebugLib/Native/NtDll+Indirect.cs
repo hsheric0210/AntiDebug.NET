@@ -11,7 +11,7 @@ namespace AntiDebugLib.Native
         #region Delegates
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate bool DNtClose(IntPtr Handle);
+        internal delegate uint DNtClose(IntPtr Handle);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         internal delegate uint DNtSetInformationThread(SafeHandle ThreadHandle, uint ThreadInformationClass, IntPtr ThreadInformation, int ThreadInformationLength);

@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using static AntiDebugLib.Native.AntiDebugLibNative;
 using static AntiDebugLib.Native.NativeStructs;
 using static AntiDebugLib.Native.Kernel32;
+using System;
 
 namespace AntiDebugLib.Check.DebugFlags
 {
@@ -34,17 +35,18 @@ namespace AntiDebugLib.Check.DebugFlags
 
         private const uint HEAP_GROWABLE = 0x00000002;
 
+        private bool Check(_HEAP heap) => (heap.Flags & ~HEAP_GROWABLE) != 0 || heap.ForceFlags != 0;
+
         public override bool CheckActive()
         {
             // Don't care if the OS version is lower than Vista
 
-            if (IsWow64Process2(Process.GetCurrentProcess().Handle, out var processMachine, out _))
-                Logger.Error("IsWow64Process2 failure. Win32 error {w32err}", Marshal.GetLastWin32Error());
-
-            var isWow64 = processMachine != 0; // IMAGE_FILE_MACHINE_UNKNOWN
+            var isWow64 = Environment.Is64BitOperatingSystem && !Environment.Is64BitProcess;
             Logger.Information("Wow64 state: {state}", isWow64);
-            var heapStruct = isWow64 ? Marshal.PtrToStructure<_HEAP>(GetPeb() + 0x1030) : Marshal.PtrToStructure<_HEAP>(_PEB.ParsePeb().ProcessHeap);
-            return (heapStruct.Flags & ~HEAP_GROWABLE) != 0 || heapStruct.ForceFlags != 0;
+            if (isWow64 && Check(Marshal.PtrToStructure<_HEAP>(GetPeb() + 0x1030)))
+                return true;
+
+            return Check(Marshal.PtrToStructure<_HEAP>(_PEB.ParsePeb().ProcessHeap));
         }
     }
 }

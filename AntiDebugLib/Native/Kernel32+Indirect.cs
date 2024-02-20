@@ -6,6 +6,7 @@ using Microsoft.Win32.SafeHandles;
 using static AntiDebugLib.Native.AntiDebugLibNative;
 using static AntiDebugLib.Native.NativeStructs;
 using AntiDebugLib.Utils;
+using static AntiDebugLib.Native.Kernel32;
 
 namespace AntiDebugLib.Native
 {
@@ -58,14 +59,14 @@ namespace AntiDebugLib.Native
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         internal delegate IntPtr DCreateFileW([MarshalAs(UnmanagedType.LPWStr)] string fileName, uint desiredAccess, uint shareMode, IntPtr securityAttributes, uint creationDisposition, uint flagsAndAttributes, IntPtr templateFile);
 
-        [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+        [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode, SetLastError = true)]
         internal delegate uint DGetModuleFileNameW(IntPtr module, StringBuilder fileName, uint size);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         internal delegate bool DCloseHandle(IntPtr handle);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate bool DIsWow64Process2(IntPtr process, out ushort processMachine, out ushort nativeMatchine);
+        internal delegate uint DGetFullPathNameW(string lpPathName, uint bufferSize, StringBuilder buffer, IntPtr part);
 
         #endregion
 
@@ -105,7 +106,7 @@ namespace AntiDebugLib.Native
 
         internal static DCloseHandle CloseHandle { get; private set; }
 
-        internal static DIsWow64Process2 IsWow64Process2 { get; private set; }
+        internal static DGetFullPathNameW GetFullPathNameW { get; private set; }
 
         #endregion
 
@@ -130,7 +131,7 @@ namespace AntiDebugLib.Native
             CreateFileW = Marshal.GetDelegateForFunctionPointer<DCreateFileW>(MyGetProcAddress(kernel32, "CreateFileW"));
             GetModuleFileNameW = Marshal.GetDelegateForFunctionPointer<DGetModuleFileNameW>(MyGetProcAddress(kernel32, "GetModuleFileNameW"));
             CloseHandle = Marshal.GetDelegateForFunctionPointer<DCloseHandle>(MyGetProcAddress(kernel32, "CloseHandle"));
-            IsWow64Process2 = Marshal.GetDelegateForFunctionPointer<DIsWow64Process2>(MyGetProcAddress(kernel32, "IsWow64Process2"));
+            GetFullPathNameW = Marshal.GetDelegateForFunctionPointer<DGetFullPathNameW>(MyGetProcAddress(kernel32, "GetFullPathNameW"));
         }
     }
 }

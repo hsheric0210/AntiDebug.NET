@@ -1,7 +1,8 @@
 ﻿using AntiDebugLib.Check;
 using AntiDebugLib.Check.AntiHook;
 using AntiDebugLib.Check.DebugFlags;
-using AntiDebugLib.Check.Exploits;
+using AntiDebugLib.Check.Handle;
+using AntiDebugLib.Check.Handle.CloseHandle;
 using AntiDebugLib.Check.Timing;
 using AntiDebugLib.Native;
 using AntiDebugLib.Prevention;
@@ -16,8 +17,11 @@ namespace AntiDebugLib
     public class AntiDebug
     {
         public static event EventHandler<DebuggerDetectedEventArgs> DebuggerDetected;
+        public static event EventHandler<CheckResultEventArgs> CheckFinished;
+        public static event EventHandler<PreventionResultEventArgs> PreventionFinished;
 
         private static IReadOnlyList<CheckBase> checks;
+        private static IReadOnlyList<PreventionBase> preventions;
         private static Thread activeThread;
         private static CancellationTokenSource activeThreadCancel;
 
@@ -32,7 +36,6 @@ namespace AntiDebugLib
 
             checks = new List<CheckBase>()
             {
-                // checks
                 new NtDllCheck(),
                 new Kernel32Check(),
                 new KernelBaseCheck(),
@@ -75,8 +78,10 @@ namespace AntiDebugLib
 
                 new GetTickCountVariance(),
                 new SleepDurationDecreased(),
+            };
 
-                // preventions
+            preventions = new List<PreventionBase>()
+            {
                 new MalformedOutputDebugString(),
                 new SandboxieCrasher(),
                 new HideThreads(),
@@ -87,36 +92,56 @@ namespace AntiDebugLib
         }
 
         [HandleProcessCorruptedStateExceptions]
-        public static void BeginChecks(int checkPeriod = 3000)
+        public static void BeginChecks(int activeCheckPeriodMillis = 3000)
         {
+            // run passive preventions
+            var preventResults = new List<PreventionResult>();
+            foreach (var prevention in preventions)
+            {
+                try
+                {
+                    preventResults.Add(prevention.PreventPassive());
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, "Error running the passive prevention {name}.", prevention.Name);
+                }
+            }
+
+            PreventionFinished?.Invoke(null, new PreventionResultEventArgs(preventResults));
+
             // run passive checks
+            var checkResults = new List<CheckResult>();
             foreach (var check in checks)
             {
                 try
                 {
-                    if (check.CheckPassive())
-                        DebuggerDetected?.Invoke(null, new DebuggerDetectedEventArgs(check.Name, check.Reliability));
-
-                    check.PreventPassive();
+                    var result = check.CheckPassive();
+                    checkResults.Add(result);
+                    if (result.Type == CheckResultType.DebuggerDetected)
+                        DebuggerDetected?.Invoke(null, new DebuggerDetectedEventArgs(result));
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(ex, "Error running the module {name}.", check.Name);
+                    Logger.Error(ex, "Error running the passive check {name}.", check.Name);
                 }
             }
+
+            CheckFinished?.Invoke(null, new CheckResultEventArgs(checkResults));
 
             if (activeThread != null)
                 return;
 
             activeThread = new Thread(new ParameterizedThreadStart(ActiveCheckProc));
             activeThreadCancel = new CancellationTokenSource();
-            var param = new ActiveCheckProcParameter { activeChecks = checks, cancelToken = activeThreadCancel.Token, checkPeriod = checkPeriod };
+            var param = new ActiveCheckProcParameter { activeChecks = checks, activePreventions = preventions, cancelToken = activeThreadCancel.Token, checkPeriod = activeCheckPeriodMillis };
             activeThread.Start(param);
         }
 
         struct ActiveCheckProcParameter
         {
             public IReadOnlyList<CheckBase> activeChecks;
+            public IReadOnlyList<PreventionBase> activePreventions;
             public CancellationToken cancelToken;
             public int checkPeriod;
         }
@@ -127,21 +152,40 @@ namespace AntiDebugLib
             var param = (ActiveCheckProcParameter)oparam;
             while (!param.cancelToken.IsCancellationRequested)
             {
-                foreach (var check in param.activeChecks)
+                // run active preventions
+                var preventResults = new List<PreventionResult>();
+                foreach (var prevention in param.activePreventions)
                 {
                     try
                     {
-                        if (check.CheckActive())
-                            DebuggerDetected?.Invoke(null, new DebuggerDetectedEventArgs(check.Name, check.Reliability));
-
-                        check.PreventActive();
+                        preventResults.Add(prevention.PreventActive());
                     }
                     catch (Exception ex)
                     {
-                        Logger.Error(ex, "Error running the module {name}.", check.Name);
+                        Logger.Error(ex, "Error running the active prevention {name}.", prevention.Name);
                     }
                 }
 
+                PreventionFinished?.Invoke(null, new PreventionResultEventArgs(preventResults));
+
+                // run passive checks
+                var checkResults = new List<CheckResult>();
+                foreach (var check in checks)
+                {
+                    try
+                    {
+                        var result = check.CheckActive();
+                        checkResults.Add(result);
+                        if (result.Type == CheckResultType.DebuggerDetected)
+                            DebuggerDetected?.Invoke(null, new DebuggerDetectedEventArgs(result));
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, "Error running the active check {name}.", check.Name);
+                    }
+                }
+
+                CheckFinished?.Invoke(null, new CheckResultEventArgs(checkResults));
                 Thread.Sleep(param.checkPeriod);
             }
         }
@@ -156,12 +200,24 @@ namespace AntiDebugLib
             activeThreadCancel = null;
         }
 
+        public void ApplyPreventions()
+        {
+            foreach (var prevention in preventions)
+            {
+                prevention.PreventPassive();
+                prevention.PreventActive();
+            }
+        }
+
         public bool IsDebuggerPresent()
         {
             foreach (var check in checks)
             {
-                if (check.CheckPassive() || check.CheckActive())
+                if (check.CheckPassive().Type == CheckResultType.DebuggerDetected
+                    || check.CheckActive().Type == CheckResultType.DebuggerDetected)
+                {
                     return true;
+                }
             }
 
             return false;

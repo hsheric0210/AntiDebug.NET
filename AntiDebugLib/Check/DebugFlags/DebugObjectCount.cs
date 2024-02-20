@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AntiDebugLib.Native;
+using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 using static AntiDebugLib.Native.NativeDefs;
@@ -31,47 +33,81 @@ namespace AntiDebugLib.Check.DebugFlags
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckPassive()
+        public override unsafe CheckResult CheckPassive()
         {
             const uint ObjectAllTypesInformation = 0x3;
             var buffer = IntPtr.Zero;
-            var beingDebugged = false;
+            var result = DebuggerNotDetected();
+            var debugObjectCount = 0;
 
             try
             {
-                var status = NtQueryObject(IntPtr.Zero, ObjectAllTypesInformation, IntPtr.Zero, 0, out var size);
+                var dummyInt = 0u;
+                var status = NtQueryObject_ref(IntPtr.Zero, ObjectAllTypesInformation, ref dummyInt, sizeof(ulong), out var allocLength); // it seems just passing (nullptr, 0) to arguments make them return invalid ReturnLength.
                 if (status != NTSTATUS.STATUS_INFO_LENGTH_MISMATCH)
                 {
                     Logger.Warning("Unable to query the required buffer size. NtQueryObject returned unexpected NTSTATUS {status}.", status);
+                    result = NtError("NtQueryObject", status);
                     goto cleanup;
                 }
 
-                size += 0x10; // Padding bytes
-                buffer = Marshal.AllocHGlobal((IntPtr)size);
-                if (buffer == IntPtr.Zero)
-                {
-                    Logger.Warning("Unable to allocate the unmanaged buffer of size {size}.", size);
-                    goto cleanup;
-                }
+                allocLength += 0x40; // https://www.vbforums.com/showthread.php?859341-How-to-Use-NtQueryObject-function-with-ObjectAllTypesInformation
 
-                status = NtQueryObject(IntPtr.Zero, ObjectAllTypesInformation, buffer, size, out var size2);
-                if (status != 0)
+                Logger.Debug("Allocating buffer of size {size} bytes.", allocLength);
+                do
                 {
-                    Logger.Warning("Unable to query the all objects. NtQueryObject returned NTSTATUS {status}.", status);
-                    goto cleanup;
-                }
+                    buffer = Marshal.AllocHGlobal((IntPtr)allocLength);
+                    if (buffer == IntPtr.Zero)
+                    {
+                        Logger.Warning("Unable to allocate the unmanaged buffer of size {size}.", allocLength);
+                        result = Error(new { Function = nameof(Marshal.AllocHGlobal) });
+                        goto cleanup;
+                    }
+
+                    status = NtQueryObject_IntPtr(IntPtr.Zero, ObjectAllTypesInformation, buffer, allocLength, out var returnLength);
+
+                    if (returnLength > allocLength)
+                    {
+                        Logger.Debug("It seems the call requires {size} bytes buffer, which is larger than currently allocated {alloc} bytes buffer.", returnLength, allocLength);
+                        Marshal.FreeHGlobal(buffer);
+                        allocLength = returnLength + 0x40;
+                        continue;
+                    }
+
+                    Logger.Debug("Return legnth is {size} bytes.", allocLength);
+                    if (!NT_SUCCESS(status))
+                    {
+                        Logger.Warning("Unable to query the all objects. NtQueryObject returned NTSTATUS {status}.", status);
+                        result = NtError("NtQueryObject", status);
+                        goto cleanup;
+                    }
+                } while (false);
 
                 var info = Marshal.PtrToStructure<OBJECT_ALL_INFORMATION>(buffer);
+                var pinnedArray = GCHandle.Alloc(info.ObjectTypeInformation[0], GCHandleType.Pinned);
+                var objInfoLocation = (byte*)pinnedArray.AddrOfPinnedObject();
+
                 for (uint i = 0, j = info.NumberOfObjects; i < j; i++)
                 {
-                    var typeInfo = info.ObjectTypeInformation[i];
-                    var typeName = Marshal.PtrToStringUni(typeInfo.TypeName.Buffer, typeInfo.TypeName.Length);
-                    if (string.Equals(typeName, "DebugObject") && typeInfo.TotalNumberOfObjects > 0)
+                    var typeInfo = *(OBJECT_TYPE_INFORMATION*)objInfoLocation;
+                    var typeName = Marshal.PtrToStringUni(typeInfo.TypeName.Buffer, typeInfo.TypeName.Length / 2); // It's a 2-bytes unicode string
+                    if (string.Equals(typeName, "DebugObject"))
                     {
-                        beingDebugged = true;
-                        break;
+                        Logger.Debug("Found DebugObject at {address}. Count of objects: {count}", new IntPtr(objInfoLocation).ToHex(), typeInfo.TotalNumberOfObjects);
+                        debugObjectCount += typeInfo.TotalNumberOfObjects;
                     }
+
+                    objInfoLocation = (byte*)typeInfo.TypeName.Buffer;
+                    objInfoLocation += typeInfo.TypeName.MaximumLength;
+
+                    var tmp = (ulong)objInfoLocation & (ulong)-sizeof(void*); // align
+                    if (tmp != (ulong)objInfoLocation)
+                        tmp += (ulong)sizeof(void*);
+
+                    objInfoLocation = (byte*)tmp;
                 }
+
+                pinnedArray.Free();
             }
             catch (Exception ex)
             {
@@ -81,7 +117,11 @@ namespace AntiDebugLib.Check.DebugFlags
 cleanup:
             if (buffer != IntPtr.Zero)
                 Marshal.FreeHGlobal(buffer);
-            return beingDebugged;
+
+            if (debugObjectCount > 0)
+                return DebuggerDetected(new { Count = debugObjectCount });
+
+            return DebuggerNotDetected();
         }
     }
 }

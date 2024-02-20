@@ -19,11 +19,14 @@ namespace AntiDebugLib.Check.DebugFlags
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             var kdDebuggerAttached = Marshal.ReadInt16(new IntPtr(0x7FFE02D4));
             Logger.Debug("USER_SHARED_DATA->KdDebuggerAttached is {value:X}.", kdDebuggerAttached);
-            return (kdDebuggerAttached & 0b11) != 0;
+            if ((kdDebuggerAttached & 0b11) == 0)
+                return DebuggerNotDetected();
+
+            return DebuggerDetected(new { Flags = kdDebuggerAttached });
         }
     }
 }

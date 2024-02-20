@@ -1,9 +1,9 @@
-﻿using System;
+﻿using AntiDebugLib.Native;
+using System;
 
-using static AntiDebugLib.Native.Kernel32;
 using static AntiDebugLib.Native.NtDll;
 
-namespace AntiDebugLib.Check.Exploits
+namespace AntiDebugLib.Check.Handle
 {
     /// <summary>
     /// <list type="bullet">
@@ -32,25 +32,25 @@ namespace AntiDebugLib.Check.Exploits
 
         private const uint PROCESS_ALL_ACCESS = 0x000F0000 | 0x00100000 | 0xFFFF; // winnt.h
 
-        public override bool CheckPassive()
+        public override CheckResult CheckPassive()
         {
             try
             {
-                var handle = OpenProcess(PROCESS_ALL_ACCESS, false, CsrGetProcessId());
+                var handle = Kernel32.OpenProcess(PROCESS_ALL_ACCESS, false, CsrGetProcessId());
                 if (handle != IntPtr.Zero)
                 {
-                    Logger.Debug("CSRSS successfully opened. Handle {handle:X}.", handle.ToInt64());
-                    CloseHandle(handle);
-                    return true;
+                    Logger.Debug("CSRSS successfully opened. Handle {handle:X}.", handle.ToHex());
+                    Kernel32.CloseHandle(handle);
+                    return DebuggerDetected(new { Handle = handle });
                 }
             }
             catch (Exception ex)
             {
                 Logger.Warning(ex, "Error calling CsrGetProcessId and OpenProcess. It is likely to something is blocking the call.");
-                return true;
+                return DebuggerDetected();
             }
 
-            return false;
+            return DebuggerNotDetected();
         }
     }
 }

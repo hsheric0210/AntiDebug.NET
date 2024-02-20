@@ -24,18 +24,18 @@ namespace AntiDebugLib.Check.DebugFlags
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             const uint ProcessDebugFlags = 0x1F; // https://ntdoc.m417z.com/processinfoclass
             var status = NtQueryInformationProcess_uint(Process.GetCurrentProcess().SafeHandle, ProcessDebugFlags, out var flag, sizeof(uint), 0);
             if (!NT_SUCCESS(status))
             {
                 Logger.Warning("Unable to query ProcessDebugFlags process information. NtQueryInformationProcess returned NTSTATUS {status}.", status);
-                return false;
+                return NtError("NtQueryInformationProcess", status);
             }
 
             Logger.Debug("ProcessDebugFlags is {value}.", flag);
-            return flag == 0;
+            return MakeResult(flag == 0);
         }
     }
 }

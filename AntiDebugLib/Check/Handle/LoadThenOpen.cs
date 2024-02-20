@@ -1,9 +1,10 @@
-﻿using System;
+﻿using AntiDebugLib.Native;
+using System;
 using System.IO;
 
 using static AntiDebugLib.Native.Kernel32;
 
-namespace AntiDebugLib.Check.Exploits
+namespace AntiDebugLib.Check.Handle
 {
     /// <summary>
     /// <list type="bullet">
@@ -29,24 +30,24 @@ namespace AntiDebugLib.Check.Exploits
 
         public override CheckReliability Reliability => CheckReliability.Bad;
 
-        public override bool CheckPassive()
+        public override CheckResult CheckPassive()
         {
             var path = randomBinary[new Random().Next(randomBinary.Length)];
             var lib = IntPtr.Zero;
             try
             {
                 lib = LoadLibrary(path);
-                Logger.Debug("LoadLibrary'd the binary {path} to {address:X}.", path, lib.ToInt64());
+                Logger.Debug("LoadLibrary'd the binary {path} to {address:X}.", path, lib.ToHex());
 
-                var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.None);
+                var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.None); // Open exclusively
                 stream.Dispose();
 
-                return false;
+                return DebuggerNotDetected();
             }
             catch (Exception ex)
             {
                 Logger.Information(ex, "CreateFile() failed for {path}. (possible being debugged)", path);
-                return true; // CreateFile will return INVALID_IntPtr_VALUE
+                return DebuggerDetected(new { Path = path, Exception = ex });
             }
             finally
             {

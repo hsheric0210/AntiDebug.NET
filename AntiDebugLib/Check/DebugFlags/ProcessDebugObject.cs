@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AntiDebugLib.Native;
+using System;
 using System.Diagnostics;
 
 using static AntiDebugLib.Native.NativeDefs;
@@ -28,7 +29,7 @@ namespace AntiDebugLib.Check.DebugFlags
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             const uint ProcessDebugObjectHandle = 0x1E; // https://ntdoc.m417z.com/processinfoclass
             var size = (uint)(sizeof(uint) * (Environment.Is64BitProcess ? 2 : 1));
@@ -36,11 +37,14 @@ namespace AntiDebugLib.Check.DebugFlags
             if (!NT_SUCCESS(status) && status != NTSTATUS.STATUS_PORT_NOT_SET)
             {
                 Logger.Warning("Unable to query ProcessDebugFlags process information. NtQueryInformationProcess returned NTSTATUS {status}.", status);
-                return false;
+                return NtError("NtQueryInformationProcess", status);
             }
 
-            Logger.Debug("ProcessDebugFlags is {value:X}.", dbgObject.ToInt64());
-            return dbgObject != IntPtr.Zero;
+            Logger.Debug("ProcessDebugFlags is {value:X}.", dbgObject.ToHex());
+            if (dbgObject == IntPtr.Zero)
+                return DebuggerNotDetected();
+
+            return DebuggerDetected(new { Handle = dbgObject });
         }
     }
 }

@@ -31,11 +31,14 @@ namespace AntiDebugLib.Check.DebugFlags
         private const uint FLG_HEAP_ENABLE_FREE_CHECK = 0x20;
         private const uint FLG_HEAP_VALIDATE_PARAMETERS = 0x40;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             var ntGlobalFlag = _PEB.ParsePeb().NtGlobalFlag;
             Logger.Debug("NtGlobalFlag is {value:X}.", ntGlobalFlag);
-            return (ntGlobalFlag & (FLG_HEAP_ENABLE_TAIL_CHECK | FLG_HEAP_ENABLE_FREE_CHECK | FLG_HEAP_VALIDATE_PARAMETERS)) != 0;
+            if ((ntGlobalFlag & (FLG_HEAP_ENABLE_TAIL_CHECK | FLG_HEAP_ENABLE_FREE_CHECK | FLG_HEAP_VALIDATE_PARAMETERS)) == 0)
+                return DebuggerNotDetected();
+
+            return DebuggerDetected(new { Flags = ntGlobalFlag });
         }
     }
 }

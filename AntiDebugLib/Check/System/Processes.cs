@@ -74,7 +74,7 @@ namespace AntiDebugLib.Check
             "xenservice",                   // Citrix Xen
         };
 
-        public override bool CheckPassive()
+        public override CheckResult CheckPassive()
         {
             foreach (var process in Process.GetProcesses())
             {
@@ -83,12 +83,12 @@ namespace AntiDebugLib.Check
                     if (string.Equals(process.ProcessName, name, StringComparison.OrdinalIgnoreCase))
                     {
                         Logger.Information("Bad process {name} is running.", name);
-                        return true;
+                        return DebuggerDetected(new { Name = name });
                     }
                 }
             }
 
-            return false;
+            return DebuggerNotDetected();
         }
     }
 }

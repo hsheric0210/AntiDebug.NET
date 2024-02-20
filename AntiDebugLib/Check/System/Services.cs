@@ -57,7 +57,7 @@ namespace AntiDebugLib.Check
             "vmx86"
         };
 
-        public override bool CheckPassive()
+        public override CheckResult CheckPassive()
         {
             foreach (var service in ServiceController.GetServices())
             {
@@ -69,12 +69,12 @@ namespace AntiDebugLib.Check
                     if (service.ServiceName.Contains(name))
                     {
                         Logger.Information("Bad service {name} is running.", name);
-                        return true;
+                        return DebuggerDetected(new { Name = name });
                     }
                 }
             }
 
-            return false;
+            return DebuggerNotDetected();
         }
     }
 }

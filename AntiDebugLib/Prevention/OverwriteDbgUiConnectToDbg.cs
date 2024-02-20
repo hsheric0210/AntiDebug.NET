@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using AntiDebugLib.Native;
+using System.Diagnostics;
 
 using static AntiDebugLib.Native.Kernel32;
 
@@ -11,18 +12,16 @@ namespace AntiDebugLib.Prevention
     /// </item>
     /// </list>
     /// </summary>
-    public class OverwriteDbgUiConnectToDbg : CheckBase
+    public class OverwriteDbgUiConnectToDbg : FunctionOverwrite
     {
         public override string Name => "Neutralize ntdll!DbgUiConnectToDbg";
 
-        public override CheckReliability Reliability => CheckReliability.Perfect;
-
-        public override bool PreventPassive()
+        public override PreventionResult PreventPassive()
         {
             var ntdll = GetModuleHandleA("ntdll.dll");
             var proc = GetProcAddress(ntdll, "DbgUiConnectToDbg");
-            var instr = new byte[] { 0xCC }; // INT3
-            return WriteProcessMemory(Process.GetCurrentProcess().SafeHandle, proc, instr, 1, 0);
+            Logger.Debug("DbgUiConnectToDbg address is {address}.", proc.ToHex());
+            return OverwriteFunction(proc, new byte[] { 0xCC }); // INT3 // TODO: replace with program instant crash instruction
         }
     }
 }

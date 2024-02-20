@@ -25,7 +25,7 @@ namespace AntiDebugLib.Check
         private const uint CODEINTEGRITY_OPTION_ENABLED = 0x01;
         private const uint CODEINTEGRITY_OPTION_TESTSIGN = 0x02;
 
-        public override bool CheckPassive()
+        public override CheckResult CheckPassive()
         {
             var CodeIntegrityInfo = new SYSTEM_CODEINTEGRITY_INFORMATION { Length = (uint)Marshal.SizeOf(typeof(SYSTEM_CODEINTEGRITY_INFORMATION)) };
 
@@ -33,18 +33,21 @@ namespace AntiDebugLib.Check
             if (!NT_SUCCESS(status))
             {
                 Logger.Warning("Unable to query SystemCodeIntegrityInformation system information. NtQuerySystemInformation returned NTSTATUS {status}.", status);
-                return false;
+                return NtError("NtQuerySystemInformation", status);
             }
 
             var expectedReturnLength = (uint)Marshal.SizeOf(CodeIntegrityInfo);
             if (returnLength != expectedReturnLength)
             {
                 Logger.Warning("Return length mismatched. Expected {expected}, got {actual}.", expectedReturnLength, returnLength);
-                return true;
+                return DebuggerDetected(new { Expected = expectedReturnLength, Actual = returnLength });
             }
 
             Logger.Debug("SYSTEM_CODEINTEGRITY_INFORMATION->CodeIntegrityOptions is {value:X}.", CodeIntegrityInfo.CodeIntegrityOptions);
-            return (CodeIntegrityInfo.CodeIntegrityOptions & CODEINTEGRITY_OPTION_ENABLED) == 0 || (CodeIntegrityInfo.CodeIntegrityOptions & CODEINTEGRITY_OPTION_TESTSIGN) != 0;
+            if ((CodeIntegrityInfo.CodeIntegrityOptions & CODEINTEGRITY_OPTION_ENABLED) != 0 && (CodeIntegrityInfo.CodeIntegrityOptions & CODEINTEGRITY_OPTION_TESTSIGN) == 0)
+                return DebuggerNotDetected();
+
+            return DebuggerDetected(new { Flags = CodeIntegrityInfo.CodeIntegrityOptions });
         }
     }
 }

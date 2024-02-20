@@ -103,7 +103,6 @@ public partial class DLLFromMemory
 
             var kernel32 = GetModuleHandle("kernel32.dll");
             var llaAddr = GetProcAddress(kernel32, "LoadLibraryA");
-            Console.WriteLine("LoadLibraryA available on " + llaAddr.ToInt64().ToString("X16"));
             LoadLibrary = Marshal.GetDelegateForFunctionPointer<DLoadLibrary>(llaAddr);
             FreeLibrary = Marshal.GetDelegateForFunctionPointer<DFreeLibrary>(GetProcAddress(kernel32, "FreeLibrary"));
             VirtualAlloc = Marshal.GetDelegateForFunctionPointer<DVirtualAlloc>(GetProcAddress(kernel32, "VirtualAlloc"));

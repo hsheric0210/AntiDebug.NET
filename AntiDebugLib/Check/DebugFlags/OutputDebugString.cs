@@ -25,14 +25,14 @@ namespace AntiDebugLib.Check.DebugFlags
 
         public override CheckReliability Reliability => CheckReliability.Okay;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             var random = new Random();
             OutputDebugStringA(StringUtils.RandomString(random.Next(512), random));
 
             var err = Marshal.GetLastWin32Error();
             Logger.Debug("Received win32 error {error}.", err);
-            return err != 0;
+            return MakeResult(err != 0);
         }
     }
 }

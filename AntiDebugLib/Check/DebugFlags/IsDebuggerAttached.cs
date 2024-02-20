@@ -15,6 +15,6 @@ namespace AntiDebugLib.Check.DebugFlags
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckActive() => Debugger.IsAttached;
+        public override CheckResult CheckActive() => MakeResult(Debugger.IsAttached);
     }
 }

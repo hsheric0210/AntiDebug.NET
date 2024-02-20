@@ -16,7 +16,7 @@ namespace AntiDebugLib.Check
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckPassive()
+        public override CheckResult CheckPassive()
         {
             using (var ObjectSearcher = new ManagementObjectSearcher("Select * from Win32_ComputerSystem"))
             using (var ObjectItems = ObjectSearcher.Get())
@@ -28,11 +28,11 @@ namespace AntiDebugLib.Check
                     if (string.Equals(manufacturer, "Microsoft Corporation", StringComparison.OrdinalIgnoreCase) && model.IndexOf("Virtual", StringComparison.OrdinalIgnoreCase) >= 0 || manufacturer.IndexOf("vmware", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         Logger.Information("Suspicious computor manufacturer {manufacturer} and model name {name}.", manufacturer, model);
-                        return true;
+                        return DebuggerDetected(new { Manufacturer = manufacturer, Model = model });
                     }
                 }
             }
-            return false;
+            return DebuggerNotDetected();
         }
     }
 }

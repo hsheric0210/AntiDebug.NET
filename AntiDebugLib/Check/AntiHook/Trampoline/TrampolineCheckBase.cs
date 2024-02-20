@@ -22,7 +22,7 @@ namespace AntiDebugLib.Check.AntiHook
 
         public override CheckReliability Reliability => CheckReliability.Okay;
 
-        public override bool CheckPassive()
+        public override CheckResult CheckPassive()
         {
             try
             {
@@ -37,8 +37,9 @@ namespace AntiDebugLib.Check.AntiHook
                     {
                         if (ops[0] == badOps)
                         {
-                            Logger.Debug("Found bad opcode {op} from function {name}.", badOps.ToString("X2"), proc);
-                            return true;
+                            var opcode = "0x" + badOps.ToString("X2");
+                            Logger.Debug("Found bad opcode {op} from function {name}.", opcode, proc);
+                            return DebuggerDetected(new { Function = proc, OpCode = opcode });
                         }
                     }
                 }
@@ -48,7 +49,7 @@ namespace AntiDebugLib.Check.AntiHook
                 Logger.Warning(ex, "Failed to check procedure hooking for dll: {dllName}", DllName);
             }
 
-            return false;
+            return DebuggerNotDetected();
         }
     }
 }

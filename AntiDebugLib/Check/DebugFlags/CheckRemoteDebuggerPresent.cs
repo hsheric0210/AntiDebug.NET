@@ -32,7 +32,7 @@ namespace AntiDebugLib.Check.DebugFlags
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckActive()
-            => CheckRemoteDebuggerPresent(Process.GetCurrentProcess().SafeHandle, out var debuggerPresent) && debuggerPresent;
+        public override CheckResult CheckActive()
+            => MakeResult(CheckRemoteDebuggerPresent(Process.GetCurrentProcess().SafeHandle, out var debuggerPresent) && debuggerPresent);
     }
 }

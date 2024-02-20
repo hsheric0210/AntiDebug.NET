@@ -28,7 +28,7 @@ namespace AntiDebugLib.Check.DebugFlags
 
         private const uint HEAP_GROWABLE = 0x00000002;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             var buffer = IntPtr.Zero;
 
@@ -38,21 +38,24 @@ namespace AntiDebugLib.Check.DebugFlags
                 if (buffer == IntPtr.Zero)
                 {
                     Logger.Warning("Unable to allocate debug buffer.");
-                    return false;
+                    return Error(new { Function = nameof(RtlCreateQueryDebugBuffer) });
                 }
 
                 var status = RtlQueryProcessDebugInformation((uint)Process.GetCurrentProcess().Id, PDI_HEAPS | PDI_HEAP_BLOCKS, buffer);
                 if (!NT_SUCCESS(status))
                 {
                     Logger.Warning("Unable to query process debug information. RtlQueryProcessDebugInformation returned NTSTATUS {status}.", status);
-                    return false;
+                    return NtError("RtlQueryProcessDebugInformation", status);
                 }
 
                 var debug = Marshal.PtrToStructure<DEBUG_BUFFER>(buffer);
                 var heapFlags = Marshal.PtrToStructure<RTL_HEAP_INFORMATION>(new IntPtr(buffer.ToInt64() + debug.HeapInformation.ToInt64() + 8)).Flags; // 8: RTL_PROCESS_HEAPS.NumberOfHeaps
 
                 Logger.Debug("Heap Flags: {flags:X}", heapFlags);
-                return (heapFlags & ~HEAP_GROWABLE) != 0;
+                if ((heapFlags & ~HEAP_GROWABLE) == 0)
+                    return DebuggerNotDetected();
+
+                return DebuggerDetected(new { Flags = heapFlags });
             }
             finally
             {

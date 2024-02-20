@@ -1,8 +1,6 @@
-﻿using System;
+﻿using AntiDebugLib.Native;
 
-using static AntiDebugLib.Native.NtDll;
-
-namespace AntiDebugLib.Check.Exploits
+namespace AntiDebugLib.Check.Handle.CloseHandle
 {
     /// <summary>
     /// <list type="bullet">
@@ -29,22 +27,24 @@ namespace AntiDebugLib.Check.Exploits
     /// </item>
     /// </list>
     /// </summary>
-    public class CloseHandleInvalidHandle : CheckBase
+    public class CloseHandleInvalidHandle : CloseHandleInvalidCheckBase
     {
         public override string Name => "Close Handle: kernel32!CloseHandle (invalid handle)";
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
+            var handle = GetRandomHandle();
             try
             {
-                NtClose((IntPtr)0x13371337L);
-                return false;
+                Logger.Debug("Trying to close random handle {handle:X}.", handle);
+                Kernel32.CloseHandle(handle);
+                return DebuggerNotDetected();
             }
             catch
             {
-                return true;
+                return DebuggerDetected(new { Handle = handle });
             }
         }
     }

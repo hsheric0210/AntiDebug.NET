@@ -19,14 +19,17 @@ namespace AntiDebugLib.Check.Timing
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             var prev = Environment.TickCount;
             Thread.Sleep(500);
 
             var delta = Environment.TickCount - prev;
             Logger.Debug("Time delta between 500ms-delayed Environment.TickCount call: {delta}", delta);
-            return delta < 500L;
+            if (delta < 500L)
+                return DebuggerDetected(new { Delta = delta });
+
+            return DebuggerNotDetected();
         }
     }
 }

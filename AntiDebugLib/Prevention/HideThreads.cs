@@ -16,29 +16,31 @@ namespace AntiDebugLib.Prevention
     /// </item>
     /// </list>
     /// </summary>
-    public class HideThreads : CheckBase
+    public class HideThreads : PreventionBase
     {
         public override string Name => "Hide threads from debugger";
 
-        public override CheckReliability Reliability => CheckReliability.Okay;
 
         private const uint THREAD_SET_INFORMATION = 0x0020;
 
         private const uint ThreadHideFromDebugger = 0x11; // THREADINFOCLASS
 
-        public override bool PreventActive()
+        public override PreventionResult PreventActive()
         {
+            var count = 0;
             foreach (ProcessThread thread in Process.GetCurrentProcess().Threads)
             {
                 using (var handle = OpenThread(THREAD_SET_INFORMATION, false, thread.Id))
                 {
                     var ntstatus = NtSetInformationThread(handle, ThreadHideFromDebugger, IntPtr.Zero, 0);
-                    if (ntstatus != 0)
+                    if (ntstatus == 0)
+                        count++;
+                    else
                         Logger.Error("Failed to hide thread {tid}. NTSTATUS {ntstatus}.", thread.Id, ntstatus);
                 }
             }
 
-            return true;
+            return Applied(new { Count = count });
         }
     }
 }

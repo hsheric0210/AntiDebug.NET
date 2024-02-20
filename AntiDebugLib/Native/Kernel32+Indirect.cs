@@ -67,6 +67,9 @@ namespace AntiDebugLib.Native
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         internal delegate uint DGetFullPathNameW(string lpPathName, uint bufferSize, StringBuilder buffer, IntPtr part);
 
+        [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+        internal delegate bool DVirtualProtect(IntPtr lpAdress, IntPtr dwSize, MemoryProtection flNewProtect, out MemoryProtection lpflOldProtect);
+
         #endregion
 
         #region Properties
@@ -107,6 +110,8 @@ namespace AntiDebugLib.Native
 
         internal static DGetFullPathNameW GetFullPathNameW { get; private set; }
 
+        internal static DVirtualProtect VirtualProtect { get; private set; }
+
         #endregion
 
         internal static void InitNatives()
@@ -131,6 +136,7 @@ namespace AntiDebugLib.Native
             GetModuleFileNameW = Marshal.GetDelegateForFunctionPointer<DGetModuleFileNameW>(MyGetProcAddress(kernel32, "GetModuleFileNameW"));
             CloseHandle = Marshal.GetDelegateForFunctionPointer<DCloseHandle>(MyGetProcAddress(kernel32, "CloseHandle"));
             GetFullPathNameW = Marshal.GetDelegateForFunctionPointer<DGetFullPathNameW>(MyGetProcAddress(kernel32, "GetFullPathNameW"));
+            VirtualProtect = Marshal.GetDelegateForFunctionPointer<DVirtualProtect>(MyGetProcAddress(kernel32, "VirtualProtect"));
         }
     }
 }

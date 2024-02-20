@@ -61,18 +61,26 @@ namespace AntiDebugLib.Check
             "vmnetadapter.sys", // vmware
         };
 
-        public override bool CheckPassive()
+        public override CheckResult CheckPassive()
         {
             foreach (var name in driverNames)
             {
-                if (File.Exists(Path.Combine(Environment.SystemDirectory, name)) || File.Exists(Path.Combine(Environment.SystemDirectory, "drivers", name)))
+                var path = Path.Combine(Environment.SystemDirectory, name);
+                if (File.Exists(path))
                 {
-                    Logger.Information("Bad module file {name} found.", name);
-                    return true;
+                    Logger.Information("Bad module file {name} found on system32.", name);
+                    return DebuggerDetected(new { Path = path });
+                }
+
+                path = Path.Combine(Environment.SystemDirectory, "drivers", name);
+                if (File.Exists(path))
+                {
+                    Logger.Information("Bad module file {name} found on drivers directory.", name);
+                    return DebuggerDetected(new { Path = path });
                 }
             }
 
-            return false;
+            return DebuggerNotDetected();
         }
     }
 }

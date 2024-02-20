@@ -5,8 +5,6 @@ namespace AntiDebugLib.Native
 {
     internal static partial class NativeDefs
     {
-        public const uint STATUS_INFO_LENGTH_MISMATCH = 0xC0000004;
-
         [StructLayout(LayoutKind.Sequential)]
         public struct CONTEXT
         {
@@ -75,15 +73,44 @@ namespace AntiDebugLib.Native
         public struct OBJECT_TYPE_INFORMATION
         {
             public UNICODE_STRING TypeName;
-            public uint TotalNumberOfHandles;
-            public uint TotalNumberOfObjects;
+            public int TotalNumberOfObjects;
+            public int TotalNumberOfHandles;
+            public int TotalPagedPoolUsage;
+            public int TotalNonPagedPoolUsage;
+            public int TotalNamePoolUsage;
+            public int TotalHandleTableUsage;
+            public int HighWaterNumberOfObjects;
+            public int HighWaterNumberOfHandles;
+            public int HighWaterPagedPoolUsage;
+            public int HighWaterNonPagedPoolUsage;
+            public int HighWaterNamePoolUsage;
+            public int HighWaterHandleTableUsage;
+            public int InvalidAttributes;
+            public GENERIC_MAPPING GenericMapping;
+            public int ValidAccessMask;
+            public byte SecurityRequired;
+            public byte MaintainHandleCount;
+            public int PoolType;
+            public int DefaultPagedPoolCharge;
+            public int DefaultNonPagedPoolCharge;
         }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct OBJECT_ALL_INFORMATION
         {
             public uint NumberOfObjects;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
             public OBJECT_TYPE_INFORMATION[] ObjectTypeInformation;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct GENERIC_MAPPING
+        {
+            private int GenericRead;
+            private int GenericWrite;
+            private int GenericExecute;
+            private int GenericAll;
         }
 
         // https://github.com/rrbranco/blackhat2012/blob/master/Csrc/fcall_examples/fcall_examples/defs.h
@@ -141,6 +168,21 @@ namespace AntiDebugLib.Native
             public fixed uint Reserved[5];
             public IntPtr Tags;
             public IntPtr Entries;
+        }
+
+        public enum MemoryProtection : uint
+        {
+            EXECUTE = 0x10,
+            EXECUTE_READ = 0x20,
+            EXECUTE_READWRITE = 0x40,
+            EXECUTE_WRITECOPY = 0x80,
+            NOACCESS = 0x01,
+            READONLY = 0x02,
+            READWRITE = 0x04,
+            WRITECOPY = 0x08,
+            GUARD_Modifierflag = 0x100,
+            NOCACHE_Modifierflag = 0x200,
+            WRITECOMBINE_Modifierflag = 0x400
         }
     }
 }

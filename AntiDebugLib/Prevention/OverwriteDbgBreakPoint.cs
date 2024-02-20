@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-
+﻿using AntiDebugLib.Native;
 using static AntiDebugLib.Native.Kernel32;
 
 namespace AntiDebugLib.Prevention
@@ -14,18 +13,16 @@ namespace AntiDebugLib.Prevention
     /// </item>
     /// </list>
     /// </summary>
-    public class OverwriteDbgBreakPoint : CheckBase
+    public class OverwriteDbgBreakPoint : FunctionOverwrite
     {
         public override string Name => "Neutralize ntdll!DbgBreakPoint";
 
-        public override CheckReliability Reliability => CheckReliability.Perfect;
-
-        public override bool PreventPassive()
+        public override PreventionResult PreventPassive()
         {
             var ntdll = GetModuleHandleA("ntdll.dll");
             var proc = GetProcAddress(ntdll, "DbgBreakPoint");
-            var instr = new byte[] { 0xC3 }; // RET
-            return WriteProcessMemory(Process.GetCurrentProcess().SafeHandle, proc, instr, 1, 0);
+            Logger.Debug("DbgBreakPoint address is {address}.", proc.ToHex());
+            return OverwriteFunction(proc, new byte[] { 0xC3 }); // RET
         }
     }
 }

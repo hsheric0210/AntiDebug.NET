@@ -4,7 +4,7 @@ using System.Text;
 
 using static AntiDebugLib.Native.Kernel32;
 
-namespace AntiDebugLib.Check.Exploits
+namespace AntiDebugLib.Check.Handle
 {
     /// <summary>
     /// <list type="bullet">
@@ -25,23 +25,25 @@ namespace AntiDebugLib.Check.Exploits
 
         public override CheckReliability Reliability => CheckReliability.Bad;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             var builder = new StringBuilder(260);
             if (GetModuleFileNameW(IntPtr.Zero, builder, 260) <= 0)
-                return false; // The path of myself is not available
+                return Win32Error("GetModuleFileNameW"); // The path of myself is not available
 
+            var path = builder.ToString();
             try
             {
-                Logger.Debug("Location of myself is {path}.", builder.ToString());
-                var stream = File.Open(builder.ToString(), FileMode.Open, FileAccess.Read, FileShare.None);
+                Logger.Debug("Location of myself is {path}.", path);
+                var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.None);
                 stream.Dispose();
-                return false;
+
+                return DebuggerNotDetected();
             }
             catch (Exception ex)
             {
                 Logger.Information(ex, "CreateFile() failed. (possible being debugged)");
-                return true; // CreateFile will return INVALID_IntPtr_VALUE
+                return DebuggerDetected(new { Exception = ex }); // CreateFile will return INVALID_IntPtr_VALUE
             }
         }
     }

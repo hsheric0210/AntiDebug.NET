@@ -1,9 +1,9 @@
-﻿using AntiDebugLib.Utils;
+﻿using AntiDebugLib.Native;
+using AntiDebugLib.Utils;
 using System;
 using System.Runtime.InteropServices;
-using static AntiDebugLib.Native.Kernel32;
 
-namespace AntiDebugLib.Check.Exploits
+namespace AntiDebugLib.Check.Handle.CloseHandle
 {
     /// <summary>
     /// <list type="bullet">
@@ -23,20 +23,20 @@ namespace AntiDebugLib.Check.Exploits
 
         const uint HANDLE_FLAG_PROTECT_FROM_CLOSE = 0x00000002u;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             var random = new Random();
-            var hMutex = CreateMutexA(IntPtr.Zero, false, StringUtils.RandomString(random.Next(15, 256), random));
-            if (!SetHandleInformation(hMutex, HANDLE_FLAG_PROTECT_FROM_CLOSE, HANDLE_FLAG_PROTECT_FROM_CLOSE))
+            var hMutex = Kernel32.CreateMutexA(IntPtr.Zero, false, StringUtils.RandomString(random.Next(15, 256), random));
+            if (!Kernel32.SetHandleInformation(hMutex, HANDLE_FLAG_PROTECT_FROM_CLOSE, HANDLE_FLAG_PROTECT_FROM_CLOSE))
             {
-                Logger.Warning("Failed to protect the handle {handle:X}. SetHandleInformation returned win32 error {errorcode}.", hMutex.ToInt64(), Marshal.GetLastWin32Error());
-                return false;
+                Logger.Warning("Failed to protect the handle {handle:X}. SetHandleInformation returned win32 error {errorcode}.", hMutex.ToHex(), Marshal.GetLastWin32Error());
+                return Win32Error("SetHandleInformation", new { Handle = hMutex });
             }
 
             var beingDebugged = false;
             try
             {
-                CloseHandle(hMutex);
+                Kernel32.CloseHandle(hMutex);
             }
             catch
             {
@@ -44,10 +44,10 @@ namespace AntiDebugLib.Check.Exploits
             }
 
             // Don't forget to clean up!
-            if (!SetHandleInformation(hMutex, HANDLE_FLAG_PROTECT_FROM_CLOSE, 0) || !CloseHandle(hMutex))
-                Logger.Warning("Failed to unprotect and close the handle {handle:X}. SetHandleInformation or CloseHandle returned win32 error {errorcode}.", hMutex.ToInt64(), Marshal.GetLastWin32Error());
+            if (!Kernel32.SetHandleInformation(hMutex, HANDLE_FLAG_PROTECT_FROM_CLOSE, 0) || !Kernel32.CloseHandle(hMutex))
+                Logger.Warning("Failed to unprotect and close the handle {handle:X}. SetHandleInformation or CloseHandle returned win32 error {errorcode}.", hMutex.ToHex(), Marshal.GetLastWin32Error());
 
-            return beingDebugged;
+            return MakeResult(beingDebugged);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace AntiDebugLib.Check.DebugFlags
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             // check if NtSetInformationThread is hooked by calling it with bogus parameters
             throw new NotImplementedException();

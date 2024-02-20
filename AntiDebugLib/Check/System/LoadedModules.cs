@@ -50,24 +50,24 @@ namespace AntiDebugLib.Check
             "wpespy.dll",       // WPE Pro
         };
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             foreach (var name in moduleNames)
             {
                 if (MyGetModuleHandle(name) != IntPtr.Zero)
                 {
                     Logger.Information("Bad module {name} is currently loaded to this process.", name);
-                    return true;
+                    return DebuggerDetected(new { Name = name });
                 }
             }
 
             if (MyGetProcAddress(MyGetModuleHandle("kernel32.dll"), "wine_get_unix_file_name") != IntPtr.Zero)
             {
                 Logger.Information("Wine export is detected.");
-                return true;
+                return DebuggerDetected(new { Name = "wine" });
             }
 
-            return false;
+            return DebuggerNotDetected();
         }
     }
 }

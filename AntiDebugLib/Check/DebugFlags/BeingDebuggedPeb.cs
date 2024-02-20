@@ -30,7 +30,6 @@ namespace AntiDebugLib.Check.DebugFlags
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckActive()
-            => _PEB.ParsePeb().BeingDebugged != 0;
+        public override CheckResult CheckActive() => MakeResult(_PEB.ParsePeb().BeingDebugged != 0);
     }
 }

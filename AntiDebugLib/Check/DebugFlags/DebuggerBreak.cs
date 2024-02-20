@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace AntiDebugLib.Check.DebugFlags
 {
@@ -15,16 +16,17 @@ namespace AntiDebugLib.Check.DebugFlags
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             try
             {
                 Debugger.Break();
-                return false;
+                return DebuggerNotDetected();
             }
-            catch
+            catch (Exception ex)
             {
-                return true;
+                Logger.Debug(ex, "Received exception.");
+                return DebuggerDetected(new { Exception = ex });
             }
         }
     }

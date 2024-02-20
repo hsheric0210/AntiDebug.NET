@@ -15,7 +15,7 @@ namespace AntiDebugLib.Check
 
         public override CheckReliability Reliability => CheckReliability.Great;
 
-        public override bool CheckPassive()
-            => new ManagementObjectSearcher("SELECT * FROM Win32_PortConnector").Get().Count == 0;
+        public override CheckResult CheckPassive()
+            => MakeResult(new ManagementObjectSearcher("SELECT * FROM Win32_PortConnector").Get().Count == 0);
     }
 }

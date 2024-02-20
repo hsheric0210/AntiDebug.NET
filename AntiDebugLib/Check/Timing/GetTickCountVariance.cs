@@ -15,12 +15,15 @@ namespace AntiDebugLib.Check.Timing
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             var start = GetTickCount();
             var delta = GetTickCount() - start;
             Logger.Debug("Time delta between simultaneous GetTickCount call: {delta}", delta);
-            return delta > 0x10;
+            if (delta > 0x10)
+                return DebuggerDetected(new { Delta = delta });
+
+            return DebuggerNotDetected();
         }
     }
 }

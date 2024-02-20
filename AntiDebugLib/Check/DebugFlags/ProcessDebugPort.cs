@@ -28,7 +28,7 @@ namespace AntiDebugLib.Check.DebugFlags
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             const uint ProcessDebugPort = 0x7; // https://ntdoc.m417z.com/processinfoclass
             var size = (uint)(sizeof(uint) * (Environment.Is64BitProcess ? 2 : 1));
@@ -36,11 +36,14 @@ namespace AntiDebugLib.Check.DebugFlags
             if (!NT_SUCCESS(status))
             {
                 Logger.Warning("Unable to query ProcessDebugPort process information. NtQueryInformationProcess returned NTSTATUS {status}.", status);
-                return false;
+                return NtError("NtQueryInformationProcess", status);
             }
 
             Logger.Debug("ProcessDebugPort is {value}.", port);
-            return port != 0;
+            if (port == 0)
+                return DebuggerNotDetected();
+
+            return DebuggerDetected(new { Port = port });
         }
     }
 }

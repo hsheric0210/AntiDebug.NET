@@ -3,6 +3,7 @@
 using static AntiDebugLib.Native.AntiDebugLibNative;
 using static AntiDebugLib.Native.NativeDefs;
 using System;
+using AntiDebugLib.Native;
 
 namespace AntiDebugLib.Check.DebugFlags
 {
@@ -33,25 +34,29 @@ namespace AntiDebugLib.Check.DebugFlags
 
         private const uint HEAP_GROWABLE = 0x00000002;
 
-        private bool Check(int flags, int forceFlags)
+        private CheckResult Check(int flags, int forceFlags)
         {
             Logger.Debug("Heap Flags: {flags:X}, ForceFlags: {forceFlags:X}", flags, forceFlags);
-            return (flags & ~HEAP_GROWABLE) != 0 || forceFlags != 0;
+            if ((flags & ~HEAP_GROWABLE) != 0 || forceFlags != 0)
+                return DebuggerDetected(new { Flags = flags, ForceFlags = forceFlags });
+
+            return DebuggerNotDetected();
         }
 
-        public override bool CheckActive()
+        public override CheckResult CheckActive()
         {
             if (Environment.Is64BitOperatingSystem && !Environment.Is64BitProcess) // WOW64
             {
                 var wow64heap = GetPeb() + 0x1030;
-                Logger.Debug("WOW64 _HEAP is located at {address:X}.", wow64heap.ToInt64());
+                Logger.Debug("WOW64 _HEAP is located at {address:X}.", wow64heap.ToHex());
 
-                if (Check(Marshal.ReadInt32(wow64heap + 0x40), Marshal.ReadInt32(wow64heap + 0x44)))
-                    return true;
+                var result = Check(Marshal.ReadInt32(wow64heap + 0x40), Marshal.ReadInt32(wow64heap + 0x44));
+                if (result.IsDetected)
+                    return result;
             }
 
             var heapAddress = _PEB.ParsePeb().ProcessHeap;
-            Logger.Debug("_HEAP address is located at {address:X}.", heapAddress.ToInt64());
+            Logger.Debug("_HEAP address is located at {address:X}.", heapAddress.ToHex());
             var flagsOffset = Environment.Is64BitProcess ? 0x70 : 0x40;
             var forceFlagsOffset = Environment.Is64BitProcess ? 0x74 : 0x44;
             return Check(Marshal.ReadInt32(heapAddress + flagsOffset), Marshal.ReadInt32(heapAddress + forceFlagsOffset));

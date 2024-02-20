@@ -23,7 +23,7 @@ namespace AntiDebugLib.Check
 
         private const uint SystemKernelDebuggerInformation = 0x23;
 
-        public override bool CheckPassive()
+        public override CheckResult CheckPassive()
         {
             var KernelDebugInfo = new SYSTEM_KERNEL_DEBUGGER_INFORMATION
             {
@@ -35,17 +35,17 @@ namespace AntiDebugLib.Check
             if (!NT_SUCCESS(status))
             {
                 Logger.Warning("Unable to query SystemKernelDebuggerInformation system information. NtQuerySystemInformation returned NTSTATUS {status}.", status);
-                return false;
+                NtError("NtQuerySystemInformation", status);
             }
             var expectedReturnLength = (uint)Marshal.SizeOf(KernelDebugInfo);
             if (returnLength != expectedReturnLength)
             {
                 Logger.Warning("Return length mismatched. Expected {expected}, got {actual}.", expectedReturnLength, returnLength);
-                return true;
+                return DebuggerDetected(new { Expected = expectedReturnLength, Actual = returnLength });
             }
 
             Logger.Debug("KernelDebuggerEnabled = {enabled}, KernelDebuggerNotPresent = {notpresent}", KernelDebugInfo.KernelDebuggerEnabled, KernelDebugInfo.KernelDebuggerNotPresent);
-            return KernelDebugInfo.KernelDebuggerEnabled || !KernelDebugInfo.KernelDebuggerNotPresent;
+            return MakeResult(KernelDebugInfo.KernelDebuggerEnabled || !KernelDebugInfo.KernelDebuggerNotPresent);
         }
     }
 }

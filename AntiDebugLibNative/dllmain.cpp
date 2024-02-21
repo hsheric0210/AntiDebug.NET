@@ -12,7 +12,7 @@ extern "C" {
     // Feel free to rename this function, but I'd recommend to use 'RenameNativeFunctions.ps1'.
     // (It will automatically find markers and rename function names in both C++ and C# side)
 
-    DLLEXPORT ULONGLONG WINAPI /*<c_entrypoint>*/TCA43960234689/*</c_entrypoint>*/()
+    DLLEXPORT ULONGLONG WINAPI /*<c_entrypoint>*/AD43568293496/*</c_entrypoint>*/()
     {
         ULONGLONG value = 0ULL;
         UINT16 i = 0;
@@ -45,7 +45,7 @@ extern "C" {
         return value;
     }
 
-    DLLEXPORT ULONG_PTR WINAPI /*<c_getpeb>*/TCA5682394023/*</c_getpeb>*/()
+    DLLEXPORT ULONG_PTR WINAPI /*<c_getpeb>*/AD4567348905025/*</c_getpeb>*/()
     {
         return GetPEB();
     }

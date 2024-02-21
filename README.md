@@ -19,10 +19,12 @@ You should download the project and then manually compile it. Then copy the 'Ant
 
 For those who worried about getting caught by native export name strings: Use `RenameNativeExports.ps1`; it will help you to rename native dll export names.
 
+You can also edit the native dll XOR encryption key with this tool.
+
 Usage:
 
-1. Open the powershell, set cwd to this project solution folder. (use `pushd` command to set cwd to the folder where `RenameNativeExports.ps1` file is located)
-2. Enter: `.\RenameNativeExports.ps1`
+1. Open the powershell, set cwd to this project solution folder. (use `pushd` command to set cwd to the folder where `ChangeMagics.ps1` file is located)
+2. Enter: `.\ChangeMagics.ps1`
 3. Enter the function names you want.
 4. Don't forget to re-build the solution!
 

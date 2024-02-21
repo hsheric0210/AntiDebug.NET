@@ -44,7 +44,7 @@ function Rename-PsCommentMarker {
     )
 
     $begin = $Data.IndexOf("<#$Marker#>") + "<#$Marker#>".Length + $TrimLength
-    $end = $Data.IndexOf("/*<#/$Marker#>") - $TrimLength
+    $end = $Data.IndexOf("<#/$Marker#>") - $TrimLength
     $Data = $Data.Substring(0, $begin) + $Value + $Data.Substring($end)
 
     return $Data
@@ -68,8 +68,8 @@ $cpp_cnt = Rename-CommentMarker -Data $cpp_cnt -Marker "c_entrypoint" -Value $en
 $cs_cnt = Rename-CommentMarker -Data $cs_cnt -Marker "cs_getpeb" -Value $pebName -TrimLength 1
 $cpp_cnt = Rename-CommentMarker -Data $cpp_cnt -Marker "c_getpeb" -Value $pebName -TrimLength 0
 
-$cs_cnt = Rename-CommentMarker -Data $cs_cnt -Marker "dll_crypt_magic" -Value $pebName -TrimLength 1
-$ps_cnt = Rename-PsCommentMarker -Data $ps_cnt -Marker "dll_crypt_magic" -Value $pebName -TrimLength 1
+$cs_cnt = Rename-CommentMarker -Data $cs_cnt -Marker "dll_crypt_magic" -Value $xorEncKey -TrimLength 1
+$ps_cnt = Rename-PsCommentMarker -Data $ps_cnt -Marker "dll_crypt_magic" -Value $xorEncKey -TrimLength 1
 
 [System.IO.File]::WriteAllText($cs, $cs_cnt)
 [System.IO.File]::WriteAllText($cpp, $cpp_cnt)

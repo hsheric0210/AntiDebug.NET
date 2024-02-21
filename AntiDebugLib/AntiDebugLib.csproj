@@ -168,9 +168,9 @@
     <Folder Include="Check\Memory\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DllFromMemorySafer\DllFromMemorySafer.csproj">
+    <ProjectReference Include="..\DllFromMemorySafer\EvilMemoryModule.csproj">
       <Project>{f69097de-623f-438b-bdf4-26534ee3b47e}</Project>
-      <Name>DllFromMemorySafer</Name>
+      <Name>EvilMemoryModule</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

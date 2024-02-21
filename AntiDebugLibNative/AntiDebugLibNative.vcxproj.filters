@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+    <None Include="copy-dllfile-encrypted.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="hwbrk.txt" />

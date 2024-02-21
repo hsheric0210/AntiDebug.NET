@@ -1,6 +1,6 @@
 ﻿using System;
 
-using static AntiDebugLib.Native.AntiDebugLibNative;
+using static AntiDebugLib.Native.Kernel32;
 
 namespace AntiDebugLib.Check
 {
@@ -54,14 +54,14 @@ namespace AntiDebugLib.Check
         {
             foreach (var name in moduleNames)
             {
-                if (MyGetModuleHandle(name) != IntPtr.Zero)
+                if (DInvoke.GetModuleHandle(name) != IntPtr.Zero)
                 {
                     Logger.Information("Bad module {name} is currently loaded to this process.", name);
                     return DebuggerDetected(new { Name = name });
                 }
             }
 
-            if (MyGetProcAddress(MyGetModuleHandle("kernel32.dll"), "wine_get_unix_file_name") != IntPtr.Zero)
+            if (DInvoke.GetProcAddress(DInvoke.GetModuleHandle("kernel32.dll"), "wine_get_unix_file_name") != IntPtr.Zero)
             {
                 Logger.Information("Wine export is detected.");
                 return DebuggerDetected(new { Name = "wine" });

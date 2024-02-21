@@ -1,12 +1,28 @@
 #include "pch.h"
 #include "GetProcAddressSilent.h"
 
+// https://gist.github.com/Wack0/849348f9d4f3a73dac864a556e9372a5
 ULONG_PTR GetPEB()
 {
-#ifdef _WIN64
+#ifdef _M_X64
     return __readgsqword(0x60);
-#else
+#elif _M_IX86
     return __readfsdword(0x30);
+#elif _M_ARM
+    return *(ULONG_PTR *)(_MoveFromCoprocessor(15, 0, 13, 0, 2) + 0x30);
+#elif _M_ARM64
+    return *(ULONG_PTR *)(__getReg(18) + 0x60); // TEB in x18
+#elif _M_IA64
+    return *(ULONG_PTR *)((size_t)_rdteb() + 0x60); // TEB in r13
+#elif _M_ALPHA
+    return *(ULONG_PTR *)((size_t)_rdteb() + 0x30); // TEB pointer returned from callpal 0xAB
+#elif _M_MIPS
+    return *(ULONG_PTR *)((*(size_t *)(0x7ffff030)) + 0x30); // TEB pointer located at 0x7ffff000 (PCR in user-mode) + 0x30
+#elif _M_PPC
+    // winnt.h of the period uses __builtin_get_gpr13() or __gregister_get(13) depending on _MSC_VER
+    return *(ULONG_PTR *)(__gregister_get(13) + 0x30); // TEB in r13
+#else
+#error "This architecture is currently unsupported"
 #endif
 }
 

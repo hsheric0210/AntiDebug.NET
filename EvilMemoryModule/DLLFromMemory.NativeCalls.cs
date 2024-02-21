@@ -40,75 +40,78 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 public partial class DLLFromMemory
 {
     class NativeCalls
     {
-        public const ushort IMAGE_DOS_SIGNATURE = 0x5A4D;
-        public const uint IMAGE_NT_SIGNATURE = 0x00004550;
-        public const uint IMAGE_FILE_MACHINE_I386 = 0x014c;
-        public const uint IMAGE_FILE_MACHINE_AMD64 = 0x8664;
-        public const uint PAGE_NOCACHE = 0x200;
-        public const uint IMAGE_SCN_CNT_INITIALIZED_DATA = 0x00000040;
-        public const uint IMAGE_SCN_CNT_UNINITIALIZED_DATA = 0x00000080;
-        public const uint IMAGE_SCN_MEM_DISCARDABLE = 0x02000000;
-        public const uint IMAGE_SCN_MEM_NOT_CACHED = 0x04000000;
-        public const uint IMAGE_FILE_DLL = 0x2000;
+        internal const ushort IMAGE_DOS_SIGNATURE = 0x5A4D;
+        internal const uint IMAGE_NT_SIGNATURE = 0x00004550;
+        internal const uint IMAGE_FILE_MACHINE_I386 = 0x014c;
+        internal const uint IMAGE_FILE_MACHINE_AMD64 = 0x8664;
+        internal const uint PAGE_NOCACHE = 0x200;
+        internal const uint IMAGE_SCN_CNT_INITIALIZED_DATA = 0x00000040;
+        internal const uint IMAGE_SCN_CNT_UNINITIALIZED_DATA = 0x00000080;
+        internal const uint IMAGE_SCN_MEM_DISCARDABLE = 0x02000000;
+        internal const uint IMAGE_SCN_MEM_NOT_CACHED = 0x04000000;
+        internal const uint IMAGE_FILE_DLL = 0x2000;
 
-        public delegate IntPtr DVirtualAlloc(IntPtr lpAddress, UIntPtr dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
-        public delegate IntPtr DLoadLibrary(IntPtr lpFileName);
-        public delegate bool DVirtualFree(IntPtr lpAddress, IntPtr dwSize, AllocationType dwFreeType);
-        public delegate bool DVirtualProtect(IntPtr lpAddress, IntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
-        public delegate bool DFreeLibrary(IntPtr hModule);
-        public delegate void DGetNativeSystemInfo(out SYSTEM_INFO lpSystemInfo);
+        internal delegate IntPtr DVirtualAlloc(IntPtr lpAddress, UIntPtr dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
+        internal delegate IntPtr DLoadLibrary(IntPtr lpFileName);
+        internal delegate bool DVirtualFree(IntPtr lpAddress, IntPtr dwSize, AllocationType dwFreeType);
+        internal delegate bool DVirtualProtect(IntPtr lpAddress, IntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+        internal delegate bool DFreeLibrary(IntPtr hModule);
+        internal delegate void DGetNativeSystemInfo(out SYSTEM_INFO lpSystemInfo);
+        internal delegate IntPtr DGetProcAddress(IntPtr hModule, IntPtr procName);
 
         static bool nativeInitialized;
-        public static DLoadLibrary LoadLibrary;
-        public static DFreeLibrary FreeLibrary;
-        public static DVirtualAlloc VirtualAlloc;
-        public static DVirtualFree VirtualFree;
-        public static DVirtualProtect VirtualProtect;
-        public static DGetNativeSystemInfo GetNativeSystemInfo;
-
-        [DllImport("msvcrt.dll", EntryPoint = "memset", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        internal static extern IntPtr MemSet(IntPtr dest, int c, UIntPtr count);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
-        internal static extern IntPtr GetProcAddress(IntPtr hModule, IntPtr procName);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
-        internal static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern IntPtr GetModuleHandle(string lpModuleName);
+        internal static DLoadLibrary LoadLibrary;
+        internal static DFreeLibrary FreeLibrary;
+        internal static DVirtualAlloc VirtualAlloc;
+        internal static DVirtualFree VirtualFree;
+        internal static DVirtualProtect VirtualProtect;
+        internal static DGetNativeSystemInfo GetNativeSystemInfo;
+        internal static DGetProcAddress GetProcAddress;
 
         // Equivalent to the IMAGE_FIRST_SECTION macro
-        public static IntPtr IMAGE_FIRST_SECTION(IntPtr pNTHeader, ushort ntheader_FileHeader_SizeOfOptionalHeader) => PtrAdd(pNTHeader, Of.IMAGE_NT_HEADERS_OptionalHeader + ntheader_FileHeader_SizeOfOptionalHeader);
+        internal static IntPtr IMAGE_FIRST_SECTION(IntPtr pNTHeader, ushort ntheader_FileHeader_SizeOfOptionalHeader) => PtrAdd(pNTHeader, Of.IMAGE_NT_HEADERS_OptionalHeader + ntheader_FileHeader_SizeOfOptionalHeader);
 
         // Equivalent to the IMAGE_FIRST_SECTION macro
-        public static int IMAGE_FIRST_SECTION(int lfanew, ushort ntheader_FileHeader_SizeOfOptionalHeader) => lfanew + Of.IMAGE_NT_HEADERS_OptionalHeader + ntheader_FileHeader_SizeOfOptionalHeader;
+        internal static int IMAGE_FIRST_SECTION(int lfanew, ushort ntheader_FileHeader_SizeOfOptionalHeader) => lfanew + Of.IMAGE_NT_HEADERS_OptionalHeader + ntheader_FileHeader_SizeOfOptionalHeader;
 
         // Equivalent to the IMAGE_ORDINAL32/64 macros
-        public static IntPtr IMAGE_ORDINAL(IntPtr ordinal) => (IntPtr)(int)(unchecked((ulong)ordinal.ToInt64()) & 0xffff);
+        internal static IntPtr IMAGE_ORDINAL(IntPtr ordinal) => (IntPtr)(int)(unchecked((ulong)ordinal.ToInt64()) & 0xffff);
 
         // Equivalent to the IMAGE_SNAP_BY_ORDINAL32/64 macro
-        public static bool IMAGE_SNAP_BY_ORDINAL(IntPtr ordinal) => IntPtr.Size == 8 ? (ordinal.ToInt64() < 0) : (ordinal.ToInt32() < 0);
+        internal static bool IMAGE_SNAP_BY_ORDINAL(IntPtr ordinal) => IntPtr.Size == 8 ? (ordinal.ToInt64() < 0) : (ordinal.ToInt32() < 0);
 
         internal static void InitNatives()
         {
             if (nativeInitialized)
                 return;
 
-            var kernel32 = GetModuleHandle("kernel32.dll");
-            var llaAddr = GetProcAddress(kernel32, "LoadLibraryA");
-            LoadLibrary = Marshal.GetDelegateForFunctionPointer<DLoadLibrary>(llaAddr);
-            FreeLibrary = Marshal.GetDelegateForFunctionPointer<DFreeLibrary>(GetProcAddress(kernel32, "FreeLibrary"));
-            VirtualAlloc = Marshal.GetDelegateForFunctionPointer<DVirtualAlloc>(GetProcAddress(kernel32, "VirtualAlloc"));
-            VirtualFree = Marshal.GetDelegateForFunctionPointer<DVirtualFree>(GetProcAddress(kernel32, "VirtualFree"));
-            VirtualProtect = Marshal.GetDelegateForFunctionPointer<DVirtualProtect>(GetProcAddress(kernel32, "VirtualProtect"));
-            GetNativeSystemInfo = Marshal.GetDelegateForFunctionPointer<DGetNativeSystemInfo>(GetProcAddress(kernel32, "GetNativeSystemInfo"));
+            var kernel32 = DInvoke.GetModuleHandle("kernel32.dll");
+            var exports = new string[] {
+                 "LoadLibraryA",
+                 "FreeLibrary",
+                 "VirtualAlloc",
+                 "VirtualFree",
+                 "VirtualProtect",
+                 "GetNativeSystemInfo",
+                 "GetProcAddress",
+            };
+
+            var addresses = DInvoke.GetProcAddressBatch(kernel32, exports, true);
+            LoadLibrary = Marshal.GetDelegateForFunctionPointer<DLoadLibrary>(addresses[0]);
+            FreeLibrary = Marshal.GetDelegateForFunctionPointer<DFreeLibrary>(addresses[1]);
+            VirtualAlloc = Marshal.GetDelegateForFunctionPointer<DVirtualAlloc>(addresses[2]);
+            VirtualFree = Marshal.GetDelegateForFunctionPointer<DVirtualFree>(addresses[3]);
+            VirtualProtect = Marshal.GetDelegateForFunctionPointer<DVirtualProtect>(addresses[4]);
+            GetNativeSystemInfo = Marshal.GetDelegateForFunctionPointer<DGetNativeSystemInfo>(addresses[5]);
+            GetProcAddress = Marshal.GetDelegateForFunctionPointer<DGetProcAddress>(addresses[6]);
             nativeInitialized = true;
         }
     }

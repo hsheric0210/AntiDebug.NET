@@ -87,7 +87,7 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY /Y "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)$(TargetExt)*"</Command>
+      <Command>powershell -noninteractive -executionpolicy unrestricted -command "&amp;{ &amp;'$(ProjectDir)copy-encrypted.ps1' '$(OutDir)$(TargetName)$(TargetExt)' '$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)' }"</Command>
       <Message>Copy output DLL to AntiDebugLib Resources directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -111,7 +111,7 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY /Y "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)$(TargetExt)*"</Command>
+      <Command>powershell -noninteractive -executionpolicy unrestricted -command "&amp;{ &amp;'$(ProjectDir)copy-encrypted.ps1' '$(OutDir)$(TargetName)$(TargetExt)' '$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)' }"</Command>
       <Message>Copy output DLL to AntiDebugLib Resources directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -131,7 +131,7 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY /Y "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)$(TargetExt)*"</Command>
+      <Command>powershell -noninteractive -executionpolicy unrestricted -command "&amp;{ &amp;'$(ProjectDir)copy-encrypted.ps1' '$(OutDir)$(TargetName)$(TargetExt)' '$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)' }"</Command>
       <Message>Copy output DLL to AntiDebugLib Resources directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -155,7 +155,7 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY /Y "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)$(TargetExt)*"</Command>
+      <Command>powershell -noninteractive -executionpolicy unrestricted -command "&amp;{ &amp;'$(ProjectDir)copy-encrypted.ps1' '$(OutDir)$(TargetName)$(TargetExt)' '$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)' }"</Command>
       <Message>Copy output DLL to AntiDebugLib Resources directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -193,6 +193,7 @@
       <ExcludedFromBuild Condition="'$(Platform)'=='x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Platform)'=='Win32'">true</ExcludedFromBuild>
     </MASM>
+    <None Include="copy-dllfile-encrypted.ps1" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

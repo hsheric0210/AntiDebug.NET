@@ -41,9 +41,9 @@
 
 using System;
 
-public class DllException : Exception
+public class DLLException : Exception
 {
-    public DllException() : base() { }
-    public DllException(string message) : base(message) { }
-    public DllException(string message, Exception innerException) : base(message, innerException) { }
+    public DLLException() : base() { }
+    public DLLException(string message) : base(message) { }
+    public DLLException(string message, Exception innerException) : base(message, innerException) { }
 }

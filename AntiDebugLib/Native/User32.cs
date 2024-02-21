@@ -34,11 +34,17 @@ namespace AntiDebugLib.Native
 
         internal static void InitNatives()
         {
-            var user32 = LoadLibrary("user32.dll"); // user32 is not loaded by default
+            var user32 = LoadLibraryW("user32.dll"); // user32 is not loaded by default
+            var exports = new string[] {
+                "GetForegroundWindow",
+                "GetWindowTextLengthA",
+                "GetWindowTextA",
+            };
 
-            GetForegroundWindow = Marshal.GetDelegateForFunctionPointer<DGetForegroundWindow>(MyGetProcAddress(user32, "GetForegroundWindow"));
-            GetWindowTextLengthA = Marshal.GetDelegateForFunctionPointer<DGetWindowTextLengthA>(MyGetProcAddress(user32, "GetWindowTextLengthA"));
-            GetWindowTextA = Marshal.GetDelegateForFunctionPointer<DGetWindowTextA>(MyGetProcAddress(user32, "GetWindowTextA"));
+            var addrs = DInvoke.GetProcAddressBatch(user32, exports, true);
+            GetForegroundWindow = Marshal.GetDelegateForFunctionPointer<DGetForegroundWindow>(addrs[0]);
+            GetWindowTextLengthA = Marshal.GetDelegateForFunctionPointer<DGetWindowTextLengthA>(addrs[1]);
+            GetWindowTextA = Marshal.GetDelegateForFunctionPointer<DGetWindowTextA>(addrs[2]);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace AntiDebugLib.Check.Handle
             var lib = IntPtr.Zero;
             try
             {
-                lib = LoadLibrary(path);
+                lib = LoadLibraryW(path);
                 Logger.Debug("LoadLibrary'd the binary {path} to {address:X}.", path, lib.ToHex());
 
                 var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.None); // Open exclusively

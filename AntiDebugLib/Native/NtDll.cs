@@ -89,22 +89,35 @@ namespace AntiDebugLib.Native
 
         internal static void InitNatives()
         {
-            var ntdll = MyGetModuleHandle("ntdll.dll");
+            var ntdll = DInvoke.GetModuleHandle("ntdll.dll", true);
+            var exports = new string[] {
+                "NtClose",
+                "NtSetInformationThread",
+                "NtQueryInformationProcess",
+                "NtQuerySystemInformation",
+                "CsrGetProcessId",
+                "NtQueryObject",
+                "RtlCreateQueryDebugBuffer",
+                "RtlQueryProcessHeapInformation",
+                "RtlQueryProcessDebugInformation",
+                "RtlDestroyQueryDebugBuffer",
+            };
 
-            NtClose = Marshal.GetDelegateForFunctionPointer<DNtClose>(MyGetProcAddress(ntdll, "NtClose"));
-            NtSetInformationThread = Marshal.GetDelegateForFunctionPointer<DNtSetInformationThread>(MyGetProcAddress(ntdll, "NtSetInformationThread"));
-            NtQueryInformationProcess_uint = Marshal.GetDelegateForFunctionPointer<DNtQueryInformationProcess_uint>(MyGetProcAddress(ntdll, "NtQueryInformationProcess"));
-            NtQueryInformationProcess_IntPtr = Marshal.GetDelegateForFunctionPointer<DNtQueryInformationProcess_IntPtr>(MyGetProcAddress(ntdll, "NtQueryInformationProcess"));
-            NtQueryInformationProcess_ProcessBasicInfo = Marshal.GetDelegateForFunctionPointer<DNtQueryInformationProcess_ProcessBasicInfo>(MyGetProcAddress(ntdll, "NtQueryInformationProcess"));
-            NtQuerySystemInformation_CodeIntegrityInfo = Marshal.GetDelegateForFunctionPointer<DNtQuerySystemInformation_CodeIntegrityInfo>(MyGetProcAddress(ntdll, "NtQuerySystemInformation"));
-            NtQuerySystemInformation_KernelDebuggerInfo = Marshal.GetDelegateForFunctionPointer<DNtQuerySystemInformation_KernelDebuggerInfo>(MyGetProcAddress(ntdll, "NtQuerySystemInformation"));
-            CsrGetProcessId = Marshal.GetDelegateForFunctionPointer<DCsrGetProcessId>(MyGetProcAddress(ntdll, "CsrGetProcessId"));
-            NtQueryObject_ref = Marshal.GetDelegateForFunctionPointer<DNtQueryObject_ref>(MyGetProcAddress(ntdll, "NtQueryObject"));
-            NtQueryObject_IntPtr = Marshal.GetDelegateForFunctionPointer<DNtQueryObject_IntPtr>(MyGetProcAddress(ntdll, "NtQueryObject"));
-            RtlCreateQueryDebugBuffer = Marshal.GetDelegateForFunctionPointer<DRtlCreateQueryDebugBuffer>(MyGetProcAddress(ntdll, "RtlCreateQueryDebugBuffer"));
-            RtlQueryProcessHeapInformation = Marshal.GetDelegateForFunctionPointer<DRtlQueryProcessHeapInformation>(MyGetProcAddress(ntdll, "RtlQueryProcessHeapInformation"));
-            RtlQueryProcessDebugInformation = Marshal.GetDelegateForFunctionPointer<DRtlQueryProcessDebugInformation>(MyGetProcAddress(ntdll, "RtlQueryProcessDebugInformation"));
-            RtlDestroyQueryDebugBuffer = Marshal.GetDelegateForFunctionPointer<DRtlDestroyQueryDebugBuffer>(MyGetProcAddress(ntdll, "RtlDestroyQueryDebugBuffer"));
+            var addrs = DInvoke.GetProcAddressBatch(ntdll, exports, true);
+            NtClose = Marshal.GetDelegateForFunctionPointer<DNtClose>(addrs[0]);
+            NtSetInformationThread = Marshal.GetDelegateForFunctionPointer<DNtSetInformationThread>(addrs[1]);
+            NtQueryInformationProcess_uint = Marshal.GetDelegateForFunctionPointer<DNtQueryInformationProcess_uint>(addrs[2]);
+            NtQueryInformationProcess_IntPtr = Marshal.GetDelegateForFunctionPointer<DNtQueryInformationProcess_IntPtr>(addrs[2]);
+            NtQueryInformationProcess_ProcessBasicInfo = Marshal.GetDelegateForFunctionPointer<DNtQueryInformationProcess_ProcessBasicInfo>(addrs[2]);
+            NtQuerySystemInformation_CodeIntegrityInfo = Marshal.GetDelegateForFunctionPointer<DNtQuerySystemInformation_CodeIntegrityInfo>(addrs[3]);
+            NtQuerySystemInformation_KernelDebuggerInfo = Marshal.GetDelegateForFunctionPointer<DNtQuerySystemInformation_KernelDebuggerInfo>(addrs[3]);
+            CsrGetProcessId = Marshal.GetDelegateForFunctionPointer<DCsrGetProcessId>(addrs[4]);
+            NtQueryObject_ref = Marshal.GetDelegateForFunctionPointer<DNtQueryObject_ref>(addrs[5]);
+            NtQueryObject_IntPtr = Marshal.GetDelegateForFunctionPointer<DNtQueryObject_IntPtr>(addrs[5]);
+            RtlCreateQueryDebugBuffer = Marshal.GetDelegateForFunctionPointer<DRtlCreateQueryDebugBuffer>(addrs[6]);
+            RtlQueryProcessHeapInformation = Marshal.GetDelegateForFunctionPointer<DRtlQueryProcessHeapInformation>(addrs[7]);
+            RtlQueryProcessDebugInformation = Marshal.GetDelegateForFunctionPointer<DRtlQueryProcessDebugInformation>(addrs[8]);
+            RtlDestroyQueryDebugBuffer = Marshal.GetDelegateForFunctionPointer<DRtlDestroyQueryDebugBuffer>(addrs[9]);
         }
     }
 }

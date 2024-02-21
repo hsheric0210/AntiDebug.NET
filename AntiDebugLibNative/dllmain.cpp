@@ -45,16 +45,6 @@ extern "C" {
         return value;
     }
 
-    DLLEXPORT ULONG_PTR WINAPI /*<c_getmodulehandle>*/TCA590674302/*</c_getmodulehandle>*/(LPCWSTR name)
-    {
-        return GetModu1eH4ndle(name);
-    }
-
-    DLLEXPORT ULONG_PTR WINAPI /*<c_getprocaddress>*/TCA4586298345/*</c_getprocaddress>*/(ULONG_PTR base, LPCSTR name)
-    {
-        return (ULONG_PTR)GetPr0cAddr3ss(base, name);
-    }
-
     DLLEXPORT ULONG_PTR WINAPI /*<c_getpeb>*/TCA5682394023/*</c_getpeb>*/()
     {
         return GetPEB();

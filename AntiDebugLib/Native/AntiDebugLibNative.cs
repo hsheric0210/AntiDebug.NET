@@ -6,34 +6,18 @@ namespace AntiDebugLib.Native
 {
     internal static class AntiDebugLibNative
     {
+        private const string EncryptionMagic = /*<dll_crypt_magic>*/"https://github.com/hsheric0210/AntiDebug.NET"/*</dll_crypt_magic>*/; // only use ascii chars
+
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         internal delegate ulong DMyEntryPoint();
-
-        [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-        internal delegate IntPtr DMyGetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
-
-        [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode)]
-        internal delegate IntPtr DMyGetModuleHandle([MarshalAs(UnmanagedType.LPWStr)] string moduleName);
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         internal delegate IntPtr DMyGetPeb();
 
         private static DMyEntryPoint pfnMyEntryPoint;
-        private static DMyGetProcAddress pfnMyGetProcAddress;
-        private static DMyGetModuleHandle pfnMyGetModuleHandle;
         private static DMyGetPeb pfnMyGetPeb;
 
         internal static ulong DoNativeChecks() => pfnMyEntryPoint();
-
-        internal static IntPtr MyGetProcAddress(IntPtr dllBase, string procName)
-        {
-            if (dllBase == IntPtr.Zero)
-                throw new ArgumentException("dllBase is zero", nameof(dllBase));
-
-            return pfnMyGetProcAddress(dllBase, procName);
-        }
-
-        internal static IntPtr MyGetModuleHandle(string dllName) => pfnMyGetModuleHandle(dllName);
 
         internal static IntPtr GetPeb() => pfnMyGetPeb();
 
@@ -47,13 +31,24 @@ namespace AntiDebugLib.Native
             return '_' + name + '@' + paramSize; // Example: _MyFunctionName@0
         }
 
+        private static byte[] Decrypt(byte[] encrypted)
+        {
+            var decrypted = new byte[encrypted.Length];
+            for (int i = 0, j = 0; i < encrypted.Length; i++)
+            {
+                decrypted[i] = (byte)(encrypted[i] ^ EncryptionMagic[j++]);
+                if (j >= EncryptionMagic.Length)
+                    j = 0;
+            }
+            return decrypted;
+        }
+
         internal static void Init()
         {
             AntiDebug.Logger.Information("Will use {bit}-bit native library.", Environment.Is64BitProcess ? 64 : 32);
-            nativeModule = new DLLFromMemory(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
+            var dll = Decrypt(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
+            nativeModule = new DLLFromMemory(dll);
             pfnMyEntryPoint = nativeModule.GetDelegateFromFuncName<DMyEntryPoint>(DecorateFunctionName(/*<cs_entrypoint>*/"TCA43960234689"/*</cs_entrypoint>*/, 0));
-            pfnMyGetProcAddress = nativeModule.GetDelegateFromFuncName<DMyGetProcAddress>(DecorateFunctionName(/*<cs_getprocaddress>*/"TCA4586298345"/*</cs_getprocaddress>*/, 8));
-            pfnMyGetModuleHandle = nativeModule.GetDelegateFromFuncName<DMyGetModuleHandle>(DecorateFunctionName(/*<cs_getmodulehandle>*/"TCA590674302"/*</cs_getmodulehandle>*/, 4));
             pfnMyGetPeb = nativeModule.GetDelegateFromFuncName<DMyGetPeb>(DecorateFunctionName(/*<cs_getpeb>*/"TCA5682394023"/*</cs_getpeb>*/, 0));
 
             // initialize indirect calls

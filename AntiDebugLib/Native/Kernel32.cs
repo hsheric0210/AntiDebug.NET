@@ -71,6 +71,15 @@ namespace AntiDebugLib.Native
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         internal delegate bool DVirtualProtect(IntPtr lpAdress, IntPtr dwSize, MemoryProtection flNewProtect, out MemoryProtection lpflOldProtect);
 
+        [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode, SetLastError = true)]
+        internal delegate IntPtr DLoadLibraryW(string lpFileName);
+
+        [UnmanagedFunctionPointer(CallingConvention.Winapi, SetLastError = true)]
+        internal delegate IntPtr DGetProcAddress(IntPtr ModuleHandle, string Function);
+
+        [UnmanagedFunctionPointer(CallingConvention.Winapi, SetLastError = true)]
+        internal delegate bool DFreeLibrary(IntPtr hModule);
+
         #endregion
 
         #region Properties
@@ -113,31 +122,65 @@ namespace AntiDebugLib.Native
 
         internal static DVirtualProtect VirtualProtect { get; private set; }
 
+        internal static DLoadLibraryW LoadLibraryW { get; private set; }
+
+        internal static DGetProcAddress GetProcAddress { get; private set; }
+
+        internal static DFreeLibrary FreeLibrary { get; private set; }
+
         #endregion
 
         internal static void InitNatives()
         {
-            var kernel32 = MyGetModuleHandle("kernel32.dll");
+            var kernel32 = DInvoke.GetModuleHandle("kernel32.dll", true);
+            var exports = new string[] {
+                "SetHandleInformation",
+                "CreateMutexA",
+                "IsDebuggerPresent",
+                "CheckRemoteDebuggerPresent",
+                "WriteProcessMemory",
+                "OpenThread",
+                "GetTickCount",
+                "OutputDebugStringA",
+                "GetCurrentThread",
+                "GetThreadContext",
+                "QueryFullProcessImageNameA",
+                "IsProcessCritical",
+                "GetModuleHandleA",
+                "OpenProcess",
+                "CreateFileW",
+                "GetModuleFileNameW",
+                "CloseHandle",
+                "GetFullPathNameW",
+                "VirtualProtect",
+                "LoadLibraryW",
+                "GetProcAddress",
+                "FreeLibrary",
+            };
 
-            SetHandleInformation = Marshal.GetDelegateForFunctionPointer<DSetHandleInformation>(MyGetProcAddress(kernel32, "SetHandleInformation"));
-            CreateMutexA = Marshal.GetDelegateForFunctionPointer<DCreateMutexA>(MyGetProcAddress(kernel32, "CreateMutexA"));
-            IsDebuggerPresent = Marshal.GetDelegateForFunctionPointer<DIsDebuggerPresent>(MyGetProcAddress(kernel32, "IsDebuggerPresent"));
-            CheckRemoteDebuggerPresent = Marshal.GetDelegateForFunctionPointer<DCheckRemoteDebuggerPresent>(MyGetProcAddress(kernel32, "CheckRemoteDebuggerPresent"));
-            WriteProcessMemory = Marshal.GetDelegateForFunctionPointer<DWriteProcessMemory>(MyGetProcAddress(kernel32, "WriteProcessMemory"));
-            OpenThread = Marshal.GetDelegateForFunctionPointer<DOpenThread>(MyGetProcAddress(kernel32, "OpenThread"));
-            GetTickCount = Marshal.GetDelegateForFunctionPointer<DGetTickCount>(MyGetProcAddress(kernel32, "GetTickCount"));
-            OutputDebugStringA = Marshal.GetDelegateForFunctionPointer<DOutputDebugStringA>(MyGetProcAddress(kernel32, "OutputDebugStringA"));
-            GetCurrentThread = Marshal.GetDelegateForFunctionPointer<DGetCurrentThread>(MyGetProcAddress(kernel32, "GetCurrentThread"));
-            GetThreadContext = Marshal.GetDelegateForFunctionPointer<DGetThreadContext>(MyGetProcAddress(kernel32, "GetThreadContext"));
-            QueryFullProcessImageNameA = Marshal.GetDelegateForFunctionPointer<DQueryFullProcessImageNameA>(MyGetProcAddress(kernel32, "QueryFullProcessImageNameA"));
-            IsProcessCritical = Marshal.GetDelegateForFunctionPointer<DIsProcessCritical>(MyGetProcAddress(kernel32, "IsProcessCritical"));
-            GetModuleHandleA = Marshal.GetDelegateForFunctionPointer<DGetModuleHandleA>(MyGetProcAddress(kernel32, "GetModuleHandleA"));
-            OpenProcess = Marshal.GetDelegateForFunctionPointer<DOpenProcess>(MyGetProcAddress(kernel32, "OpenProcess"));
-            CreateFileW = Marshal.GetDelegateForFunctionPointer<DCreateFileW>(MyGetProcAddress(kernel32, "CreateFileW"));
-            GetModuleFileNameW = Marshal.GetDelegateForFunctionPointer<DGetModuleFileNameW>(MyGetProcAddress(kernel32, "GetModuleFileNameW"));
-            CloseHandle = Marshal.GetDelegateForFunctionPointer<DCloseHandle>(MyGetProcAddress(kernel32, "CloseHandle"));
-            GetFullPathNameW = Marshal.GetDelegateForFunctionPointer<DGetFullPathNameW>(MyGetProcAddress(kernel32, "GetFullPathNameW"));
-            VirtualProtect = Marshal.GetDelegateForFunctionPointer<DVirtualProtect>(MyGetProcAddress(kernel32, "VirtualProtect"));
+            var addrs = DInvoke.GetProcAddressBatch(kernel32, exports, true);
+            SetHandleInformation = Marshal.GetDelegateForFunctionPointer<DSetHandleInformation>(addrs[0]);
+            CreateMutexA = Marshal.GetDelegateForFunctionPointer<DCreateMutexA>(addrs[1]);
+            IsDebuggerPresent = Marshal.GetDelegateForFunctionPointer<DIsDebuggerPresent>(addrs[2]);
+            CheckRemoteDebuggerPresent = Marshal.GetDelegateForFunctionPointer<DCheckRemoteDebuggerPresent>(addrs[3]);
+            WriteProcessMemory = Marshal.GetDelegateForFunctionPointer<DWriteProcessMemory>(addrs[4]);
+            OpenThread = Marshal.GetDelegateForFunctionPointer<DOpenThread>(addrs[5]);
+            GetTickCount = Marshal.GetDelegateForFunctionPointer<DGetTickCount>(addrs[6]);
+            OutputDebugStringA = Marshal.GetDelegateForFunctionPointer<DOutputDebugStringA>(addrs[7]);
+            GetCurrentThread = Marshal.GetDelegateForFunctionPointer<DGetCurrentThread>(addrs[8]);
+            GetThreadContext = Marshal.GetDelegateForFunctionPointer<DGetThreadContext>(addrs[9]);
+            QueryFullProcessImageNameA = Marshal.GetDelegateForFunctionPointer<DQueryFullProcessImageNameA>(addrs[10]);
+            IsProcessCritical = Marshal.GetDelegateForFunctionPointer<DIsProcessCritical>(addrs[11]);
+            GetModuleHandleA = Marshal.GetDelegateForFunctionPointer<DGetModuleHandleA>(addrs[12]);
+            OpenProcess = Marshal.GetDelegateForFunctionPointer<DOpenProcess>(addrs[13]);
+            CreateFileW = Marshal.GetDelegateForFunctionPointer<DCreateFileW>(addrs[14]);
+            GetModuleFileNameW = Marshal.GetDelegateForFunctionPointer<DGetModuleFileNameW>(addrs[15]);
+            CloseHandle = Marshal.GetDelegateForFunctionPointer<DCloseHandle>(addrs[16]);
+            GetFullPathNameW = Marshal.GetDelegateForFunctionPointer<DGetFullPathNameW>(addrs[17]);
+            VirtualProtect = Marshal.GetDelegateForFunctionPointer<DVirtualProtect>(addrs[18]);
+            LoadLibraryW = Marshal.GetDelegateForFunctionPointer<DLoadLibraryW>(addrs[19]);
+            GetProcAddress = Marshal.GetDelegateForFunctionPointer<DGetProcAddress>(addrs[20]);
+            FreeLibrary = Marshal.GetDelegateForFunctionPointer<DFreeLibrary>(addrs[21]);
         }
     }
 }

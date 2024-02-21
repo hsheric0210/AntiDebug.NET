@@ -21,7 +21,7 @@ For those who worried about getting caught by native export name strings: Use `R
 
 Usage:
 
-1. Open the powershell, set cwd to this project solution folder. (where `RenameNativeExports.ps1`` file is located; use 'pushd' command)
+1. Open the powershell, set cwd to this project solution folder. (use `pushd` command to set cwd to the folder where `RenameNativeExports.ps1` file is located; )
 2. Enter: `.\RenameNativeExports.ps1`
 3. Enter the function names you want.
 4. Don't forget to re-build the solution!

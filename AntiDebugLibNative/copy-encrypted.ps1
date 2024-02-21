@@ -6,10 +6,12 @@ function encode($plaintext)
     $cyphertext = new-object byte[] $plaintext.Length
     $keyposition = 0
     $KeyArray = $key.ToCharArray()
+    $index = 0
     $plaintext | foreach-object -process {
-        $cyphertext += [byte]($_ -bxor $KeyArray[$keyposition])
+        $cyphertext[$index] = [byte]($_ -bxor $KeyArray[$keyposition])
         $keyposition += 1
         if ($keyposition -eq $key.Length) {$keyposition = 0}
+        $index += 1
     }
     return $cyphertext
 }

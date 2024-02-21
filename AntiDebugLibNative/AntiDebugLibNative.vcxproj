@@ -193,7 +193,7 @@
       <ExcludedFromBuild Condition="'$(Platform)'=='x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Platform)'=='Win32'">true</ExcludedFromBuild>
     </MASM>
-    <None Include="copy-dllfile-encrypted.ps1" />
+    <None Include="copy-encrypted.ps1" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

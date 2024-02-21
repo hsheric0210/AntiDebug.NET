@@ -177,10 +177,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\AntiDebugLibNative_Win32.dll" />
+    <None Include="Resources\AntiDebugLibNative_Win32" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\AntiDebugLibNative_x64.dll" />
+    <None Include="Resources\AntiDebugLibNative_x64" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

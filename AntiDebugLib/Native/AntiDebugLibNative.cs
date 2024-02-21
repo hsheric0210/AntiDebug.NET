@@ -51,10 +51,10 @@ namespace AntiDebugLib.Native
         {
             AntiDebug.Logger.Information("Will use {bit}-bit native library.", Environment.Is64BitProcess ? 64 : 32);
             nativeModule = new DLLFromMemory(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
-            pfnMyEntryPoint = nativeModule.GetDelegateFromFuncName<DMyEntryPoint>(DecorateFunctionName(/*<cs_entrypoint>*/"AcmStartupObject"/*</cs_entrypoint>*/, 0));
-            pfnMyGetProcAddress = nativeModule.GetDelegateFromFuncName<DMyGetProcAddress>(DecorateFunctionName(/*<cs_getprocaddress>*/"EeInitializeCom"/*</cs_getprocaddress>*/, 8));
-            pfnMyGetModuleHandle = nativeModule.GetDelegateFromFuncName<DMyGetModuleHandle>(DecorateFunctionName(/*<cs_getmodulehandle>*/"EeGetComObject"/*</cs_getmodulehandle>*/, 4));
-            pfnMyGetPeb = nativeModule.GetDelegateFromFuncName<DMyGetPeb>(DecorateFunctionName(/*<cs_getpeb>*/"EeGetVerifier"/*</cs_getpeb>*/, 0));
+            pfnMyEntryPoint = nativeModule.GetDelegateFromFuncName<DMyEntryPoint>(DecorateFunctionName(/*<cs_entrypoint>*/"TCA43960234689"/*</cs_entrypoint>*/, 0));
+            pfnMyGetProcAddress = nativeModule.GetDelegateFromFuncName<DMyGetProcAddress>(DecorateFunctionName(/*<cs_getprocaddress>*/"TCA4586298345"/*</cs_getprocaddress>*/, 8));
+            pfnMyGetModuleHandle = nativeModule.GetDelegateFromFuncName<DMyGetModuleHandle>(DecorateFunctionName(/*<cs_getmodulehandle>*/"TCA590674302"/*</cs_getmodulehandle>*/, 4));
+            pfnMyGetPeb = nativeModule.GetDelegateFromFuncName<DMyGetPeb>(DecorateFunctionName(/*<cs_getpeb>*/"TCA5682394023"/*</cs_getpeb>*/, 0));
 
             // initialize indirect calls
             Kernel32.InitNatives();

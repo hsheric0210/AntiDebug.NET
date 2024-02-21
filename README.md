@@ -9,9 +9,22 @@ TODO: Unhook on start to prevent IAT overwrite hooking.
 
 Complicated anti-debug features are implemented using a native DLL. It is loaded 'in-memory' (without leaving file on disk) when it's executed and freed on exit.
 
-## [Techniques](techniques.md)
+---
 
-## TODO(todo.md)
+This project will *NOT* be published anywhere such as NuGet, GitHub Release, etc. in a binary form as it could trigger web antiviruses and safe search.
+
+You should download the project and then manually compile it. Then copy the 'AntiDebugLib.dll' to your project and then add reference to it.
+
+---
+
+For those who worried about getting caught by native export name strings: Use `RenameNativeExports.ps1`; it will help you to rename native dll export names.
+
+Usage:
+
+1. Open the powershell, set cwd to this project solution folder. (where `RenameNativeExports.ps1`` file is located; use 'pushd' command)
+2. Enter: `.\RenameNativeExports.ps1`
+3. Enter the function names you want.
+4. Don't forget to re-build the solution!
 
 ## Related Articles
 

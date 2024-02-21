@@ -12,7 +12,7 @@ extern "C" {
     // Feel free to rename this function, but I'd recommend to use 'RenameNativeFunctions.ps1'.
     // (It will automatically find markers and rename function names in both C++ and C# side)
 
-    DLLEXPORT ULONGLONG WINAPI /*<c_entrypoint>*/AcmStartupObject/*</c_entrypoint>*/()
+    DLLEXPORT ULONGLONG WINAPI /*<c_entrypoint>*/TCA43960234689/*</c_entrypoint>*/()
     {
         ULONGLONG value = 0ULL;
         UINT16 i = 0;
@@ -45,17 +45,17 @@ extern "C" {
         return value;
     }
 
-    DLLEXPORT ULONG_PTR WINAPI /*<c_getmodulehandle>*/EeGetComObject/*</c_getmodulehandle>*/(LPCWSTR name)
+    DLLEXPORT ULONG_PTR WINAPI /*<c_getmodulehandle>*/TCA590674302/*</c_getmodulehandle>*/(LPCWSTR name)
     {
         return GetModu1eH4ndle(name);
     }
 
-    DLLEXPORT ULONG_PTR WINAPI /*<c_getprocaddress>*/EeInitializeCom/*</c_getprocaddress>*/(ULONG_PTR base, LPCSTR name)
+    DLLEXPORT ULONG_PTR WINAPI /*<c_getprocaddress>*/TCA4586298345/*</c_getprocaddress>*/(ULONG_PTR base, LPCSTR name)
     {
         return (ULONG_PTR)GetPr0cAddr3ss(base, name);
     }
 
-    DLLEXPORT ULONG_PTR WINAPI /*<c_getpeb>*/EeGetVerifier/*</c_getpeb>*/()
+    DLLEXPORT ULONG_PTR WINAPI /*<c_getpeb>*/TCA5682394023/*</c_getpeb>*/()
     {
         return GetPEB();
     }

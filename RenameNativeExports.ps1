@@ -32,7 +32,7 @@ $pebName = Read-Host -Prompt "New MyGetPeb procedure Name"
 $beginMarkerFormat = '<%s>'
 $endMarkerFormat = '</%s>'
 
-$cs = [System.IO.Path]::Combine((Get-Location).Path, "AntiDebugLib", "NativeCalls.cs")
+$cs = [System.IO.Path]::Combine((Get-Location).Path, "AntiDebugLib", "Native", "AntiDebugLibNative.cs")
 $cpp = [System.IO.Path]::Combine((Get-Location).Path, "AntiDebugLibNative", "dllmain.cpp")
 $cs_cnt = [System.IO.File]::ReadAllText($cs)
 $cpp_cnt = [System.IO.File]::ReadAllText($cpp)

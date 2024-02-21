@@ -20,7 +20,6 @@ namespace AntiDebugLib.Prevention
     {
         public override string Name => "Hide threads from debugger";
 
-
         private const uint THREAD_SET_INFORMATION = 0x0020;
 
         private const uint ThreadHideFromDebugger = 0x11; // THREADINFOCLASS

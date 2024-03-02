@@ -27,6 +27,41 @@ You should download the project and then manually compile it. Then copy the 'Ant
 
 **Don't forget to add the project folder (or at least the dll output folder) to the exclusion list of antivirus!**
 
+## Usage
+
+```csharp
+using AntiDebugLib;
+```
+
+There are two types of checks. Passive checks are executed once at the begin. Active checks are executed for each 3 seconds. (This period can be changed)
+
+### Standard usage (detect debuggers)
+
+Initialize the AntiDebug modules, register the event handler, and then begin the job.
+
+`AntiDebug.Initialize()` will create and initialize check and prevention instances.
+
+`AntiDebug.BeginChecks()` will perform all passive checks, then start a thread to perform active checks periodically. You can specify the optional `int` parameter to set active check execution period in milliseconds.
+
+```csharp
+AntiDebug.Initialize();
+AntiDebug.DebuggerDetected += AntiDebug_DebuggerDetected;
+AntiDebug.BeginChecks();
+```
+
+The handler method
+
+```csharp
+private static void AntiDebug_DebuggerDetected(object sender, DebuggerDetectedEventArgs e)
+{
+    Console.WriteLine("A potential debugging behavior is detected! (Check name: " + e.Result.CheckName + ", Check reliability: " + e.Result.Reliability + ")");
+}
+```
+
+### Monitoring usage (print all check and prevention results)
+
+The code is too long to note here. See `Program.cs` in AntiDebugSample project for the exact implementation.
+
 ## Changing magic values
 
 For those who worried about getting caught by native export name strings: Use `RenameNativeExports.ps1`; it will help you to rename native dll export names.

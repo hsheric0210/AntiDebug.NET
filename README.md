@@ -135,7 +135,7 @@ Usage:
     * Use dynamic loader to load the dll in-memory on C# part.
 * [ ] Unhook on start to prevent IAT overwrite hooking.
 
-### Checkpoint Research Anti-Debugging Techniques
+### ShowStopper (= Checkpoint Research Anti-Debug Tricks)
 
 * [x] /debugflags/CheckRemoteDebuggerPresent
 * [x] /debugflags/RtlQueryProcessHeapInformation
@@ -171,18 +171,18 @@ Usage:
 
 ### al-khaser
 
-* [ ] /al_khaser/WriteWatch
-* [ ] /al_khaser/WUDF_IsDebuggerPresent
-* [x] /al_khaser/SetHandleInformation_API
-* [x] /al_khaser/SeDebugPrivilege
-* [ ] /al_khaser/ProcessJob
-* [x] /al_khaser/ProcessHeap_ForceFlags
-* [x] /al_khaser/ProcessHeap_Flags
-* [x] /al_khaser/PageExceptionBreakpointCheck
-* [ ] /al_khaser/NtSystemDebugControl
-* [x] /al_khaser/NtSetInformationThread_ThreadHideFromDebugger
-* [x] /al_khaser/NtQueryObject_ObjectTypeInformation
-* [ ] /al_khaser/NtQueryObject_AllTypesInformation
-* [x] /al_khaser/NtGlobalFlag
+* [ ] WriteWatch
+* [ ] WUDF_IsDebuggerPresent
+* [x] SetHandleInformation_API
+* [x] SeDebugPrivilege
+* [ ] ProcessJob
+* [x] ProcessHeap_ForceFlags
+* [x] ProcessHeap_Flags
+* [x] PageExceptionBreakpointCheck
+* [ ] NtSystemDebugControl
+* [x] NtSetInformationThread_ThreadHideFromDebugger
+* [x] NtQueryObject_ObjectTypeInformation
+* [ ] NtQueryObject_AllTypesInformation
+* [x] NtGlobalFlag
 
 </details>

@@ -165,12 +165,6 @@
     <Folder Include="Check\Memory\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EvilMemoryModule\EvilMemoryModule.csproj">
-      <Project>{f69097de-623f-438b-bdf4-26534ee3b47e}</Project>
-      <Name>EvilMemoryModule</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StealthModule;
+using System;
 
 using static AntiDebugLib.Native.Kernel32;
 
@@ -54,14 +55,14 @@ namespace AntiDebugLib.Check
         {
             foreach (var name in moduleNames)
             {
-                if (DInvoke.GetModuleHandle(name) != IntPtr.Zero)
+                if (ExportResolver.GetModuleHandle(name) != Pointer.Zero)
                 {
                     Logger.Information("Bad module {name} is currently loaded to this process.", name);
                     return DebuggerDetected(new { Name = name });
                 }
             }
 
-            if (DInvoke.GetProcAddress(DInvoke.GetModuleHandle("kernel32.dll"), "wine_get_unix_file_name") != IntPtr.Zero)
+            if (ExportResolver.ResolveExport("kernel32.dll", "wine_get_unix_file_name") != Pointer.Zero)
             {
                 Logger.Information("Wine export is detected.");
                 return DebuggerDetected(new { Name = "wine" });

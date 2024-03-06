@@ -5,6 +5,7 @@ using static AntiDebugLib.Native.AntiDebugLibNative;
 using static AntiDebugLib.Native.NativeDefs;
 using AntiDebugLib.Utils;
 using Microsoft.Win32.SafeHandles;
+using StealthModule;
 
 namespace AntiDebugLib.Native
 {
@@ -132,7 +133,6 @@ namespace AntiDebugLib.Native
 
         internal static void InitNatives()
         {
-            var kernel32 = DInvoke.GetModuleHandle("kernel32.dll", true);
             var exports = new string[] {
                 "SetHandleInformation",
                 "CreateMutexA",
@@ -158,7 +158,7 @@ namespace AntiDebugLib.Native
                 "FreeLibrary",
             };
 
-            var addrs = DInvoke.GetProcAddressBatch(kernel32, exports, true);
+            var addrs = ExportResolver.ResolveExports("kernel32.dll", exports, throwIfNotFound: true);
             SetHandleInformation = Marshal.GetDelegateForFunctionPointer<DSetHandleInformation>(addrs[0]);
             CreateMutexA = Marshal.GetDelegateForFunctionPointer<DCreateMutexA>(addrs[1]);
             IsDebuggerPresent = Marshal.GetDelegateForFunctionPointer<DIsDebuggerPresent>(addrs[2]);

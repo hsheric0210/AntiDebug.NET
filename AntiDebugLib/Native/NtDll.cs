@@ -4,6 +4,7 @@ using System;
 using static AntiDebugLib.Native.AntiDebugLibNative;
 using static AntiDebugLib.Native.NativeDefs;
 using AntiDebugLib.Utils;
+using StealthModule;
 
 namespace AntiDebugLib.Native
 {
@@ -89,7 +90,6 @@ namespace AntiDebugLib.Native
 
         internal static void InitNatives()
         {
-            var ntdll = DInvoke.GetModuleHandle("ntdll.dll", true);
             var exports = new string[] {
                 "NtClose",
                 "NtSetInformationThread",
@@ -103,7 +103,7 @@ namespace AntiDebugLib.Native
                 "RtlDestroyQueryDebugBuffer",
             };
 
-            var addrs = DInvoke.GetProcAddressBatch(ntdll, exports, true);
+            var addrs = ExportResolver.ResolveExports("ntdll.dll", exports, throwIfNotFound: true);
             NtClose = Marshal.GetDelegateForFunctionPointer<DNtClose>(addrs[0]);
             NtSetInformationThread = Marshal.GetDelegateForFunctionPointer<DNtSetInformationThread>(addrs[1]);
             NtQueryInformationProcess_uint = Marshal.GetDelegateForFunctionPointer<DNtQueryInformationProcess_uint>(addrs[2]);

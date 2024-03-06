@@ -1,4 +1,5 @@
 using AntiDebugLib.Properties;
+using StealthModule;
 using System;
 using System.Runtime.InteropServices;
 
@@ -21,7 +22,7 @@ namespace AntiDebugLib.Native
 
         internal static IntPtr GetPeb() => pfnMyGetPeb();
 
-        private static DLLFromMemory nativeModule; // Prevent DLL from get garbage collected
+        private static MemoryModule nativeModule; // Prevent DLL from get garbage collected
 
         private static string DecorateFunctionName(string name, int paramSize)
         {
@@ -47,9 +48,9 @@ namespace AntiDebugLib.Native
         {
             AntiDebug.Logger.Information("Will use {bit}-bit native library.", Environment.Is64BitProcess ? 64 : 32);
             var dll = Decrypt(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
-            nativeModule = new DLLFromMemory(dll);
-            pfnMyEntryPoint = nativeModule.GetDelegateFromFuncName<DMyEntryPoint>(DecorateFunctionName(/*<cs_entrypoint>*/"AD43568293496"/*</cs_entrypoint>*/, 0));
-            pfnMyGetPeb = nativeModule.GetDelegateFromFuncName<DMyGetPeb>(DecorateFunctionName(/*<cs_getpeb>*/"AD4567348905025"/*</cs_getpeb>*/, 0));
+            nativeModule = new MemoryModule(dll);
+            pfnMyEntryPoint = nativeModule.GetExport<DMyEntryPoint>(DecorateFunctionName(/*<cs_entrypoint>*/"AD43568293496"/*</cs_entrypoint>*/, 0));
+            pfnMyGetPeb = nativeModule.GetExport<DMyGetPeb>(DecorateFunctionName(/*<cs_getpeb>*/"AD4567348905025"/*</cs_getpeb>*/, 0));
 
             // initialize indirect calls
             Kernel32.InitNatives();

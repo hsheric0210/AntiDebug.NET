@@ -4,6 +4,7 @@ using System.Text;
 
 using static AntiDebugLib.Native.AntiDebugLibNative;
 using static AntiDebugLib.Native.Kernel32;
+using StealthModule;
 
 namespace AntiDebugLib.Native
 {
@@ -41,7 +42,7 @@ namespace AntiDebugLib.Native
                 "GetWindowTextA",
             };
 
-            var addrs = DInvoke.GetProcAddressBatch(user32, exports, true);
+            var addrs = ExportResolver.ResolveExports(user32, exports, throwIfNotFound: true);
             GetForegroundWindow = Marshal.GetDelegateForFunctionPointer<DGetForegroundWindow>(addrs[0]);
             GetWindowTextLengthA = Marshal.GetDelegateForFunctionPointer<DGetWindowTextLengthA>(addrs[1]);
             GetWindowTextA = Marshal.GetDelegateForFunctionPointer<DGetWindowTextA>(addrs[2]);

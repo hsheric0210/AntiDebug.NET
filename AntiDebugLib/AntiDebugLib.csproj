@@ -176,5 +176,11 @@
   <ItemGroup>
     <None Include="Resources\AntiDebugLibNative_x64" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StealthModule.NET\StealthModule\StealthModule.csproj">
+      <Project>{2efc65a7-0b03-4905-8765-c66792d9f829}</Project>
+      <Name>StealthModule</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -16,20 +16,20 @@ namespace AntiDebugLib.Native
             [UnmanagedFunctionPointer(CallingConvention.Winapi)]
             internal delegate IntPtr GetForegroundWindow();
 
-            [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-            internal delegate int GetWindowTextLengthA(SafeHandle HWND);
+            [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode)]
+            internal delegate int GetWindowTextLengthW(SafeHandle HWND);
 
-            [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-            internal delegate int GetWindowTextA(IntPtr HWND, StringBuilder WindowText, int nMaxCount);
+            [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode)]
+            internal delegate int GetWindowTextW(IntPtr HWND, StringBuilder WindowText, int nMaxCount);
         }
 
         #region Properties
 
         internal static GetForegroundWindow GetForegroundWindow { get; private set; }
 
-        internal static GetWindowTextLengthA GetWindowTextLengthA { get; private set; }
+        internal static GetWindowTextLengthW GetWindowTextLengthW { get; private set; }
 
-        internal static GetWindowTextA GetWindowTextA { get; private set; }
+        internal static GetWindowTextW GetWindowTextW { get; private set; }
 
         #endregion
 
@@ -40,8 +40,8 @@ namespace AntiDebugLib.Native
             var resolver = new ExportResolver(user32);
             resolver.CacheAllExports();
             GetForegroundWindow = resolver.GetExport<GetForegroundWindow>("GetForegroundWindow");
-            GetWindowTextLengthA = resolver.GetExport<GetWindowTextLengthA>("GetWindowTextLengthA");
-            GetWindowTextA = resolver.GetExport<GetWindowTextA>("GetWindowTextA");
+            GetWindowTextLengthW = resolver.GetExport<GetWindowTextLengthW>("GetWindowTextLengthW");
+            GetWindowTextW = resolver.GetExport<GetWindowTextW>("GetWindowTextW");
         }
     }
 }

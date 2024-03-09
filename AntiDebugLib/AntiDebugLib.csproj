@@ -84,6 +84,8 @@
     <Compile Include="AntiDebug.cs" />
     <Compile Include="CheckData.cs" />
     <Compile Include="Native\IntPtrExtension.cs" />
+    <Compile Include="Native\Kernel32.Unhooked.cs" />
+    <Compile Include="Native\NtDll.Unhooked.cs" />
     <Compile Include="PreventionData.cs" />
     <Compile Include="PreventionResultEventArgs.cs" />
     <Compile Include="ModuleBase.cs" />

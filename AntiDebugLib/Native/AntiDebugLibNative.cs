@@ -54,7 +54,9 @@ namespace AntiDebugLib.Native
 
             // initialize indirect calls
             Kernel32.InitNatives();
+            Kernel32.InitNativesUnhooked();
             NtDll.InitNatives();
+            NtDll.InitNativesUnhooked();
             User32.InitNatives();
         }
     }

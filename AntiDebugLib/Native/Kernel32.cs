@@ -84,33 +84,13 @@ namespace AntiDebugLib.Native
 
         #region Properties
 
-        internal static SetHandleInformation SetHandleInformation { get; private set; }
-
         internal static CreateMutexA CreateMutexA { get; private set; }
-
-        internal static IsDebuggerPresent IsDebuggerPresent { get; private set; }
-
-        internal static CheckRemoteDebuggerPresent CheckRemoteDebuggerPresent { get; private set; }
-
-        internal static WriteProcessMemory WriteProcessMemory { get; private set; }
-
-        internal static OpenThread OpenThread { get; private set; }
-
-        internal static GetTickCount GetTickCount { get; private set; }
-
-        internal static OutputDebugStringA OutputDebugStringA { get; private set; }
-
-        internal static GetCurrentThread GetCurrentThread { get; private set; }
-
-        internal static GetThreadContext GetThreadContext { get; private set; }
 
         internal static QueryFullProcessImageNameA QueryFullProcessImageNameA { get; private set; }
 
         internal static IsProcessCritical IsProcessCritical { get; private set; }
 
         internal static GetModuleHandleA GetModuleHandleA { get; private set; }
-
-        internal static OpenProcess OpenProcess { get; private set; }
 
         internal static CreateFileW CreateFileW { get; private set; }
 
@@ -120,11 +100,7 @@ namespace AntiDebugLib.Native
 
         internal static GetFullPathNameW GetFullPathNameW { get; private set; }
 
-        internal static VirtualProtect VirtualProtect { get; private set; }
-
         internal static LoadLibraryW LoadLibraryW { get; private set; }
-
-        internal static GetProcAddress GetProcAddress { get; private set; }
 
         internal static FreeLibrary FreeLibrary { get; private set; }
 
@@ -134,27 +110,15 @@ namespace AntiDebugLib.Native
         {
             var resolver = new ExportResolver("kernel32.dll");
             resolver.CacheAllExports();
-            SetHandleInformation = resolver.GetExport<SetHandleInformation>("SetHandleInformation");
             CreateMutexA = resolver.GetExport<CreateMutexA>("CreateMutexA");
-            IsDebuggerPresent = resolver.GetExport<IsDebuggerPresent>("IsDebuggerPresent");
-            CheckRemoteDebuggerPresent = resolver.GetExport<CheckRemoteDebuggerPresent>("CheckRemoteDebuggerPresent");
-            WriteProcessMemory = resolver.GetExport<WriteProcessMemory>("WriteProcessMemory");
-            OpenThread = resolver.GetExport<OpenThread>("OpenThread");
-            GetTickCount = resolver.GetExport<GetTickCount>("GetTickCount");
-            OutputDebugStringA = resolver.GetExport<OutputDebugStringA>("OutputDebugStringA");
-            GetCurrentThread = resolver.GetExport<GetCurrentThread>("GetCurrentThread");
-            GetThreadContext = resolver.GetExport<GetThreadContext>("GetThreadContext");
             QueryFullProcessImageNameA = resolver.GetExport<QueryFullProcessImageNameA>("QueryFullProcessImageNameA");
             IsProcessCritical = resolver.GetExport<IsProcessCritical>("IsProcessCritical");
             GetModuleHandleA = resolver.GetExport<GetModuleHandleA>("GetModuleHandleA");
-            OpenProcess = resolver.GetExport<OpenProcess>("OpenProcess");
             CreateFileW = resolver.GetExport<CreateFileW>("CreateFileW");
             GetModuleFileNameW = resolver.GetExport<GetModuleFileNameW>("GetModuleFileNameW");
             CloseHandle = resolver.GetExport<CloseHandle>("CloseHandle");
             GetFullPathNameW = resolver.GetExport<GetFullPathNameW>("GetFullPathNameW");
-            VirtualProtect = resolver.GetExport<VirtualProtect>("VirtualProtect");
             LoadLibraryW = resolver.GetExport<LoadLibraryW>("LoadLibraryW");
-            GetProcAddress = resolver.GetExport<GetProcAddress>("GetProcAddress");
             FreeLibrary = resolver.GetExport<FreeLibrary>("FreeLibrary");
         }
     }

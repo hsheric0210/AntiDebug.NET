@@ -8,7 +8,7 @@ using StealthModule;
 
 namespace AntiDebugLib.Native
 {
-    internal static class NtDll
+    internal static partial class NtDll
     {
         internal static class Delegates
         {
@@ -59,29 +59,7 @@ namespace AntiDebugLib.Native
 
         internal static NtClose NtClose { get; private set; }
 
-        internal static NtSetInformationThread NtSetInformationThread { get; private set; }
-
-        internal static NtQueryInformationProcess_uint NtQueryInformationProcess_uint { get; private set; }
-
-        internal static NtQueryInformationProcess_IntPtr NtQueryInformationProcess_IntPtr { get; private set; }
-
-        internal static NtQueryInformationProcess_ProcessBasicInfo NtQueryInformationProcess_ProcessBasicInfo { get; private set; }
-
-        internal static NtQuerySystemInformation_CodeIntegrityInfo NtQuerySystemInformation_CodeIntegrityInfo { get; private set; }
-
-        internal static NtQuerySystemInformation_KernelDebuggerInfo NtQuerySystemInformation_KernelDebuggerInfo { get; private set; }
-
-        internal static CsrGetProcessId CsrGetProcessId { get; private set; }
-
-        internal static NtQueryObject_ref NtQueryObject_ref { get; private set; }
-
-        internal static NtQueryObject_IntPtr NtQueryObject_IntPtr { get; private set; }
-
         internal static RtlCreateQueryDebugBuffer RtlCreateQueryDebugBuffer { get; private set; }
-
-        internal static RtlQueryProcessHeapInformation RtlQueryProcessHeapInformation { get; private set; }
-
-        internal static RtlQueryProcessDebugInformation RtlQueryProcessDebugInformation { get; private set; }
 
         internal static RtlDestroyQueryDebugBuffer RtlDestroyQueryDebugBuffer { get; private set; }
 
@@ -92,18 +70,7 @@ namespace AntiDebugLib.Native
             var resolver = new ExportResolver("ntdll.dll");
             resolver.CacheAllExports();
             NtClose = resolver.GetExport<NtClose>("NtClose");
-            NtSetInformationThread = resolver.GetExport<NtSetInformationThread>("NtSetInformationThread");
-            NtQueryInformationProcess_uint = resolver.GetExport<NtQueryInformationProcess_uint>("NtQueryInformationProcess");
-            NtQueryInformationProcess_IntPtr = resolver.GetExport<NtQueryInformationProcess_IntPtr>("NtQueryInformationProcess");
-            NtQueryInformationProcess_ProcessBasicInfo = resolver.GetExport<NtQueryInformationProcess_ProcessBasicInfo>("NtQueryInformationProcess");
-            NtQuerySystemInformation_CodeIntegrityInfo = resolver.GetExport<NtQuerySystemInformation_CodeIntegrityInfo>("NtQuerySystemInformation");
-            NtQuerySystemInformation_KernelDebuggerInfo = resolver.GetExport<NtQuerySystemInformation_KernelDebuggerInfo>("NtQuerySystemInformation");
-            CsrGetProcessId = resolver.GetExport<CsrGetProcessId>("CsrGetProcessId");
-            NtQueryObject_ref = resolver.GetExport<NtQueryObject_ref>("NtQueryObject");
-            NtQueryObject_IntPtr = resolver.GetExport<NtQueryObject_IntPtr>("NtQueryObject");
             RtlCreateQueryDebugBuffer = resolver.GetExport<RtlCreateQueryDebugBuffer>("RtlCreateQueryDebugBuffer");
-            RtlQueryProcessHeapInformation = resolver.GetExport<RtlQueryProcessHeapInformation>("RtlQueryProcessHeapInformation");
-            RtlQueryProcessDebugInformation = resolver.GetExport<RtlQueryProcessDebugInformation>("RtlQueryProcessDebugInformation");
             RtlDestroyQueryDebugBuffer = resolver.GetExport<RtlDestroyQueryDebugBuffer>("RtlDestroyQueryDebugBuffer");
         }
     }

@@ -19,9 +19,30 @@ Instead of using direct P/Invoke, they're all retrieved dynamically via hand-mad
 
 Complicated anti-debug features are implemented using a native DLL. It is loaded 'in-memory' (without leaving file on disk) when it's executed and freed on exit.
 
+## Disclaimer
+
+Use at your own risk! Your program may not work after applying AntiDebug.NET.
+
+As it uses various _Anti-Anti-Anti-Debug_ techniques, your Anti-virus softwares may complain about your program as if it is infected.
+
+### This project _Manual Maps_ DLL: `kernel32.dll` and `ntdll.dll`
+
+Popular Anti-Anti-Debug solutions such as [ScyllaHide](https://github.com/x64dbg/ScyllaHide) just hooks all debugging-related functions and manipulates its parameters or return value to bypass Anti-Debug solutions.
+
+There is a lot of methods to counter this. Basically, this problem is very similar to 'AV/EDR bypassing.'
+[There is a great documentation about this.](https://www.advania.co.uk/insights/blog/a-practical-guide-to-bypassing-userland-api-hooking/)
+
+AntiDebug.NET do manual map the whole `kernel32.dll` and `ntdll.dll` modules using [StealthModule.NET](https://github.com/hsheric0210/StealthModule.NET) to the process memory and then call its exports.
+
+**Since this solution is also (in-)famous for AV/EDR bypassing method, your Anti-virus software may start screaming on this. It may terminate, quarantine or delete your program right after.**
+
+As there is no malicious intention of this manual-mapping behavior, you can ignore the warning or notification from your anti-virus.
+
+If you really doubt about it, feel free to look around this repository, and look if there is any _malicious_ code.
+
 ## Binary files are not available for download or share
 
-This project will *NOT* be published anywhere such as NuGet, GitHub Release, etc. in a binary form as **it could trigger web antiviruses and safe search**.
+This project will _NOT_ be published anywhere such as NuGet, GitHub Release, etc. in a binary form as **it could trigger web antiviruses and safe search**.
 
 You should download the project and then manually compile it. Then copy the 'AntiDebugLib.dll' to your project and then add reference to it.
 

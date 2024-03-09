@@ -81,6 +81,8 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AntiDebug+ActivePreventionThread.cs" />
+    <Compile Include="AntiDebug+ActiveCheckThread.cs" />
     <Compile Include="AntiDebug.cs" />
     <Compile Include="CheckData.cs" />
     <Compile Include="Native\IntPtrExtension.cs" />

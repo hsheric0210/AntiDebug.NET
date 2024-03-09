@@ -1,5 +1,4 @@
 ﻿using AntiDebugLib;
-using MyStealer;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;

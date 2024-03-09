@@ -21,9 +21,14 @@ namespace AntiDebugLib
         public static event EventHandler<PreventionResultEventArgs> PreventionFinished;
 
         private static IReadOnlyList<CheckBase> checks;
+        private static IReadOnlyList<CheckBase> timingChecks;
         private static IReadOnlyList<PreventionBase> preventions;
-        private static Thread activeThread;
-        private static CancellationTokenSource activeThreadCancel;
+
+        private static Thread activeCheckThread;
+        private static Thread activeTimingCheckThread;
+        private static Thread activePreventionThread;
+
+        private static CancellationTokenSource threadCancel;
 
         /// <summary>
         /// Note: Logger must be set before the <c>Initialize()</c> function call.
@@ -80,6 +85,12 @@ namespace AntiDebugLib
                 new SleepDurationDecreased(),
             };
 
+            timingChecks = new List<CheckBase>()
+            {
+                new GetTickCountVariance(),
+                new SleepDurationDecreased(),
+            };
+
             preventions = new List<PreventionBase>()
             {
                 new MalformedOutputDebugString(),
@@ -92,7 +103,10 @@ namespace AntiDebugLib
         }
 
         [HandleProcessCorruptedStateExceptions]
-        public static void BeginChecks(int activeCheckPeriodMillis = 3000)
+        public static void BeginChecks(
+            int activeCheckPeriodMillis = 3000,
+            int activeTimingCheckPeriodMillis = 5000,
+            int activePreventionPeriodMillis = 1000)
         {
             // run passive preventions
             var preventResults = new List<PreventionResult>();
@@ -132,19 +146,31 @@ namespace AntiDebugLib
 
             CheckFinished?.Invoke(null, new CheckResultEventArgs(checkResults));
 
-            if (activeThread != null)
+            if (activeCheckThread != null)
                 return;
 
-            activeThread = new Thread(new ParameterizedThreadStart(ActiveCheckProc));
-            activeThreadCancel = new CancellationTokenSource();
-            var param = new ActiveCheckProcParameter { activeChecks = checks, activePreventions = preventions, cancelToken = activeThreadCancel.Token, checkPeriod = activeCheckPeriodMillis };
-            activeThread.Start(param);
+            threadCancel = new CancellationTokenSource();
+
+            activeCheckThread = new Thread(new ParameterizedThreadStart(ActiveCheckProc));
+            activeCheckThread.Start(new ActiveCheckThreadParameter { checks = checks, cancelToken = threadCancel.Token, checkPeriod = activeCheckPeriodMillis });
+
+            activeTimingCheckThread = new Thread(new ParameterizedThreadStart(ActiveCheckProc));
+            activeTimingCheckThread.Start(new ActiveCheckThreadParameter { checks = timingChecks, cancelToken = threadCancel.Token, checkPeriod = activeTimingCheckPeriodMillis });
+
+            activePreventionThread = new Thread(new ParameterizedThreadStart(ActivePreventionProc));
+            activePreventionThread.Start(new ActivePreventionThreadParameter { preventions = preventions, cancelToken = threadCancel.Token, checkPeriod = activePreventionPeriodMillis });
         }
 
-        struct ActiveCheckProcParameter
+        struct ActiveCheckThreadParameter
         {
-            public IReadOnlyList<CheckBase> activeChecks;
-            public IReadOnlyList<PreventionBase> activePreventions;
+            public IReadOnlyList<CheckBase> checks;
+            public CancellationToken cancelToken;
+            public int checkPeriod;
+        }
+
+        struct ActivePreventionThreadParameter
+        {
+            public IReadOnlyList<PreventionBase> preventions;
             public CancellationToken cancelToken;
             public int checkPeriod;
         }
@@ -152,28 +178,9 @@ namespace AntiDebugLib
         [HandleProcessCorruptedStateExceptions]
         static void ActiveCheckProc(object oparam)
         {
-            var param = (ActiveCheckProcParameter)oparam;
+            var param = (ActiveCheckThreadParameter)oparam;
             while (!param.cancelToken.IsCancellationRequested)
             {
-                // run active preventions
-                var preventResults = new List<PreventionResult>();
-                foreach (var prevention in param.activePreventions)
-                {
-                    try
-                    {
-                        var result = prevention.PreventActive();
-                        if (result.Type != PreventionResultType.NotImplemented)
-                            preventResults.Add(result);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex, "Error running the active prevention {name}.", prevention.Name);
-                    }
-                }
-
-                PreventionFinished?.Invoke(null, new PreventionResultEventArgs(preventResults));
-
-                // run passive checks
                 var checkResults = new List<CheckResult>();
                 foreach (var check in checks)
                 {
@@ -196,14 +203,40 @@ namespace AntiDebugLib
             }
         }
 
+        [HandleProcessCorruptedStateExceptions]
+        static void ActivePreventionProc(object oparam)
+        {
+            var param = (ActivePreventionThreadParameter)oparam;
+            while (!param.cancelToken.IsCancellationRequested)
+            {
+                var preventResults = new List<PreventionResult>();
+                foreach (var prevention in param.preventions)
+                {
+                    try
+                    {
+                        var result = prevention.PreventActive();
+                        if (result.Type != PreventionResultType.NotImplemented)
+                            preventResults.Add(result);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, "Error running the active prevention {name}.", prevention.Name);
+                    }
+                }
+
+                PreventionFinished?.Invoke(null, new PreventionResultEventArgs(preventResults));
+                Thread.Sleep(param.checkPeriod);
+            }
+        }
+
         public static void EndChecks()
         {
-            activeThreadCancel.Cancel();
+            threadCancel.Cancel();
 
-            activeThread = null;
+            activeCheckThread = null;
 
-            activeThreadCancel.Dispose();
-            activeThreadCancel = null;
+            threadCancel.Dispose();
+            threadCancel = null;
         }
 
         public void ApplyPreventions()

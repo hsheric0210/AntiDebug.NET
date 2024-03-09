@@ -94,7 +94,7 @@ namespace AntiDebugSample
         private static void AntiDebug_PreventionFinished(object sender, PreventionResultEventArgs e)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("* Debugging prevention methodsa are applied.");
+            Console.WriteLine("* Debugging prevention methods are applied.");
             Console.ForegroundColor = ConsoleColor.Gray;
 
             var paddingLength = e.Results.Select(r => r.PreventionName.Length).Max() + 8;

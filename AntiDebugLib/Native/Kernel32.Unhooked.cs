@@ -7,11 +7,14 @@ using AntiDebugLib.Utils;
 using Microsoft.Win32.SafeHandles;
 using StealthModule;
 using System.IO;
+using System.Threading;
 
 namespace AntiDebugLib.Native
 {
     internal static partial class Kernel32
     {
+        private static MemoryModule mappedKernel32;
+
         #region Properties
 
         internal static SetHandleInformation SetHandleInformation { get; private set; }
@@ -43,7 +46,8 @@ namespace AntiDebugLib.Native
         internal static void InitNativesUnhooked()
         {
             var kernel32Bytes = File.ReadAllBytes(Path.Combine(Environment.SystemDirectory, "kernel32.dll"));
-            var resolver = new MemoryModule(kernel32Bytes).Exports;
+            mappedKernel32 = new MemoryModule(kernel32Bytes);
+            var resolver = mappedKernel32.Exports;
             resolver.CacheAllExports();
             SetHandleInformation = resolver.GetExport<SetHandleInformation>("SetHandleInformation");
             IsDebuggerPresent = resolver.GetExport<IsDebuggerPresent>("IsDebuggerPresent");

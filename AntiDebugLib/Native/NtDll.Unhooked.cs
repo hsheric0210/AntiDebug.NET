@@ -9,6 +9,8 @@ namespace AntiDebugLib.Native
 {
     internal static partial class NtDll
     {
+        private static MemoryModule mappedNtdll;
+
         #region Properties
 
         internal static NtSetInformationThread NtSetInformationThread { get; private set; }
@@ -38,7 +40,8 @@ namespace AntiDebugLib.Native
         internal static void InitNativesUnhooked()
         {
             var ntdllBytes = File.ReadAllBytes(Path.Combine(Environment.SystemDirectory, "ntdll.dll"));
-            var resolver = new MemoryModule(ntdllBytes).Exports;
+            mappedNtdll = new MemoryModule(ntdllBytes);
+            var resolver = mappedNtdll.Exports;
             resolver.CacheAllExports();
             NtSetInformationThread = resolver.GetExport<NtSetInformationThread>("NtSetInformationThread");
             NtQueryInformationProcess_uint = resolver.GetExport<NtQueryInformationProcess_uint>("NtQueryInformationProcess");

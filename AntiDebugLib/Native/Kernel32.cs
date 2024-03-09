@@ -133,54 +133,30 @@ namespace AntiDebugLib.Native
 
         internal static void InitNatives()
         {
-            var exports = new string[] {
-                "SetHandleInformation",
-                "CreateMutexA",
-                "IsDebuggerPresent",
-                "CheckRemoteDebuggerPresent",
-                "WriteProcessMemory",
-                "OpenThread",
-                "GetTickCount",
-                "OutputDebugStringA",
-                "GetCurrentThread",
-                "GetThreadContext",
-                "QueryFullProcessImageNameA",
-                "IsProcessCritical",
-                "GetModuleHandleA",
-                "OpenProcess",
-                "CreateFileW",
-                "GetModuleFileNameW",
-                "CloseHandle",
-                "GetFullPathNameW",
-                "VirtualProtect",
-                "LoadLibraryW",
-                "GetProcAddress",
-                "FreeLibrary",
-            };
-
-            var addrs = ExportResolver.ResolveExports("kernel32.dll", exports, throwIfNotFound: true);
-            SetHandleInformation = Marshal.GetDelegateForFunctionPointer<DSetHandleInformation>(addrs[0]);
-            CreateMutexA = Marshal.GetDelegateForFunctionPointer<DCreateMutexA>(addrs[1]);
-            IsDebuggerPresent = Marshal.GetDelegateForFunctionPointer<DIsDebuggerPresent>(addrs[2]);
-            CheckRemoteDebuggerPresent = Marshal.GetDelegateForFunctionPointer<DCheckRemoteDebuggerPresent>(addrs[3]);
-            WriteProcessMemory = Marshal.GetDelegateForFunctionPointer<DWriteProcessMemory>(addrs[4]);
-            OpenThread = Marshal.GetDelegateForFunctionPointer<DOpenThread>(addrs[5]);
-            GetTickCount = Marshal.GetDelegateForFunctionPointer<DGetTickCount>(addrs[6]);
-            OutputDebugStringA = Marshal.GetDelegateForFunctionPointer<DOutputDebugStringA>(addrs[7]);
-            GetCurrentThread = Marshal.GetDelegateForFunctionPointer<DGetCurrentThread>(addrs[8]);
-            GetThreadContext = Marshal.GetDelegateForFunctionPointer<DGetThreadContext>(addrs[9]);
-            QueryFullProcessImageNameA = Marshal.GetDelegateForFunctionPointer<DQueryFullProcessImageNameA>(addrs[10]);
-            IsProcessCritical = Marshal.GetDelegateForFunctionPointer<DIsProcessCritical>(addrs[11]);
-            GetModuleHandleA = Marshal.GetDelegateForFunctionPointer<DGetModuleHandleA>(addrs[12]);
-            OpenProcess = Marshal.GetDelegateForFunctionPointer<DOpenProcess>(addrs[13]);
-            CreateFileW = Marshal.GetDelegateForFunctionPointer<DCreateFileW>(addrs[14]);
-            GetModuleFileNameW = Marshal.GetDelegateForFunctionPointer<DGetModuleFileNameW>(addrs[15]);
-            CloseHandle = Marshal.GetDelegateForFunctionPointer<DCloseHandle>(addrs[16]);
-            GetFullPathNameW = Marshal.GetDelegateForFunctionPointer<DGetFullPathNameW>(addrs[17]);
-            VirtualProtect = Marshal.GetDelegateForFunctionPointer<DVirtualProtect>(addrs[18]);
-            LoadLibraryW = Marshal.GetDelegateForFunctionPointer<DLoadLibraryW>(addrs[19]);
-            GetProcAddress = Marshal.GetDelegateForFunctionPointer<DGetProcAddress>(addrs[20]);
-            FreeLibrary = Marshal.GetDelegateForFunctionPointer<DFreeLibrary>(addrs[21]);
+            var resolver = new ExportResolver("kernel32.dll");
+            resolver.CacheAllExports();
+            SetHandleInformation = resolver.GetExport<DSetHandleInformation>("SetHandleInformation");
+            CreateMutexA = resolver.GetExport<DCreateMutexA>("CreateMutexA");
+            IsDebuggerPresent = resolver.GetExport<DIsDebuggerPresent>("IsDebuggerPresent");
+            CheckRemoteDebuggerPresent = resolver.GetExport<DCheckRemoteDebuggerPresent>("CheckRemoteDebuggerPresent");
+            WriteProcessMemory = resolver.GetExport<DWriteProcessMemory>("WriteProcessMemory");
+            OpenThread = resolver.GetExport<DOpenThread>("OpenThread");
+            GetTickCount = resolver.GetExport<DGetTickCount>("GetTickCount");
+            OutputDebugStringA = resolver.GetExport<DOutputDebugStringA>("OutputDebugStringA");
+            GetCurrentThread = resolver.GetExport<DGetCurrentThread>("GetCurrentThread");
+            GetThreadContext = resolver.GetExport<DGetThreadContext>("GetThreadContext");
+            QueryFullProcessImageNameA = resolver.GetExport<DQueryFullProcessImageNameA>("QueryFullProcessImageNameA");
+            IsProcessCritical = resolver.GetExport<DIsProcessCritical>("IsProcessCritical");
+            GetModuleHandleA = resolver.GetExport<DGetModuleHandleA>("GetModuleHandleA");
+            OpenProcess = resolver.GetExport<DOpenProcess>("OpenProcess");
+            CreateFileW = resolver.GetExport<DCreateFileW>("CreateFileW");
+            GetModuleFileNameW = resolver.GetExport<DGetModuleFileNameW>("GetModuleFileNameW");
+            CloseHandle = resolver.GetExport<DCloseHandle>("CloseHandle");
+            GetFullPathNameW = resolver.GetExport<DGetFullPathNameW>("GetFullPathNameW");
+            VirtualProtect = resolver.GetExport<DVirtualProtect>("VirtualProtect");
+            LoadLibraryW = resolver.GetExport<DLoadLibraryW>("LoadLibraryW");
+            GetProcAddress = resolver.GetExport<DGetProcAddress>("GetProcAddress");
+            FreeLibrary = resolver.GetExport<DFreeLibrary>("FreeLibrary");
         }
     }
 }

@@ -49,8 +49,8 @@ namespace AntiDebugLib.Native
             AntiDebug.Logger.Information("Will use {bit}-bit native library.", Environment.Is64BitProcess ? 64 : 32);
             var dll = Decrypt(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
             nativeModule = new MemoryModule(dll);
-            pfnMyEntryPoint = nativeModule.GetExport<DMyEntryPoint>(DecorateFunctionName(/*<cs_entrypoint>*/"AD43568293496"/*</cs_entrypoint>*/, 0));
-            pfnMyGetPeb = nativeModule.GetExport<DMyGetPeb>(DecorateFunctionName(/*<cs_getpeb>*/"AD4567348905025"/*</cs_getpeb>*/, 0));
+            pfnMyEntryPoint = nativeModule.Exports.GetExport<DMyEntryPoint>(DecorateFunctionName(/*<cs_entrypoint>*/"AD43568293496"/*</cs_entrypoint>*/, 0));
+            pfnMyGetPeb = nativeModule.Exports.GetExport<DMyGetPeb>(DecorateFunctionName(/*<cs_getpeb>*/"AD4567348905025"/*</cs_getpeb>*/, 0));
 
             // initialize indirect calls
             Kernel32.InitNatives();

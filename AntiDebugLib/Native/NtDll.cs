@@ -90,34 +90,22 @@ namespace AntiDebugLib.Native
 
         internal static void InitNatives()
         {
-            var exports = new string[] {
-                "NtClose",
-                "NtSetInformationThread",
-                "NtQueryInformationProcess",
-                "NtQuerySystemInformation",
-                "CsrGetProcessId",
-                "NtQueryObject",
-                "RtlCreateQueryDebugBuffer",
-                "RtlQueryProcessHeapInformation",
-                "RtlQueryProcessDebugInformation",
-                "RtlDestroyQueryDebugBuffer",
-            };
-
-            var addrs = ExportResolver.ResolveExports("ntdll.dll", exports, throwIfNotFound: true);
-            NtClose = Marshal.GetDelegateForFunctionPointer<DNtClose>(addrs[0]);
-            NtSetInformationThread = Marshal.GetDelegateForFunctionPointer<DNtSetInformationThread>(addrs[1]);
-            NtQueryInformationProcess_uint = Marshal.GetDelegateForFunctionPointer<DNtQueryInformationProcess_uint>(addrs[2]);
-            NtQueryInformationProcess_IntPtr = Marshal.GetDelegateForFunctionPointer<DNtQueryInformationProcess_IntPtr>(addrs[2]);
-            NtQueryInformationProcess_ProcessBasicInfo = Marshal.GetDelegateForFunctionPointer<DNtQueryInformationProcess_ProcessBasicInfo>(addrs[2]);
-            NtQuerySystemInformation_CodeIntegrityInfo = Marshal.GetDelegateForFunctionPointer<DNtQuerySystemInformation_CodeIntegrityInfo>(addrs[3]);
-            NtQuerySystemInformation_KernelDebuggerInfo = Marshal.GetDelegateForFunctionPointer<DNtQuerySystemInformation_KernelDebuggerInfo>(addrs[3]);
-            CsrGetProcessId = Marshal.GetDelegateForFunctionPointer<DCsrGetProcessId>(addrs[4]);
-            NtQueryObject_ref = Marshal.GetDelegateForFunctionPointer<DNtQueryObject_ref>(addrs[5]);
-            NtQueryObject_IntPtr = Marshal.GetDelegateForFunctionPointer<DNtQueryObject_IntPtr>(addrs[5]);
-            RtlCreateQueryDebugBuffer = Marshal.GetDelegateForFunctionPointer<DRtlCreateQueryDebugBuffer>(addrs[6]);
-            RtlQueryProcessHeapInformation = Marshal.GetDelegateForFunctionPointer<DRtlQueryProcessHeapInformation>(addrs[7]);
-            RtlQueryProcessDebugInformation = Marshal.GetDelegateForFunctionPointer<DRtlQueryProcessDebugInformation>(addrs[8]);
-            RtlDestroyQueryDebugBuffer = Marshal.GetDelegateForFunctionPointer<DRtlDestroyQueryDebugBuffer>(addrs[9]);
+            var resolver = new ExportResolver("ntdll.dll");
+            resolver.CacheAllExports();
+            NtClose = resolver.GetExport<DNtClose>("NtClose");
+            NtSetInformationThread = resolver.GetExport<DNtSetInformationThread>("NtSetInformationThread");
+            NtQueryInformationProcess_uint = resolver.GetExport<DNtQueryInformationProcess_uint>("NtQueryInformationProcess");
+            NtQueryInformationProcess_IntPtr = resolver.GetExport<DNtQueryInformationProcess_IntPtr>("NtQueryInformationProcess");
+            NtQueryInformationProcess_ProcessBasicInfo = resolver.GetExport<DNtQueryInformationProcess_ProcessBasicInfo>("NtQueryInformationProcess");
+            NtQuerySystemInformation_CodeIntegrityInfo = resolver.GetExport<DNtQuerySystemInformation_CodeIntegrityInfo>("NtQuerySystemInformation");
+            NtQuerySystemInformation_KernelDebuggerInfo = resolver.GetExport<DNtQuerySystemInformation_KernelDebuggerInfo>("NtQuerySystemInformation");
+            CsrGetProcessId = resolver.GetExport<DCsrGetProcessId>("CsrGetProcessId");
+            NtQueryObject_ref = resolver.GetExport<DNtQueryObject_ref>("NtQueryObject");
+            NtQueryObject_IntPtr = resolver.GetExport<DNtQueryObject_IntPtr>("NtQueryObject");
+            RtlCreateQueryDebugBuffer = resolver.GetExport<DRtlCreateQueryDebugBuffer>("RtlCreateQueryDebugBuffer");
+            RtlQueryProcessHeapInformation = resolver.GetExport<DRtlQueryProcessHeapInformation>("RtlQueryProcessHeapInformation");
+            RtlQueryProcessDebugInformation = resolver.GetExport<DRtlQueryProcessDebugInformation>("RtlQueryProcessDebugInformation");
+            RtlDestroyQueryDebugBuffer = resolver.GetExport<DRtlDestroyQueryDebugBuffer>("RtlDestroyQueryDebugBuffer");
         }
     }
 }

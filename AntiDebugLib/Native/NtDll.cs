@@ -63,6 +63,10 @@ namespace AntiDebugLib.Native
 
         internal static RtlDestroyQueryDebugBuffer RtlDestroyQueryDebugBuffer { get; private set; }
 
+        internal static RtlQueryProcessHeapInformation RtlQueryProcessHeapInformation { get; private set; }
+
+        internal static RtlQueryProcessDebugInformation RtlQueryProcessDebugInformation { get; private set; }
+
         #endregion
 
         internal static void InitNatives()
@@ -72,6 +76,10 @@ namespace AntiDebugLib.Native
             NtClose = resolver.GetExport<NtClose>("NtClose");
             RtlCreateQueryDebugBuffer = resolver.GetExport<RtlCreateQueryDebugBuffer>("RtlCreateQueryDebugBuffer");
             RtlDestroyQueryDebugBuffer = resolver.GetExport<RtlDestroyQueryDebugBuffer>("RtlDestroyQueryDebugBuffer");
+
+            // these two function create SEGFAULT when called from Unhooked NTDLL
+            RtlQueryProcessHeapInformation = resolver.GetExport<RtlQueryProcessHeapInformation>("RtlQueryProcessHeapInformation");
+            RtlQueryProcessDebugInformation = resolver.GetExport<RtlQueryProcessDebugInformation>("RtlQueryProcessDebugInformation");
         }
     }
 }

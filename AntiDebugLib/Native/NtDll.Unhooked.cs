@@ -31,10 +31,6 @@ namespace AntiDebugLib.Native
 
         internal static NtQueryObject_IntPtr NtQueryObject_IntPtr { get; private set; }
 
-        internal static RtlQueryProcessHeapInformation RtlQueryProcessHeapInformation { get; private set; }
-
-        internal static RtlQueryProcessDebugInformation RtlQueryProcessDebugInformation { get; private set; }
-
         #endregion
 
         internal static void InitNativesUnhooked()
@@ -52,8 +48,6 @@ namespace AntiDebugLib.Native
             CsrGetProcessId = resolver.GetExport<CsrGetProcessId>("CsrGetProcessId");
             NtQueryObject_ref = resolver.GetExport<NtQueryObject_ref>("NtQueryObject");
             NtQueryObject_IntPtr = resolver.GetExport<NtQueryObject_IntPtr>("NtQueryObject");
-            RtlQueryProcessHeapInformation = resolver.GetExport<RtlQueryProcessHeapInformation>("RtlQueryProcessHeapInformation");
-            RtlQueryProcessDebugInformation = resolver.GetExport<RtlQueryProcessDebugInformation>("RtlQueryProcessDebugInformation");
         }
     }
 }

@@ -32,7 +32,7 @@ namespace AntiDebugLib.Check.DebugFlags
             if (!GetThreadContext(GetCurrentThread(), ref ctx))
             {
                 Logger.Warning("Unable to get the current thread context. GetThreadContext returned win32 error {error}.", Marshal.GetLastWin32Error());
-                return Win32Error(nameof(GetThreadContext));
+                return Win32Error("GetThreadContext");
             }
 
             Logger.Debug("Current thread debug register values: DR0={dr0:X} DR1={dr1:X} DR2={dr2:X} DR3={dr3:X} DR4={dr4:X} DR5={dr5:X} DR6={dr6:X} DR7={dr7:X}", ctx.Dr0, ctx.Dr1, ctx.Dr2, ctx.Dr3, ctx.Dr4, ctx.Dr5, ctx.Dr6, ctx.Dr7);

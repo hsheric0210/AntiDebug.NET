@@ -60,7 +60,7 @@ namespace AntiDebugLib.Check.DebugFlags
                     if (buffer == IntPtr.Zero)
                     {
                         Logger.Warning("Unable to allocate the unmanaged buffer of size {size}.", allocLength);
-                        result = Error(new { Function = nameof(Marshal.AllocHGlobal) });
+                        result = Error(new { Function = "Marshal.AllocHGlobal" });
                         goto cleanup;
                     }
 

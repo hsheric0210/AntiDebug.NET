@@ -38,7 +38,7 @@ namespace AntiDebugLib.Check.DebugFlags
                 if (buffer == IntPtr.Zero)
                 {
                     Logger.Warning("Unable to allocate debug buffer.");
-                    return Error(new { Function = nameof(RtlCreateQueryDebugBuffer) });
+                    return Error(new { Function = "RtlCreateQueryDebugBuffer" });
                 }
 
                 var status = RtlQueryProcessDebugInformation((uint)Process.GetCurrentProcess().Id, PDI_HEAPS | PDI_HEAP_BLOCKS, buffer);

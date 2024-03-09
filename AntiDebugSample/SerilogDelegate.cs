@@ -1,7 +1,7 @@
 ﻿using AntiDebugLib;
 using System;
 
-namespace MyStealer
+namespace AntiDebugSample
 {
     internal class SerilogDelegate : ILogger
     {

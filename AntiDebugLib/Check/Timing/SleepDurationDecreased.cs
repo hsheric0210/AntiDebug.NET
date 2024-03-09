@@ -17,7 +17,7 @@ namespace AntiDebugLib.Check.Timing
     {
         public override string Name => "Sleep Ignorance - TickCount delta too short than expected";
 
-        public override CheckReliability Reliability => CheckReliability.Perfect;
+        public override CheckReliability Reliability => CheckReliability.Bad;
 
         public override CheckResult CheckActive()
         {

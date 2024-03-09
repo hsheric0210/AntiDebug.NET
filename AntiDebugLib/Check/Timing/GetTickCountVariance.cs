@@ -13,7 +13,7 @@ namespace AntiDebugLib.Check.Timing
     {
         public override string Name => "GetTickCount delta too large";
 
-        public override CheckReliability Reliability => CheckReliability.Perfect;
+        public override CheckReliability Reliability => CheckReliability.Bad;
 
         public override CheckResult CheckActive()
         {

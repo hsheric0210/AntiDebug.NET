@@ -174,13 +174,6 @@ namespace AntiDebugLib.Native
             public IntPtr Reserved8;
         }
 
-        [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct RTL_PROCESS_HEAPS
-        {
-            public uint NumberOfHeaps;
-            public RTL_HEAP_INFORMATION[] Heaps;
-        }
-
         /// <summary>
         /// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/NtDll.h#L101
         /// </summary>

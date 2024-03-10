@@ -2,9 +2,11 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Runtime.ExceptionServices;
 
 using static AntiDebugLib.Native.NativeDefs;
 using static AntiDebugLib.Native.NtDll;
+using System.Collections.Generic;
 
 namespace AntiDebugLib.Check.DebugFlags
 {
@@ -26,6 +28,7 @@ namespace AntiDebugLib.Check.DebugFlags
 
         private const uint HEAP_GROWABLE = 0x00000002;
 
+        [HandleProcessCorruptedStateExceptions]
         public override CheckResult CheckActive()
         {
             var buffer = Pointer.Zero;
@@ -46,23 +49,12 @@ namespace AntiDebugLib.Check.DebugFlags
                     return NtError("RtlQueryProcessHeapInformation", status);
                 }
 
-                uint heapFlags;
-                if (Pointer.Is64Bit)
-                {
-                    var debug = Marshal.PtrToStructure<RTL_DEBUG_INFORMATION>(buffer);
-                    var debug2 = Marshal.PtrToStructure<DEBUG_BUFFER>(buffer);
-                    Console.WriteLine($"debug buffer @ {buffer} and the heapinfo is point to RDI {(Pointer)debug.HeapInformation} or DB {(Pointer)debug2.HeapInformation}");
-                    heapFlags = Marshal.PtrToStructure<RTL_HEAP_INFORMATION>(buffer + debug.HeapInformation + Pointer.Size).Flags; // 8: RTL_PROCESS_HEAPS.NumberOfHeaps
-                }
-                else
-                {
-                    var debug = Marshal.PtrToStructure<RTL_DEBUG_INFORMATION>(buffer);
-                    var debug2 = Marshal.PtrToStructure<DEBUG_BUFFER>(buffer);
-                    Console.WriteLine($"debug buffer @ {buffer} and the heapinfo is point to RDI {(Pointer)debug.HeapInformation} or DB {(Pointer)debug2.HeapInformation}");
-                    heapFlags = Marshal.PtrToStructure<RTL_HEAP_INFORMATION>((Pointer)debug.HeapInformation).Flags; // https://evilcodecave.wordpress.com/tag/pdebug_buffer/
-                }
+                var heapInformationOffset = Pointer.Is64Bit ? 0x70 : 0x38; // I found this address BY MYSELF (by comparing the memory dump and address values)
+                var heapInformation = (Pointer)Marshal.ReadIntPtr(buffer + heapInformationOffset);
 
-                Console.WriteLine($"Flags is {heapFlags:X}");
+                var flagsOffset = Pointer.Size * 2; // Skip 8 bytes
+                var heapFlagsAddress = heapInformation + flagsOffset;
+                var heapFlags = Marshal.ReadInt32(heapFlagsAddress);
 
                 Logger.Debug("Heap Flags: {flags:X}", heapFlags);
                 if ((heapFlags & ~HEAP_GROWABLE) == 0)

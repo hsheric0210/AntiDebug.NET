@@ -49,17 +49,12 @@ namespace AntiDebugLib.Check.DebugFlags
                     return NtError("RtlQueryProcessDebugInformation", status);
                 }
 
-                uint heapFlags;
-                if (Pointer.Is64Bit)
-                {
-                    var debug = Marshal.PtrToStructure<RTL_DEBUG_INFORMATION>(buffer);
-                    heapFlags = Marshal.PtrToStructure<RTL_HEAP_INFORMATION>(buffer + debug.HeapInformation + Pointer.Size).Flags; // 8: RTL_PROCESS_HEAPS.NumberOfHeaps
-                }
-                else
-                {
-                    var debug = Marshal.PtrToStructure<RTL_DEBUG_INFORMATION>(buffer);
-                    heapFlags = Marshal.PtrToStructure<RTL_HEAP_INFORMATION>(debug.HeapInformation + 1).Flags; // https://evilcodecave.wordpress.com/tag/pdebug_buffer/
-                }
+                var heapInformationOffset = Pointer.Is64Bit ? 0x70 : 0x38; // I found this address BY MYSELF (by comparing the memory dump and address values)
+                var heapInformation = (Pointer)Marshal.ReadIntPtr(buffer + heapInformationOffset);
+
+                var flagsOffset = Pointer.Size * 2; // Skip two ptrs
+                var heapFlagsAddress = heapInformation + flagsOffset;
+                var heapFlags = Marshal.ReadInt32(heapFlagsAddress);
 
                 Logger.Debug("Heap Flags: {flags:X}", heapFlags);
                 if ((heapFlags & ~HEAP_GROWABLE) == 0)

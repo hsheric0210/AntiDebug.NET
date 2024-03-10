@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.ExceptionServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AntiDebugLib
 {
@@ -162,9 +163,15 @@ namespace AntiDebugLib
             return thread;
         }
 
-        public static void EndChecks()
+        public static void EndChecks(bool waitUntilThreadsExit = false)
         {
             threadCancel.Cancel();
+
+            if (waitUntilThreadsExit)
+            {
+                foreach (var thread in threads)
+                    thread.Join();
+            }
 
             threads = null;
 

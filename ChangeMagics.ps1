@@ -50,9 +50,20 @@ function Rename-PsCommentMarker {
     return $Data
 }
 
-$entryName = Read-Host -Prompt "New Entry-point procedure Name"
-$pebName = Read-Host -Prompt "New MyGetPeb procedure Name"
-$xorEncKey = Read-Host -Prompt "New native dll encryption key"
+$entryPrefixChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_".ToCharArray()
+$entryChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_".ToCharArray()
+$xorKeyChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%&()*+,-./:;<=>?@[]^_{|}~".ToCharArray()
+
+$prefix = [char]($entryPrefixChars | Get-Random)
+$length = Get-Random -Minimum 16 -Maximum 32
+$generated = -join($entryChars | Get-Random -Count $length | ForEach-Object { [char]$_ })
+$entryName = $prefix + $generated
+
+$length = Get-Random -Minimum 16 -Maximum 32
+$xorEncKey = -join($xorKeyChars | Get-Random -Count $length | ForEach-Object { [char]$_ })
+
+Write-Output "Entry point name is $entryName"
+Write-Output "DLL XOR encryption key is $xorEncKey"
 
 $cs = [System.IO.Path]::Combine((Get-Location).Path, "AntiDebugLib", "Native", "AntiDebugLibNative.cs")
 $cpp = [System.IO.Path]::Combine((Get-Location).Path, "AntiDebugLibNative", "dllmain.cpp")
@@ -64,9 +75,6 @@ $ps_cnt = [System.IO.File]::ReadAllText($ps)
 
 $cs_cnt = Rename-CommentMarker -Data $cs_cnt -Marker "cs_entrypoint" -Value $entryName -TrimLength 1
 $cpp_cnt = Rename-CommentMarker -Data $cpp_cnt -Marker "c_entrypoint" -Value $entryName -TrimLength 0
-
-$cs_cnt = Rename-CommentMarker -Data $cs_cnt -Marker "cs_getpeb" -Value $pebName -TrimLength 1
-$cpp_cnt = Rename-CommentMarker -Data $cpp_cnt -Marker "c_getpeb" -Value $pebName -TrimLength 0
 
 $cs_cnt = Rename-CommentMarker -Data $cs_cnt -Marker "dll_crypt_magic" -Value $xorEncKey -TrimLength 1
 $ps_cnt = Rename-PsCommentMarker -Data $ps_cnt -Marker "dll_crypt_magic" -Value $xorEncKey -TrimLength 1

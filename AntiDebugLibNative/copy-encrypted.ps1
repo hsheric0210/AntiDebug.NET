@@ -1,4 +1,4 @@
-$key = <#dll_crypt_magic#>"AntiDebug.NET"<#/dll_crypt_magic#>
+$key = <#dll_crypt_magic#>"/sbRgX4CpG1S[9j(3."<#/dll_crypt_magic#>
 
 # http://kenwardtown.com/2016/02/28/the-xor-cipher-in-powershell/
 function encode($plaintext)

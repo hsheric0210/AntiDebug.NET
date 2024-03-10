@@ -1,4 +1,4 @@
-$key = <#dll_crypt_magic#>"vJwWO3S9~(iz&:c^1obeg@.I,+GD;"<#/dll_crypt_magic#>
+$key = <#dll_crypt_magic#>"R*P9yhc+Y,|e{KktbW"<#/dll_crypt_magic#>
 
 # http://kenwardtown.com/2016/02/28/the-xor-cipher-in-powershell/
 function encode($plaintext)

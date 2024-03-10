@@ -30,10 +30,20 @@ namespace AntiDebugLib
         private static CancellationTokenSource threadCancel;
 
         /// <summary>
-        /// Note: Logger must be set before the <c>Initialize()</c> function call.
+        /// The logging interface for the global AntiDebug.NET instance.
         /// </summary>
+        /// <remarks>
+        /// Note: Logger must be set before the <c>Initialize()</c> function call.
+        /// </remarks>
         public static ILogger Logger { get; set; } = new DummyLogger();
 
+        /// <summary>
+        /// Initialize the AntiDebug.NET instance.
+        /// You MUST call this method before calling <c>BeginChecks</c> or <c>IsDebuggerPresent</c> or you will get errors.
+        /// </summary>
+        /// <remarks>
+        /// Preparation of the native methods and instantization of checks and preventions are done here.
+        /// </remarks>
         public static void Initialize()
         {
             AntiDebugLibNative.Init(); // initialize (indirect) native calls and native checks
@@ -101,6 +111,17 @@ namespace AntiDebugLib
             };
         }
 
+        /// <summary>
+        /// Begin the anti-debug checks.
+        /// Once called, it will first run all 'passive' preventions and checks.
+        /// Then it will start threads for active checks. If the threads are already created, no new threads will be created.
+        /// </summary>
+        /// <remarks>
+        /// You can receive the detection event when the (potential) debugging activity is detected, by <c>DebuggerDetected</c> event.
+        /// </remarks>
+        /// <param name="activeCheckPeriodMillis"></param>
+        /// <param name="timingCheckPeriodMillis"></param>
+        /// <param name="activePreventionPeriodMillis"></param>
         [HandleProcessCorruptedStateExceptions]
         public static void BeginChecks(
             int activeCheckPeriodMillis = 3000,
@@ -163,6 +184,10 @@ namespace AntiDebugLib
             return thread;
         }
 
+        /// <summary>
+        /// Stops all anti-debug checks. All running anti-debug threads will be cancelled as soon as possible.
+        /// </summary>
+        /// <param name="waitUntilThreadsExit">Wait until all anti-debug threads do exit.</param>
         public static void EndChecks(bool waitUntilThreadsExit = false)
         {
             threadCancel.Cancel();
@@ -179,6 +204,10 @@ namespace AntiDebugLib
             threadCancel = null;
         }
 
+        /// <summary>
+        /// Apply all debugger prevention measures on-demand.
+        /// Both 'passive' and 'active' checks are included.
+        /// </summary>
         public void ApplyPreventions()
         {
             foreach (var prevention in preventions)
@@ -188,6 +217,11 @@ namespace AntiDebugLib
             }
         }
 
+        /// <summary>
+        /// Perform the anti-debug checks on-demand.
+        /// Both 'passive' and 'active' checks are included.
+        /// </summary>
+        /// <returns><c>true</c> if (potential) debugging activity is detected, <c>false</c> otherwise.</returns>
         public bool IsDebuggerPresent()
         {
             foreach (var check in checks)

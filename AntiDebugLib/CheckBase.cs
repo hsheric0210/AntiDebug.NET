@@ -5,6 +5,9 @@ namespace AntiDebugLib
 {
     public abstract class CheckBase : ModuleBase
     {
+        /// <summary>
+        /// The reliability of this anti-debugging  check
+        /// </summary>
         public abstract CheckReliability Reliability { get; }
 
         /// <summary>

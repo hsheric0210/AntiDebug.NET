@@ -1,4 +1,4 @@
-﻿namespace AntiDebugLib.Check.Exception
+﻿namespace AntiDebugLib.Check.ExceptionHandler
 {
     /// <summary>
     /// <list type="bullet">

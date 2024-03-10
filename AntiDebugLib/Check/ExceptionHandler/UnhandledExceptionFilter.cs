@@ -1,4 +1,4 @@
-﻿namespace AntiDebugLib.Check.Exception
+﻿namespace AntiDebugLib.Check.ExceptionHandler
 {
     /// <summary>
     /// <list type="bullet">
@@ -7,13 +7,13 @@
     /// </item>
     /// </list>
     /// </summary>
-    public class VEH : NativeCheckBase
+    public class UnhandledExceptionFilter : NativeCheckBase
     {
-        public override string Name => "Vectorized Exception Handler";
+        public override string Name => "UnhandledExceptionFilter";
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
         public override CheckResult CheckActive()
-            => CallNativeCheck(NativeCheckType.Exception_VEH);
+            => CallNativeCheck(NativeCheckType.Exception_UnhandledExceptionFilter);
     }
 }

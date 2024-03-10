@@ -92,10 +92,10 @@
     <Compile Include="Check\Assembler\IceBP.cs" />
     <Compile Include="Check\Assembler\Int2D.cs" />
     <Compile Include="Check\Assembler\Int3Long.cs" />
-    <Compile Include="Check\Exception\VEH.cs" />
-    <Compile Include="Check\Exception\RaiseException.cs" />
-    <Compile Include="Check\Exception\UnhandledExceptionFilter.cs" />
-    <Compile Include="Check\Exception\SEH.cs" />
+    <Compile Include="Check\ExceptionHandler\VEH.cs" />
+    <Compile Include="Check\ExceptionHandler\RaiseException.cs" />
+    <Compile Include="Check\ExceptionHandler\UnhandledExceptionFilter.cs" />
+    <Compile Include="Check\ExceptionHandler\SEH.cs" />
     <Compile Include="Check\Memory\AntiStepOver\AntiStepWPM.cs" />
     <Compile Include="Check\Memory\AntiStepOver\AntiStepReadFile.cs" />
     <Compile Include="Check\Memory\AntiStepOver\AntiStepDirect.cs" />

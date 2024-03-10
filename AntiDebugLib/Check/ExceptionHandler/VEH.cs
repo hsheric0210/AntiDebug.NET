@@ -1,4 +1,4 @@
-﻿namespace AntiDebugLib.Check.Exception
+﻿namespace AntiDebugLib.Check.ExceptionHandler
 {
     /// <summary>
     /// <list type="bullet">
@@ -7,13 +7,13 @@
     /// </item>
     /// </list>
     /// </summary>
-    public class SEH : NativeCheckBase
+    public class VEH : NativeCheckBase
     {
-        public override string Name => "Structured Exception Handler";
+        public override string Name => "Vectorized Exception Handler";
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 
         public override CheckResult CheckActive()
-            => CallNativeCheck(NativeCheckType.Exception_SEH);
+            => CallNativeCheck(NativeCheckType.Exception_VEH);
     }
 }

@@ -33,7 +33,7 @@ namespace AntiDebugLib.Check.DebugFlags
         {
             const uint ProcessDebugPort = 0x7; // https://ntdoc.m417z.com/processinfoclass
             var size = (uint)(sizeof(uint) * (Environment.Is64BitProcess ? 2 : 1));
-            var status = NtQueryInformationProcess_uint(GetCurrentProcess(), ProcessDebugPort, out var port, size, 0);
+            var status = NtQueryInformationProcess_uint(GetCurrentProcess(), ProcessDebugPort, out var port, size, out _);
             if (!NT_SUCCESS(status))
             {
                 Logger.Warning("Unable to query ProcessDebugPort process information. NtQueryInformationProcess returned NTSTATUS {status}.", status);

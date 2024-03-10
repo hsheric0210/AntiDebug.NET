@@ -68,7 +68,7 @@ namespace AntiDebugLib
                 new DebugRegisterModification(),
 
                 new SEH(),
-                new UnhandledExceptionFilter(),
+                //new UnhandledExceptionFilter(),
                 new RaiseException(),
                 new VEH(),
 

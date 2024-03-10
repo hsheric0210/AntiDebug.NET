@@ -45,7 +45,8 @@ namespace AntiDebugLib.Native
 
         internal static void InitNativesUnhooked()
         {
-            var kernel32Bytes = File.ReadAllBytes(Path.Combine(Environment.SystemDirectory, "kernel32.dll"));
+            var kernel32Path = ExportResolver.GetModuleFullName("kernel32.dll");
+            var kernel32Bytes = File.ReadAllBytes(kernel32Path);
             mappedKernel32 = new MemoryModule(kernel32Bytes);
             var resolver = mappedKernel32.Exports;
             resolver.CacheAllExports();

@@ -35,7 +35,8 @@ namespace AntiDebugLib.Native
 
         internal static void InitNativesUnhooked()
         {
-            var ntdllBytes = File.ReadAllBytes(Path.Combine(Environment.SystemDirectory, "ntdll.dll"));
+            var ntdllPath = ExportResolver.GetModuleFullName("ntdll.dll");
+            var ntdllBytes = File.ReadAllBytes(ntdllPath);
             mappedNtdll = new MemoryModule(ntdllBytes);
             var resolver = mappedNtdll.Exports;
             resolver.CacheAllExports();

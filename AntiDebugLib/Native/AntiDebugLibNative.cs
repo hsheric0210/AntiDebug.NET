@@ -2,6 +2,7 @@ using AntiDebugLib.Properties;
 using StealthModule;
 using System;
 using System.Runtime.InteropServices;
+using static AntiDebugLib.Native.NativeDefs;
 
 namespace AntiDebugLib.Native
 {
@@ -9,16 +10,28 @@ namespace AntiDebugLib.Native
     {
         private const string EncryptionMagic = /*<dll_crypt_magic>*/"AntiDebug.NET"/*</dll_crypt_magic>*/; // only use ascii chars
 
-        [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         internal delegate ulong DMyEntryPoint(uint checkType);
 
         private static DMyEntryPoint pfnMyEntryPoint;
 
         internal static ulong PerformNativeCheck(NativeCheckType checkType) => pfnMyEntryPoint((uint)checkType);
 
+        // todo: move these two functions to other place
+        internal static IntPtr PebAddressCache = IntPtr.Zero;
         internal static IntPtr GetPeb()
         {
-            return IntPtr.Zero; // TODo
+            if (PebAddressCache == IntPtr.Zero)
+            {
+                var processBasicInformation = new PROCESS_BASIC_INFORMATION();
+                var status = NtDll.NtQueryInformationProcess_ProcessBasicInfo((IntPtr)(-1), 0x0, ref processBasicInformation, (uint)Marshal.SizeOf(processBasicInformation), out _);
+                if (!NT_SUCCESS(status))
+                    throw new Exception($"NtQueryInformationProcess returned NTSTATUS {status}");
+
+                PebAddressCache = processBasicInformation.PebBaseAddress;
+            }
+
+            return PebAddressCache;
         }
 
         private static MemoryModule nativeModule; // Prevent DLL from get garbage collected

@@ -43,10 +43,10 @@ namespace AntiDebugLib.Native
         [StructLayout(LayoutKind.Sequential)]
         public struct PROCESS_BASIC_INFORMATION
         {
-            internal IntPtr Reserved1;
+            internal IntPtr ExitStatus;
             internal IntPtr PebBaseAddress;
-            internal IntPtr Reserved2_0;
-            internal IntPtr Reserved2_1;
+            internal IntPtr AffinityMask;
+            internal IntPtr BasePriority;
             internal IntPtr UniqueProcessId;
             internal IntPtr InheritedFromUniqueProcessId;
         }

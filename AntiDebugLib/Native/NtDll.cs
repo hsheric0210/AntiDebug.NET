@@ -19,13 +19,13 @@ namespace AntiDebugLib.Native
             internal delegate NTSTATUS NtSetInformationThread(SafeThreadHandle ThreadHandle, uint ThreadInformationClass, IntPtr ThreadInformation, int ThreadInformationLength);
 
             [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-            internal delegate NTSTATUS NtQueryInformationProcess_uint(IntPtr hProcess, uint ProcessInfoClass, out uint ProcessInfo, uint nSize, uint ReturnLength);
+            internal delegate NTSTATUS NtQueryInformationProcess_uint(IntPtr hProcess, uint ProcessInfoClass, out uint ProcessInfo, uint nSize, out uint ReturnLength);
 
             [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-            internal delegate NTSTATUS NtQueryInformationProcess_IntPtr(IntPtr hProcess, uint ProcessInfoClass, out IntPtr ProcessInfo, uint nSize, uint ReturnLength);
+            internal delegate NTSTATUS NtQueryInformationProcess_IntPtr(IntPtr hProcess, uint ProcessInfoClass, out IntPtr ProcessInfo, uint nSize, out uint ReturnLength);
 
             [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-            internal delegate NTSTATUS NtQueryInformationProcess_ProcessBasicInfo(IntPtr hProcess, uint ProcessInfoClass, ref PROCESS_BASIC_INFORMATION ProcessInfo, uint nSize, uint ReturnLength);
+            internal delegate NTSTATUS NtQueryInformationProcess_ProcessBasicInfo(IntPtr hProcess, uint ProcessInfoClass, ref PROCESS_BASIC_INFORMATION ProcessInfo, uint nSize, out uint ReturnLength);
 
             [UnmanagedFunctionPointer(CallingConvention.Winapi)]
             internal delegate NTSTATUS NtQuerySystemInformation_CodeIntegrityInfo(uint SystemInformationClass, ref SYSTEM_CODEINTEGRITY_INFORMATION SystemInformation, uint SystemInformationLength, out uint ReturnLength);

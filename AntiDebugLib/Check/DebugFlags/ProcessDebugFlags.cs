@@ -28,7 +28,7 @@ namespace AntiDebugLib.Check.DebugFlags
         public override CheckResult CheckActive()
         {
             const uint ProcessDebugFlags = 0x1F; // https://ntdoc.m417z.com/processinfoclass
-            var status = NtQueryInformationProcess_uint(GetCurrentProcess(), ProcessDebugFlags, out var flag, sizeof(uint), 0);
+            var status = NtQueryInformationProcess_uint(GetCurrentProcess(), ProcessDebugFlags, out var flag, sizeof(uint), out _);
             if (!NT_SUCCESS(status))
             {
                 Logger.Warning("Unable to query ProcessDebugFlags process information. NtQueryInformationProcess returned NTSTATUS {status}.", status);

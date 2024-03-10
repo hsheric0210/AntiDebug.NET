@@ -35,9 +35,11 @@ namespace AntiDebugLib.Check.DebugFlags
                 return Win32Error("GetThreadContext");
             }
 
-            Logger.Debug("Current thread debug register values: DR0={dr0:X} DR1={dr1:X} DR2={dr2:X} DR3={dr3:X} DR4={dr4:X} DR5={dr5:X} DR6={dr6:X} DR7={dr7:X}", ctx.Dr0, ctx.Dr1, ctx.Dr2, ctx.Dr3, ctx.Dr4, ctx.Dr5, ctx.Dr6, ctx.Dr7);
-            if (ctx.Dr0 != 0x00 || ctx.Dr1 != 0x00 || ctx.Dr2 != 0x00 || ctx.Dr3 != 0x00 || ctx.Dr4 != 0x00 || ctx.Dr5 != 0x00 || ctx.Dr6 != 0x00 || ctx.Dr7 != 0x00)
-                return DebuggerDetected(new { DR0 = ctx.Dr0, DR1 = ctx.Dr1, DR2 = ctx.Dr2, DR3 = ctx.Dr3, DR4 = ctx.Dr4, DR5 = ctx.Dr5, DR6 = ctx.Dr6, DR7 = ctx.Dr7 });
+            // https://en.wikipedia.org/wiki/X86_debug_register
+            // DR4=DR6, DR5=DR7
+            Logger.Debug("Current thread debug register values: DR0={dr0:X} DR1={dr1:X} DR2={dr2:X} DR3={dr3:X} DR6={dr6:X} DR7={dr7:X}", ctx.Dr0, ctx.Dr1, ctx.Dr2, ctx.Dr3, ctx.Dr6, ctx.Dr7);
+            if (ctx.Dr0 != 0x00 || ctx.Dr1 != 0x00 || ctx.Dr2 != 0x00 || ctx.Dr3 != 0x00 || ctx.Dr6 != 0x00 || ctx.Dr7 != 0x00)
+                return DebuggerDetected(new { DR0 = ctx.Dr0, DR1 = ctx.Dr1, DR2 = ctx.Dr2, DR3 = ctx.Dr3, DR6 = ctx.Dr6, DR7 = ctx.Dr7 });
 
             return DebuggerNotDetected();
         }

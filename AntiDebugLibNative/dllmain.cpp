@@ -12,42 +12,54 @@ extern "C" {
     // Feel free to rename this function, but I'd recommend to use 'RenameNativeFunctions.ps1'.
     // (It will automatically find markers and rename function names in both C++ and C# side)
 
-    DLLEXPORT ULONGLONG WINAPI /*<c_entrypoint>*/AD43568293496/*</c_entrypoint>*/()
+    DLLEXPORT ULONGLONG WINAPI /*<c_entrypoint>*/AD43568293496/*</c_entrypoint>*/(DWORD checkType)
     {
-        ULONGLONG value = 0ULL;
-        UINT16 i = 0;
-
-
-        if (check_assembler_int3()) value |= 1ULL << 0;
-        if (check_assembler_int3long()) value |= 1ULL << 1;
-        if (check_assembler_int2d()) value |= 1ULL << 2;
-        if (check_assembler_icebp()) value |= 1ULL << 3;
-        if (check_assembler_stack_segment_register()) value |= 1ULL << 4;
-        if (check_assembler_instruction_counting()) value |= 1ULL << 5;
-        if (check_assembler_popf_and_trap()) value |= 1ULL << 6;
-        if (check_assembler_instruction_prefixes()) value |= 1ULL << 7;
-        if (check_assembler_debug_registers_modification()) value |= 1ULL << 8;
-
-        if (check_exception_seh()) value |= 1ULL << 9;
-        if (check_exception_unhandledexceptionfilter()) value |= 1ULL << 10;
-        if (check_exception_raiseexception()) value |= 1ULL << 11;
-        if (check_exception_veh()) value |= 1ULL << 12;
-        if (check_exception_trapflag()) value |= 1ULL << 13;
-
-        if (check_timing_rdtsc_diff_locky()) value |= 1ULL << 14;
-        if (check_timing_rdtsc_diff_vmexit()) value |= 1ULL << 15;
-
-        if (check_memory_ntqueryvirtualmemory()) value |= 1ULL << 16;
-        if (check_memory_antistepover_direct()) value |= 1ULL << 17;
-        if (check_memory_antistepover_readfile()) value |= 1ULL << 18;
-        if (check_memory_antistepover_writeprocessmemory()) value |= 1ULL << 19;
-
-        return value;
-    }
-
-    DLLEXPORT ULONG_PTR WINAPI /*<c_getpeb>*/AD4567348905025/*</c_getpeb>*/()
-    {
-        return GetPEB();
+#pragma comment(linker, "/EXPORT:" __FUNCTION__ "=" __FUNCDNAME__)
+        switch (checkType)
+        {
+            case 0:
+                return (ULONGLONG)check_assembler_int3();
+            case 1:
+                return (ULONGLONG)check_assembler_int3long();
+            case 2:
+                return (ULONGLONG)check_assembler_int2d();
+            case 3:
+                return (ULONGLONG)check_assembler_icebp();
+            case 4:
+                return (ULONGLONG)check_assembler_stack_segment_register();
+            case 5:
+                return (ULONGLONG)check_assembler_instruction_counting();
+            case 6:
+                return (ULONGLONG)check_assembler_popf_and_trap();
+            case 7:
+                return (ULONGLONG)check_assembler_instruction_prefixes();
+            case 8:
+                return (ULONGLONG)check_assembler_debug_registers_modification();
+            case 9:
+                return (ULONGLONG)check_exception_seh();
+            case 10:
+                return (ULONGLONG)check_exception_unhandledexceptionfilter();
+            case 11:
+                return (ULONGLONG)check_exception_raiseexception();
+            case 12:
+                return (ULONGLONG)check_exception_veh();
+            case 13:
+                return (ULONGLONG)check_exception_trapflag();
+            case 14:
+                return (ULONGLONG)check_timing_rdtsc_diff_locky();
+            case 15:
+                return (ULONGLONG)check_timing_rdtsc_diff_vmexit();
+            case 16:
+                return (ULONGLONG)check_memory_ntqueryvirtualmemory();
+            case 17:
+                return (ULONGLONG)check_memory_antistepover_direct();
+            case 18:
+                return (ULONGLONG)check_memory_antistepover_readfile();
+            case 19:
+                return (ULONGLONG)check_memory_antistepover_writeprocessmemory();
+            default:
+                return (ULONGLONG)-1;
+        }
     }
 }
 

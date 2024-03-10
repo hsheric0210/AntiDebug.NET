@@ -1,5 +1,6 @@
 ﻿using AntiDebugLib.Check;
 using AntiDebugLib.Check.AntiHook;
+using AntiDebugLib.Check.Assembler;
 using AntiDebugLib.Check.DebugFlags;
 using AntiDebugLib.Check.Handle;
 using AntiDebugLib.Check.Handle.CloseHandle;
@@ -56,6 +57,21 @@ namespace AntiDebugLib
                 new User32Check(),
                 new Win32UCheck(),
 
+                new Int3(),
+                new Int3Long(),
+                new Int2D(),
+                new IceBP(),
+                new StackSegmentRegister(),
+                new InstructionCounting(),
+                new PopfAndTrap(),
+                new InstructionPrefixes(),
+                new DebugRegisterModification(),
+
+                new SEH(),
+                new UnhandledExceptionFilter(),
+                new RaiseException(),
+                new VEH(),
+
                 new BeingDebuggedPeb(),
                 new CheckRemoteDebuggerPresent(),
                 new DebuggerBreak(),
@@ -89,15 +105,15 @@ namespace AntiDebugLib
                 new Processes(),
                 new Services(),
                 new WmiPortConnectors(),
-
-                new GetTickCountVariance(),
-                new SleepDurationDecreased(),
             };
 
             timingChecks = new List<CheckBase>()
             {
                 new GetTickCountVariance(),
                 new SleepDurationDecreased(),
+
+                new RdtscDiffLocky(),
+                new RdtscDiffVmExit(),
             };
 
             preventions = new List<PreventionBase>()

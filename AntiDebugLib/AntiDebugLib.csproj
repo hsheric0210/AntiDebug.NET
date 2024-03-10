@@ -84,7 +84,27 @@
     <Compile Include="AntiDebug+ActivePreventionThread.cs" />
     <Compile Include="AntiDebug+ActiveCheckThread.cs" />
     <Compile Include="AntiDebug.cs" />
+    <Compile Include="Check\Assembler\DebugRegisterModification.cs" />
+    <Compile Include="Check\Assembler\InstructionPrefixes.cs" />
+    <Compile Include="Check\Assembler\PopfAndTrap.cs" />
+    <Compile Include="Check\Assembler\InstructionCounting.cs" />
+    <Compile Include="Check\Assembler\StackSegmentRegister.cs" />
+    <Compile Include="Check\Assembler\IceBP.cs" />
+    <Compile Include="Check\Assembler\Int2D.cs" />
+    <Compile Include="Check\Assembler\Int3Long.cs" />
+    <Compile Include="Check\Exception\VEH.cs" />
+    <Compile Include="Check\Exception\RaiseException.cs" />
+    <Compile Include="Check\Exception\UnhandledExceptionFilter.cs" />
+    <Compile Include="Check\Exception\SEH.cs" />
+    <Compile Include="Check\Memory\AntiStepOver\AntiStepWPM.cs" />
+    <Compile Include="Check\Memory\AntiStepOver\AntiStepReadFile.cs" />
+    <Compile Include="Check\Memory\AntiStepOver\AntiStepDirect.cs" />
+    <Compile Include="Check\Memory\WorkingSetShare.cs" />
+    <Compile Include="Check\Timing\RdtscDiffVmExit.cs" />
+    <Compile Include="Check\Timing\RdtscDiffLocky.cs" />
+    <Compile Include="NativeCheckBase.cs" />
     <Compile Include="CheckData.cs" />
+    <Compile Include="Check\Assembler\Int3.cs" />
     <Compile Include="Native\IntPtrExtension.cs" />
     <Compile Include="Native\Kernel32.Unhooked.cs" />
     <Compile Include="Native\NtDll.Unhooked.cs" />
@@ -147,7 +167,7 @@
     <Compile Include="Native\NativeDefs+PE.cs" />
     <Compile Include="Native\NativeDefs+PEB.cs" />
     <Compile Include="Native\Kernel32.cs" />
-    <Compile Include="NativeCheckTypes.cs" />
+    <Compile Include="NativeCheckType.cs" />
     <Compile Include="Prevention\FunctionOverwrite.cs" />
     <Compile Include="Prevention\OverwriteDbgBreakPoint.cs" />
     <Compile Include="Prevention\HideThreads.cs" />
@@ -165,9 +185,7 @@
     <Compile Include="Utils\SafeThreadHandle.cs" />
     <Compile Include="Utils\StringUtils.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Check\Memory\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

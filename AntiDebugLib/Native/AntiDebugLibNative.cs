@@ -10,27 +10,18 @@ namespace AntiDebugLib.Native
         private const string EncryptionMagic = /*<dll_crypt_magic>*/"AntiDebug.NET"/*</dll_crypt_magic>*/; // only use ascii chars
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate ulong DMyEntryPoint();
-
-        [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        internal delegate IntPtr DMyGetPeb();
+        internal delegate ulong DMyEntryPoint(uint checkType);
 
         private static DMyEntryPoint pfnMyEntryPoint;
-        private static DMyGetPeb pfnMyGetPeb;
 
-        internal static ulong DoNativeChecks() => pfnMyEntryPoint();
+        internal static ulong PerformNativeCheck(NativeCheckType checkType) => pfnMyEntryPoint((uint)checkType);
 
-        internal static IntPtr GetPeb() => pfnMyGetPeb();
+        internal static IntPtr GetPeb()
+        {
+            return IntPtr.Zero; // TODo
+        }
 
         private static MemoryModule nativeModule; // Prevent DLL from get garbage collected
-
-        private static string DecorateFunctionName(string name, int paramSize)
-        {
-            if (Environment.Is64BitProcess)
-                return name;
-
-            return '_' + name + '@' + paramSize; // Example: _MyFunctionName@0
-        }
 
         private static byte[] Decrypt(byte[] encrypted)
         {
@@ -49,8 +40,7 @@ namespace AntiDebugLib.Native
             AntiDebug.Logger.Information("Will use {bit}-bit native library.", Environment.Is64BitProcess ? 64 : 32);
             var dll = Decrypt(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
             nativeModule = new MemoryModule(dll);
-            pfnMyEntryPoint = nativeModule.Exports.GetExport<DMyEntryPoint>(DecorateFunctionName(/*<cs_entrypoint>*/"AD43568293496"/*</cs_entrypoint>*/, 0));
-            pfnMyGetPeb = nativeModule.Exports.GetExport<DMyGetPeb>(DecorateFunctionName(/*<cs_getpeb>*/"AD4567348905025"/*</cs_getpeb>*/, 0));
+            pfnMyEntryPoint = nativeModule.Exports.GetExport<DMyEntryPoint>(/*<cs_entrypoint>*/"AD43568293496"/*</cs_entrypoint>*/);
 
             // initialize indirect calls
             Kernel32.InitNatives();

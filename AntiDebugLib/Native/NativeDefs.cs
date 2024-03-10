@@ -142,6 +142,38 @@ namespace AntiDebugLib.Native
             public IntPtr Reserved8;
         }
 
+        /// <summary>
+        /// https://github.com/CheckPointSW/showstopper/blob/4e6b8dbef35724d7eb987f61cf72dff7a6abfe49/src/not_suspicious/NtDll.h#L164
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public unsafe struct RTL_DEBUG_INFORMATION
+        {
+            public IntPtr SectionHandle;
+            public IntPtr SectionBase;
+            public IntPtr RemoteSectionBase;
+            public uint SectionBaseDelta;
+            public IntPtr EventPairHandle;
+            public IntPtr EventPairTarget;
+            public IntPtr TargetProcessId;
+            public IntPtr TargetThreadHandle;
+            public uint Flags;
+            public uint OffsetFree;
+            public uint CommitSize;
+            public uint ViewSize;
+            public IntPtr ModuleInformation;
+            public IntPtr BackTraceInformation;
+            public IntPtr HeapInformation;
+            public IntPtr LockInformation;
+            public IntPtr SpecificHeap;
+            public IntPtr TargetProcessHandle;
+            public IntPtr Reserved3;
+            public IntPtr Reserved4;
+            public IntPtr Reserved5;
+            public IntPtr Reserved6;
+            public IntPtr Reserved7;
+            public IntPtr Reserved8;
+        }
+
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct RTL_PROCESS_HEAPS
         {

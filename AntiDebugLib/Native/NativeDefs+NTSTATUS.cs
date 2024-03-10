@@ -4,7 +4,7 @@
     /// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55
     /// Used Copytables 0.5.9
     /// </summary>
-    public enum NTSTATUS : ulong
+    public enum NTSTATUS : uint
     {
         STATUS_SUCCESS = 0x00000000,
         STATUS_WAIT_0 = 0x00000000,

@@ -57,7 +57,7 @@ namespace AntiDebugLib
                 new User32Check(),
                 new Win32UCheck(),
 
-                new Int3(),
+                /*new Int3(),
                 new Int3Long(),
                 new Int2D(),
                 new IceBP(),
@@ -70,7 +70,7 @@ namespace AntiDebugLib
                 new SEH(),
                 //new UnhandledExceptionFilter(),
                 new RaiseException(),
-                new VEH(),
+                new VEH(),*/
 
                 new BeingDebuggedPeb(),
                 new CheckRemoteDebuggerPresent(),

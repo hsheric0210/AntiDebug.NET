@@ -35,10 +35,11 @@ namespace AntiDebugLib.Native
 
         internal static void InitNativesUnhooked()
         {
-            var ntdllPath = ExportResolver.GetModuleFullName("ntdll.dll");
+            /*var ntdllPath = ExportResolver.GetModuleFullName("ntdll.dll");
             var ntdllBytes = File.ReadAllBytes(ntdllPath);
             mappedNtdll = new MemoryModule(ntdllBytes);
-            var resolver = mappedNtdll.Exports;
+            var resolver = mappedNtdll.Exports;*/
+            var resolver = new ExportResolver("ntdll.dll");
             resolver.CacheAllExports();
             NtSetInformationThread = resolver.GetExport<NtSetInformationThread>("NtSetInformationThread");
             NtQueryInformationProcess_uint = resolver.GetExport<NtQueryInformationProcess_uint>("NtQueryInformationProcess");

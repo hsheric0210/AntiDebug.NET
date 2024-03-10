@@ -1,4 +1,6 @@
-﻿using System;
+﻿using StealthModule;
+using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 using static AntiDebugLib.Native.NativeDefs;
@@ -26,12 +28,12 @@ namespace AntiDebugLib.Check.DebugFlags
 
         public override CheckResult CheckActive()
         {
-            var buffer = IntPtr.Zero;
+            var buffer = Pointer.Zero;
 
             try
             {
                 buffer = RtlCreateQueryDebugBuffer(0, false);
-                if (buffer == IntPtr.Zero)
+                if (buffer == Pointer.Zero)
                 {
                     Logger.Warning("Unable to allocate debug buffer.");
                     return Error(new { Function = "RtlCreateQueryDebugBuffer" });
@@ -44,8 +46,23 @@ namespace AntiDebugLib.Check.DebugFlags
                     return NtError("RtlQueryProcessHeapInformation", status);
                 }
 
-                var debug = Marshal.PtrToStructure<DEBUG_BUFFER>(buffer);
-                var heapFlags = Marshal.PtrToStructure<RTL_HEAP_INFORMATION>(new IntPtr(buffer.ToInt64() + debug.HeapInformation.ToInt64() + 8)).Flags; // 8: RTL_PROCESS_HEAPS.NumberOfHeaps
+                uint heapFlags;
+                if (Pointer.Is64Bit)
+                {
+                    var debug = Marshal.PtrToStructure<RTL_DEBUG_INFORMATION>(buffer);
+                    var debug2 = Marshal.PtrToStructure<DEBUG_BUFFER>(buffer);
+                    Console.WriteLine($"debug buffer @ {buffer} and the heapinfo is point to RDI {(Pointer)debug.HeapInformation} or DB {(Pointer)debug2.HeapInformation}");
+                    heapFlags = Marshal.PtrToStructure<RTL_HEAP_INFORMATION>(buffer + debug.HeapInformation + Pointer.Size).Flags; // 8: RTL_PROCESS_HEAPS.NumberOfHeaps
+                }
+                else
+                {
+                    var debug = Marshal.PtrToStructure<RTL_DEBUG_INFORMATION>(buffer);
+                    var debug2 = Marshal.PtrToStructure<DEBUG_BUFFER>(buffer);
+                    Console.WriteLine($"debug buffer @ {buffer} and the heapinfo is point to RDI {(Pointer)debug.HeapInformation} or DB {(Pointer)debug2.HeapInformation}");
+                    heapFlags = Marshal.PtrToStructure<RTL_HEAP_INFORMATION>((Pointer)debug.HeapInformation).Flags; // https://evilcodecave.wordpress.com/tag/pdebug_buffer/
+                }
+
+                Console.WriteLine($"Flags is {heapFlags:X}");
 
                 Logger.Debug("Heap Flags: {flags:X}", heapFlags);
                 if ((heapFlags & ~HEAP_GROWABLE) == 0)
@@ -55,7 +72,7 @@ namespace AntiDebugLib.Check.DebugFlags
             }
             finally
             {
-                if (buffer != IntPtr.Zero)
+                if (buffer != Pointer.Zero)
                 {
                     var status = RtlDestroyQueryDebugBuffer(buffer);
                     if (!NT_SUCCESS(status))

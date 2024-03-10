@@ -45,10 +45,11 @@ namespace AntiDebugLib.Native
 
         internal static void InitNativesUnhooked()
         {
-            var kernel32Path = ExportResolver.GetModuleFullName("kernel32.dll");
+            /*var kernel32Path = ExportResolver.GetModuleFullName("kernel32.dll");
             var kernel32Bytes = File.ReadAllBytes(kernel32Path);
             mappedKernel32 = new MemoryModule(kernel32Bytes);
-            var resolver = mappedKernel32.Exports;
+            var resolver = mappedKernel32.Exports;*/
+            var resolver = new ExportResolver("kernel32.dll");
             resolver.CacheAllExports();
             SetHandleInformation = resolver.GetExport<SetHandleInformation>("SetHandleInformation");
             IsDebuggerPresent = resolver.GetExport<IsDebuggerPresent>("IsDebuggerPresent");

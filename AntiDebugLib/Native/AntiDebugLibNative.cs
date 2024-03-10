@@ -8,14 +8,18 @@ namespace AntiDebugLib.Native
 {
     internal static class AntiDebugLibNative
     {
-        private const string EncryptionMagic = /*<dll_crypt_magic>*/"/sbRgX4CpG1S[9j(3."/*</dll_crypt_magic>*/; // only use ascii chars
+        private const string EncryptionMagic = /*<dll_crypt_magic>*/"vJwWO3S9~(iz&:c^1obeg@.I,+GD;"/*</dll_crypt_magic>*/; // only use ascii chars
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         internal delegate ulong DMyEntryPoint(uint checkType);
 
         private static DMyEntryPoint pfnMyEntryPoint;
 
-        internal static ulong PerformNativeCheck(NativeCheckType checkType) => pfnMyEntryPoint((uint)checkType);
+        internal static ulong PerformNativeCheck(NativeCheckType checkType)
+        {
+            return 0;
+            return pfnMyEntryPoint((uint)checkType);
+        }
 
         // todo: move these two functions to other place
         internal static IntPtr PebAddressCache = IntPtr.Zero;
@@ -26,7 +30,7 @@ namespace AntiDebugLib.Native
                 var processBasicInformation = new PROCESS_BASIC_INFORMATION();
                 var status = NtDll.NtQueryInformationProcess_ProcessBasicInfo((IntPtr)(-1), 0x0, ref processBasicInformation, (uint)Marshal.SizeOf(processBasicInformation), out _);
                 if (!NT_SUCCESS(status))
-                    throw new Exception($"NtQueryInformationProcess returned NTSTATUS {status}");
+                    throw new Exception($"NtQueryInformationProcess returned NTSTATUS '{status}'");
 
                 PebAddressCache = processBasicInformation.PebBaseAddress;
             }
@@ -52,8 +56,8 @@ namespace AntiDebugLib.Native
         {
             AntiDebug.Logger.Information("Will use {bit}-bit native library.", Environment.Is64BitProcess ? 64 : 32);
             var dll = Decrypt(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
-            nativeModule = new MemoryModule(dll);
-            pfnMyEntryPoint = nativeModule.Exports.GetExport<DMyEntryPoint>(/*<cs_entrypoint>*/"hNktTZ8dCX7zhp9GRjIc0Ev6fQm25n_w"/*</cs_entrypoint>*/);
+            //nativeModule = new MemoryModule(dll);
+            //pfnMyEntryPoint = nativeModule.Exports.GetExport<DMyEntryPoint>(/*<cs_entrypoint>*/"foCpvVk7U8z4TNEOf5tZ_nP2yJGI"/*</cs_entrypoint>*/);
 
             // initialize indirect calls
             Kernel32.InitNatives();

@@ -1,13 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using System;
-using System.Text;
-using static AntiDebugLib.Native.Kernel32.Delegates;
-using static AntiDebugLib.Native.NativeDefs;
-using AntiDebugLib.Utils;
-using Microsoft.Win32.SafeHandles;
+﻿using static AntiDebugLib.Native.Kernel32.Delegates;
 using StealthModule;
-using System.IO;
-using System.Threading;
 
 namespace AntiDebugLib.Native
 {

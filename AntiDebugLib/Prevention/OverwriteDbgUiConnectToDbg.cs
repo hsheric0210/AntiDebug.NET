@@ -1,5 +1,4 @@
 ﻿using AntiDebugLib.Native;
-using System.Diagnostics;
 
 using static AntiDebugLib.Native.Kernel32;
 

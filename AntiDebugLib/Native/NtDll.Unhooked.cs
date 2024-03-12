@@ -1,9 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using System;
-
-using static AntiDebugLib.Native.NtDll.Delegates;
+﻿using static AntiDebugLib.Native.NtDll.Delegates;
 using StealthModule;
-using System.IO;
 
 namespace AntiDebugLib.Native
 {

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-using static AntiDebugLib.Native.Kernel32;
+﻿using static AntiDebugLib.Native.Kernel32;
 
 namespace AntiDebugLib.Check.DebugFlags
 {

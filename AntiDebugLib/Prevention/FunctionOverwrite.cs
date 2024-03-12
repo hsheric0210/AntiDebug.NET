@@ -1,6 +1,5 @@
 ﻿using AntiDebugLib.Native;
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using static AntiDebugLib.Native.Kernel32;
 using static AntiDebugLib.Native.NativeDefs;

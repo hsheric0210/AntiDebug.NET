@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-using static AntiDebugLib.Native.NativeDefs;
+﻿using static AntiDebugLib.Native.NativeDefs;
 using static AntiDebugLib.Native.NtDll;
 using static AntiDebugLib.Native.Kernel32;
 

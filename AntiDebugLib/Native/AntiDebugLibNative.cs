@@ -1,7 +1,6 @@
 using AntiDebugLib.Properties;
 using StealthModule;
 using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;

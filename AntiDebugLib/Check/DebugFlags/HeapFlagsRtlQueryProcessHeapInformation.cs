@@ -1,12 +1,9 @@
 ﻿using StealthModule;
-using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.ExceptionServices;
 
 using static AntiDebugLib.Native.NativeDefs;
 using static AntiDebugLib.Native.NtDll;
-using System.Collections.Generic;
 
 namespace AntiDebugLib.Check.DebugFlags
 {

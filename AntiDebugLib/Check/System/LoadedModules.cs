@@ -1,7 +1,4 @@
 ﻿using StealthModule;
-using System;
-
-using static AntiDebugLib.Native.Kernel32;
 
 namespace AntiDebugLib.Check
 {

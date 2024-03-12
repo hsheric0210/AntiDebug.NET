@@ -1,14 +1,17 @@
 using AntiDebugLib.Properties;
 using StealthModule;
 using System;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
 using static AntiDebugLib.Native.NativeDefs;
 
 namespace AntiDebugLib.Native
 {
     internal static class AntiDebugLibNative
     {
-        private const string EncryptionMagic = /*<dll_crypt_magic>*/"D28SM9B4xGTWPy^A)(haH"/*</dll_crypt_magic>*/; // only use ascii chars
+        private const string EncryptionMagic = /*<dll_crypt_magic>*/"Zt/XfLsNvmFqV%R_k!C*ox~I"/*</dll_crypt_magic>*/; // only use ascii chars
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         internal delegate ulong DMyEntryPoint(uint checkType);
@@ -42,14 +45,22 @@ namespace AntiDebugLib.Native
 
         private static byte[] Decrypt(byte[] encrypted)
         {
-            var decrypted = new byte[encrypted.Length];
-            for (int i = 0, j = 0; i < encrypted.Length; i++)
+            using (var sha = SHA256.Create())
             {
-                decrypted[i] = (byte)(encrypted[i] ^ EncryptionMagic[j++]);
-                if (j >= EncryptionMagic.Length)
-                    j = 0;
+                using (var aes = Aes.Create())
+                {
+                    aes.KeySize = 256;
+                    aes.Padding = PaddingMode.ISO10126;
+
+                    aes.Key = sha.ComputeHash(Encoding.UTF8.GetBytes(EncryptionMagic));
+
+                    var ivBuffer = new byte[16];
+                    Buffer.BlockCopy(encrypted, 0, ivBuffer, 0, 16);
+                    aes.IV = ivBuffer;
+
+                    return aes.CreateDecryptor().TransformFinalBlock(encrypted, 16, encrypted.Length - 16);
+                }
             }
-            return decrypted;
         }
 
         internal static void Init()
@@ -57,7 +68,7 @@ namespace AntiDebugLib.Native
             AntiDebug.Logger.Information("Will use {bit}-bit native library.", Environment.Is64BitProcess ? 64 : 32);
             var dll = Decrypt(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
             //nativeModule = new MemoryModule(dll);
-            //pfnMyEntryPoint = nativeModule.Exports.GetExport<DMyEntryPoint>(/*<cs_entrypoint>*/"Mz1hoTnY9a4tJjWwF8Lv"/*</cs_entrypoint>*/);
+            //pfnMyEntryPoint = nativeModule.Exports.GetExport<DMyEntryPoint>(/*<cs_entrypoint>*/"bn7i9LXFVreWz_M3hyqvC2gdU8kJQYO"/*</cs_entrypoint>*/);
 
             // initialize indirect calls
             Kernel32.InitNatives();

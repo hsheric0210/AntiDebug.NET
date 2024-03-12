@@ -8,7 +8,7 @@ namespace AntiDebugLib.Native
 {
     internal static class AntiDebugLibNative
     {
-        private const string EncryptionMagic = /*<dll_crypt_magic>*/"tGrMkIv#b=Kg5i<a-U7"/*</dll_crypt_magic>*/; // only use ascii chars
+        private const string EncryptionMagic = /*<dll_crypt_magic>*/"D28SM9B4xGTWPy^A)(haH"/*</dll_crypt_magic>*/; // only use ascii chars
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         internal delegate ulong DMyEntryPoint(uint checkType);
@@ -38,7 +38,7 @@ namespace AntiDebugLib.Native
             return PebAddressCache;
         }
 
-        private static MemoryModule nativeModule; // Prevent DLL from get garbage collected
+        private static LocalMemoryModule nativeModule; // Prevent DLL from get garbage collected
 
         private static byte[] Decrypt(byte[] encrypted)
         {
@@ -57,7 +57,7 @@ namespace AntiDebugLib.Native
             AntiDebug.Logger.Information("Will use {bit}-bit native library.", Environment.Is64BitProcess ? 64 : 32);
             var dll = Decrypt(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
             //nativeModule = new MemoryModule(dll);
-            //pfnMyEntryPoint = nativeModule.Exports.GetExport<DMyEntryPoint>(/*<cs_entrypoint>*/"ZXpIfbyZQ7Szdu_hT"/*</cs_entrypoint>*/);
+            //pfnMyEntryPoint = nativeModule.Exports.GetExport<DMyEntryPoint>(/*<cs_entrypoint>*/"Mz1hoTnY9a4tJjWwF8Lv"/*</cs_entrypoint>*/);
 
             // initialize indirect calls
             Kernel32.InitNatives();

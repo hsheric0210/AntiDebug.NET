@@ -9,7 +9,7 @@ namespace AntiDebugLib.Native
 {
     internal static partial class NtDll
     {
-        private static MemoryModule mappedNtdll;
+        private static LocalMemoryModule mappedNtdll;
 
         #region Properties
 

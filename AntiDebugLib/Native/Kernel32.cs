@@ -70,7 +70,7 @@ namespace AntiDebugLib.Native
             internal delegate uint GetFullPathNameW(string lpPathName, uint bufferSize, StringBuilder buffer, IntPtr part);
 
             [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-            internal delegate bool VirtualProtect(IntPtr lpAdress, IntPtr dwSize, MemoryProtection flNewProtect, out MemoryProtection lpflOldProtect);
+            internal delegate bool VirtualProtect(IntPtr lpAdress, IntPtr dwSize, NativeDefs.MemoryProtection flNewProtect, out NativeDefs.MemoryProtection lpflOldProtect);
 
             [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode, SetLastError = true)]
             internal delegate IntPtr LoadLibraryW(string lpFileName);

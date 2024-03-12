@@ -13,7 +13,7 @@ namespace AntiDebugLib.Native
 {
     internal static partial class Kernel32
     {
-        private static MemoryModule mappedKernel32;
+        private static LocalMemoryModule mappedKernel32;
 
         #region Properties
 

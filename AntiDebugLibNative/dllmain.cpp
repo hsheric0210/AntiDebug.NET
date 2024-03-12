@@ -12,7 +12,7 @@ extern "C" {
     // Feel free to rename this function, but I'd recommend to use 'RenameNativeFunctions.ps1'.
     // (It will automatically find markers and rename function names in both C++ and C# side)
 
-    DLLEXPORT ULONGLONG __stdcall /*<c_entrypoint>*/ZXpIfbyZQ7Szdu_hT/*</c_entrypoint>*/(DWORD checkType)
+    DLLEXPORT ULONGLONG __stdcall /*<c_entrypoint>*/Mz1hoTnY9a4tJjWwF8Lv/*</c_entrypoint>*/(DWORD checkType)
     {
 #pragma comment(linker, "/EXPORT:" __FUNCTION__ "=" __FUNCDNAME__)
         switch (checkType)

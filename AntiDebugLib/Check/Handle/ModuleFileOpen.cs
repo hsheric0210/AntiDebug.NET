@@ -43,7 +43,7 @@ namespace AntiDebugLib.Check.Handle
             catch (Exception ex)
             {
                 Logger.Information(ex, "CreateFile() failed. (possible being debugged)");
-                return DebuggerDetected(new { Exception = ex }); // CreateFile will return INVALID_IntPtr_VALUE
+                return DebuggerDetected(new { Exception = ex.Message }); // CreateFile will return INVALID_IntPtr_VALUE
             }
         }
     }

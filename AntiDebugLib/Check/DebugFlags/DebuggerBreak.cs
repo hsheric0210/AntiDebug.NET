@@ -12,7 +12,7 @@ namespace AntiDebugLib.Check.DebugFlags
     /// </summary>
     public class DebuggerBreak : CheckBase
     {
-        public override string Name => "Debugger.Break";
+        public override string Name => ".NET Debugger.Break";
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 

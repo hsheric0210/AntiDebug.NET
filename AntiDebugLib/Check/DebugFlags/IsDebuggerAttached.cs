@@ -11,7 +11,7 @@ namespace AntiDebugLib.Check.DebugFlags
     /// </summary>
     public class IsDebuggerAttached : CheckBase
     {
-        public override string Name => "IsDebuggerAttached";
+        public override string Name => ".NET Debugger.IsAttached";
 
         public override CheckReliability Reliability => CheckReliability.Perfect;
 

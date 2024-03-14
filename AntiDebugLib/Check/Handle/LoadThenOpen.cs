@@ -46,8 +46,8 @@ namespace AntiDebugLib.Check.Handle
             }
             catch (Exception ex)
             {
-                Logger.Information(ex, "CreateFile() failed for {path}. (possible being debugged)", path);
-                return DebuggerDetected(new { Path = path, Exception = ex });
+                Logger.Debug(ex, "CreateFile() failed for {path}. (possible being debugged)", path);
+                return DebuggerDetected(new { Path = path, Exception = ex.Message });
             }
             finally
             {

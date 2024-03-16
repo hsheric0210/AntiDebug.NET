@@ -99,7 +99,6 @@ namespace AntiDebugLib
                 new ProcessDebugFlags(),
                 new ProcessDebugObject(),
                 new ProcessDebugPort(),
-                new WudfIsDebuggerPresent(),
                 //new WudfIsDebuggerPresent(),
 
                 //new LowFragmentationHeap(),

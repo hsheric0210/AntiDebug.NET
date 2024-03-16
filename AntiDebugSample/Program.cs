@@ -9,6 +9,8 @@ namespace AntiDebugSample
 {
     internal class Program
     {
+        private static object consoleLock = new object();
+
         static void Main(string[] args)
         {
             const string logTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] <{Module:lj}> {Message:lj}{NewLine}{Exception}";
@@ -42,94 +44,100 @@ namespace AntiDebugSample
 
         private static void AntiDebug_CheckFinished(object sender, CheckResultEventArgs e)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("* Anti-Debug checks are performed.");
-            Console.ForegroundColor = ConsoleColor.Gray;
-
-            var paddingLength = e.Results.Select(r => r.CheckName.Length).Max() + 8;
-
-            foreach (var result in e.Results)
+            lock (consoleLock)
             {
-                if (result.Reliability == CheckReliability.Perfect)
-                    Console.ForegroundColor = ConsoleColor.Green;
-                else if (result.Reliability == CheckReliability.Great)
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                else if (result.Reliability == CheckReliability.Okay)
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                else
-                    Console.ForegroundColor = ConsoleColor.Red;
-
-                Console.Write(result.CheckName);
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("* Anti-Debug checks are performed.");
                 Console.ForegroundColor = ConsoleColor.Gray;
 
-                Console.Write(new string(' ', paddingLength - result.CheckName.Length));
+                var paddingLength = e.Results.Select(r => r.CheckName.Length).Max() + 8;
 
-                if (result.Type == CheckResultType.DebuggerDetected)
+                foreach (var result in e.Results)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("Fail");
-                }
-                else if (result.Type == CheckResultType.Error)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write("Error");
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("Pass");
-                }
+                    if (result.Reliability == CheckReliability.Perfect)
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    else if (result.Reliability == CheckReliability.Great)
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                    else if (result.Reliability == CheckReliability.Okay)
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                    else
+                        Console.ForegroundColor = ConsoleColor.Red;
 
-                if (result.AdditionalInfo != null)
-                {
-                    Console.Write("    ");
-                    Console.Write(result.AdditionalInfo.ToString());
-                }
+                    Console.Write(result.CheckName);
+                    Console.ForegroundColor = ConsoleColor.Gray;
 
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.Write(new string(' ', paddingLength - result.CheckName.Length));
+
+                    if (result.Type == CheckResultType.DebuggerDetected)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("Fail");
+                    }
+                    else if (result.Type == CheckResultType.Error)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("Error");
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("Pass");
+                    }
+
+                    if (result.AdditionalInfo != null)
+                    {
+                        Console.Write("    ");
+                        Console.Write(result.AdditionalInfo.ToString());
+                    }
+
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
             }
         }
 
         private static void AntiDebug_PreventionFinished(object sender, PreventionResultEventArgs e)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("* Debugging prevention methods are applied.");
-            Console.ForegroundColor = ConsoleColor.Gray;
-
-            var paddingLength = e.Results.Select(r => r.PreventionName.Length).Max() + 8;
-
-            foreach (var result in e.Results)
+            lock (consoleLock)
             {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("* Debugging prevention methods are applied.");
                 Console.ForegroundColor = ConsoleColor.Gray;
-                Console.Write(result.PreventionName);
 
-                Console.Write(new string(' ', paddingLength - result.PreventionName.Length));
+                var paddingLength = e.Results.Select(r => r.PreventionName.Length).Max() + 8;
 
-                if (result.Type == PreventionResultType.Incompatible)
+                foreach (var result in e.Results)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("Incompatible");
-                }
-                else if (result.Type == PreventionResultType.Error)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write("Error");
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("Applied");
-                }
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.Write(result.PreventionName);
 
-                if (result.AdditionalInfo != null)
-                {
-                    Console.Write("    ");
-                    Console.Write(result.AdditionalInfo.ToString());
-                }
+                    Console.Write(new string(' ', paddingLength - result.PreventionName.Length));
 
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Gray;
+                    if (result.Type == PreventionResultType.Incompatible)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("Incompatible");
+                    }
+                    else if (result.Type == PreventionResultType.Error)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("Error");
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("Applied");
+                    }
+
+                    if (result.AdditionalInfo != null)
+                    {
+                        Console.Write("    ");
+                        Console.Write(result.AdditionalInfo.ToString());
+                    }
+
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
             }
         }
     }

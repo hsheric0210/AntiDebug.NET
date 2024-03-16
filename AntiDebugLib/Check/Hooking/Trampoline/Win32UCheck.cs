@@ -1,4 +1,4 @@
-﻿namespace AntiDebugLib.Check.AntiHook
+﻿namespace AntiDebugLib.Check.Hooking.Tramponline
 {
     /// <summary>
     /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/main/AntiCrack-DotNet/HooksDetection.cs

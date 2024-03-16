@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AntiDebugLib.Check.DebugFlags
+namespace AntiDebugLib.Check.Hooking
 {
     /// <summary>
     /// <list type="bullet">

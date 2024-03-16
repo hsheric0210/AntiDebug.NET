@@ -1,5 +1,6 @@
 ﻿using AntiDebugLib.Check;
-using AntiDebugLib.Check.AntiHook;
+using AntiDebugLib.Check.Hooking;
+using AntiDebugLib.Check.Hooking.Tramponline;
 using AntiDebugLib.Check.DebugFlags;
 using AntiDebugLib.Check.Handle;
 using AntiDebugLib.Check.Handle.CloseHandle;
@@ -49,6 +50,8 @@ namespace AntiDebugLib
 
             checks = new List<CheckBase>()
             {
+                new NtSetInformationThreadHookCheck(),
+
                 new NtDllCheck(),
                 new Kernel32Check(),
                 new KernelBaseCheck(),

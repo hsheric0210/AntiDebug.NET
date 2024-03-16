@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 using static AntiDebugLib.Native.Kernel32;
 
-namespace AntiDebugLib.Check.AntiHook
+namespace AntiDebugLib.Check.Hooking.Tramponline
 {
     /// <summary>
     /// <list type="bullet">

@@ -1,13 +1,13 @@
-﻿namespace AntiDebugLib.Check.AntiHook
+﻿namespace AntiDebugLib.Check.Hooking.Tramponline
 {
     /// <summary>
     /// https://github.com/AdvDebug/AntiCrack-DotNet/blob/main/AntiCrack-DotNet/HooksDetection.cs
     /// </summary>
-    internal class Kernel32Check : TrampolineCheckBase
+    internal class KernelBaseCheck : TrampolineCheckBase
     {
-        public override string Name => "Hooking: kernel32";
+        public override string Name => "Hooking: KernelBase";
 
-        protected override string DllName => "kernel32.dll";
+        protected override string DllName => "KernelBase.dll";
 
         protected override string[] ProcNames => new string[]
         {
@@ -21,6 +21,6 @@
             "SetHandleInformation"
         };
 
-        protected override byte[] BadOpCodes => new byte[] { 0x90, 0xE9 };
+        protected override byte[] BadOpCodes => new byte[] { 255, 0x90, 0xE9 };
     }
 }

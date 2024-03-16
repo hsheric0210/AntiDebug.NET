@@ -90,10 +90,6 @@
       <Command>powershell -noninteractive -executionpolicy unrestricted -command "&amp;{ &amp;'$(ProjectDir)copy-encrypted.ps1' '$(OutDir)$(TargetName)$(TargetExt)' '$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)' }"</Command>
       <Message>Copy output DLL to AntiDebugLib Resources directory</Message>
     </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>powershell -noninteractive -executionpolicy unrestricted -command "&amp;{ Set-Location '$(SolutionDir)' ; &amp;'$(SolutionDir)ChangeMagics.ps1' }"</Command>
-      <Message>Randomize magic values before build</Message>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -118,10 +114,6 @@
       <Command>powershell -noninteractive -executionpolicy unrestricted -command "&amp;{ &amp;'$(ProjectDir)copy-encrypted.ps1' '$(OutDir)$(TargetName)$(TargetExt)' '$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)' }"</Command>
       <Message>Copy output DLL to AntiDebugLib Resources directory</Message>
     </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>powershell -noninteractive -executionpolicy unrestricted -command "&amp;{ Set-Location '$(SolutionDir)' ; &amp;'$(SolutionDir)ChangeMagics.ps1' }"</Command>
-      <Message>Randomize magic values before build</Message>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -142,10 +134,6 @@
       <Command>powershell -noninteractive -executionpolicy unrestricted -command "&amp;{ &amp;'$(ProjectDir)copy-encrypted.ps1' '$(OutDir)$(TargetName)$(TargetExt)' '$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)' }"</Command>
       <Message>Copy output DLL to AntiDebugLib Resources directory</Message>
     </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>powershell -noninteractive -executionpolicy unrestricted -command "&amp;{ Set-Location '$(SolutionDir)' ; &amp;'$(SolutionDir)ChangeMagics.ps1' }"</Command>
-      <Message>Randomize magic values before build</Message>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -170,10 +158,6 @@
       <Command>powershell -noninteractive -executionpolicy unrestricted -command "&amp;{ &amp;'$(ProjectDir)copy-encrypted.ps1' '$(OutDir)$(TargetName)$(TargetExt)' '$(SolutionDir)AntiDebugLib\Resources\$(TargetName)_$(Platform)' }"</Command>
       <Message>Copy output DLL to AntiDebugLib Resources directory</Message>
     </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>powershell -noninteractive -executionpolicy unrestricted -command "&amp;{ Set-Location '$(SolutionDir)' ; &amp;'$(SolutionDir)ChangeMagics.ps1' }"</Command>
-      <Message>Randomize magic values before build</Message>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="check_assembler.h" />

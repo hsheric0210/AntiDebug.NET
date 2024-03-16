@@ -1,4 +1,4 @@
-$key = <#dll_crypt_magic#>"@gX[A<e3L#atyZdDqE:}?Qs0"<#/dll_crypt_magic#>
+$key = <#dll_crypt_magic#>"h4W(MSk$O=3_{^Gp*1!c&qdK}%lXgsy"<#/dll_crypt_magic#>
 
 # https://www.powershellgallery.com/packages/DRTools/4.0.2.3/Content/Functions%5CInvoke-AESEncryption.ps1
 function aes-encrypt($plaintext)

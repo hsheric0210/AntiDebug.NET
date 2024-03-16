@@ -1,6 +1,6 @@
-﻿using AntiDebugLib.Check;
+﻿using AntiDebugLib.Check.System;
 using AntiDebugLib.Check.Hooking;
-using AntiDebugLib.Check.Hooking.Tramponline;
+using AntiDebugLib.Check.Hooking.Trampoline;
 using AntiDebugLib.Check.DebugFlags;
 using AntiDebugLib.Check.Handle;
 using AntiDebugLib.Check.Handle.CloseHandle;

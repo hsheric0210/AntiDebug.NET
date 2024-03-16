@@ -1,5 +1,6 @@
 ﻿using static AntiDebugLib.Native.Kernel32.Delegates;
 using StealthModule;
+using StealthModule.MemoryModule;
 
 namespace AntiDebugLib.Native
 {

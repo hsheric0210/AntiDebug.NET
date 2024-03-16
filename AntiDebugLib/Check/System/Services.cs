@@ -1,6 +1,6 @@
 ﻿using System.ServiceProcess;
 
-namespace AntiDebugLib.Check
+namespace AntiDebugLib.Check.System
 {
     /// <summary>
     /// <list type="bullet">

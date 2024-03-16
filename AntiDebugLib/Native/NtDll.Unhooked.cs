@@ -1,5 +1,6 @@
 ﻿using static AntiDebugLib.Native.NtDll.Delegates;
 using StealthModule;
+using StealthModule.MemoryModule;
 
 namespace AntiDebugLib.Native
 {

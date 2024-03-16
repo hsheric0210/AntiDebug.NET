@@ -1,5 +1,5 @@
 using AntiDebugLib.Properties;
-using StealthModule;
+using StealthModule.MemoryModule;
 using System;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -10,7 +10,7 @@ namespace AntiDebugLib.Native
 {
     internal static class AntiDebugLibNative
     {
-        private const string EncryptionMagic = /*<dll_crypt_magic>*/"@gX[A<e3L#atyZdDqE:}?Qs0"/*</dll_crypt_magic>*/; // only use ascii chars
+        private const string EncryptionMagic = /*<dll_crypt_magic>*/"h4W(MSk$O=3_{^Gp*1!c&qdK}%lXgsy"/*</dll_crypt_magic>*/; // only use ascii chars
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         internal delegate ulong DMyEntryPoint(uint checkType);
@@ -67,7 +67,7 @@ namespace AntiDebugLib.Native
             AntiDebug.Logger.Information("Will use {bit}-bit native library.", Environment.Is64BitProcess ? 64 : 32);
             var dll = Decrypt(Environment.Is64BitProcess ? Resources.AntiDebugLibNative_x64 : Resources.AntiDebugLibNative_Win32);
             //nativeModule = new MemoryModule(dll);
-            //pfnMyEntryPoint = nativeModule.Exports.GetExport<DMyEntryPoint>(/*<cs_entrypoint>*/"gIHrDtsyo6eEUi5Zk"/*</cs_entrypoint>*/);
+            //pfnMyEntryPoint = nativeModule.Exports.GetExport<DMyEntryPoint>(/*<cs_entrypoint>*/"eLUGhbTx2acCi4R5j13fVQNlBJ"/*</cs_entrypoint>*/);
 
             // initialize indirect calls
             Kernel32.InitNatives();

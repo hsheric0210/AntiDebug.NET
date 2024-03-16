@@ -1,10 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using System;
+using StealthModule;
 
 using static AntiDebugLib.Native.NtDll.Delegates;
 using static AntiDebugLib.Native.NativeDefs;
 using AntiDebugLib.Utils;
-using StealthModule;
 
 namespace AntiDebugLib.Native
 {

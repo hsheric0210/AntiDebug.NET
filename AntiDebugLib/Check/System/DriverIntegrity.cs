@@ -3,7 +3,7 @@
 using static AntiDebugLib.Native.NativeDefs;
 using static AntiDebugLib.Native.NtDll;
 
-namespace AntiDebugLib.Check
+namespace AntiDebugLib.Check.System
 {
     /// <summary>
     /// <list type="bullet">

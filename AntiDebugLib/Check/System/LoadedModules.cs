@@ -1,6 +1,6 @@
 ﻿using StealthModule;
 
-namespace AntiDebugLib.Check
+namespace AntiDebugLib.Check.System
 {
     /// <summary>
     /// <list type="bullet">

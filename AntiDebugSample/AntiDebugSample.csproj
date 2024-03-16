@@ -98,7 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AntiDebugLib\AntiDebugLib.csproj">
-      <Project>{65d618ff-4c9a-4ec1-ba5e-22864c2c2275}</Project>
+      <Project>{36d6948f-671e-4007-9ed6-c374e4192ec7}</Project>
       <Name>AntiDebugLib</Name>
     </ProjectReference>
   </ItemGroup>

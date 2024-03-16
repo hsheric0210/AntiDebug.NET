@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace AntiDebugLib.Check
+namespace AntiDebugLib.Check.System
 {
     /// <summary>
     /// <list type="bullet">

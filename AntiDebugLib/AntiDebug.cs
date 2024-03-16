@@ -104,7 +104,7 @@ namespace AntiDebugLib
                 //new LowFragmentationHeap(),
                 //new PageExecptionBreakpoint(),
                 //new PageGuardBreakpoint(),
-                //new WorkingSetShare(),
+                new WorkingSetShare(),
                 //new WriteWatch(),
 
                 new CloseHandleInvalidHandle(),

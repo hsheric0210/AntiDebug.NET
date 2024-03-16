@@ -4,10 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntiDebugLib", "AntiDebugLib\AntiDebugLib.csproj", "{36D6948F-671E-4007-9ED6-C374E4192EC7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7EB8CFF6-D74A-4FE0-A055-2B343376984D} = {7EB8CFF6-D74A-4FE0-A055-2B343376984D}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AntiDebugLibNative", "AntiDebugLibNative\AntiDebugLibNative.vcxproj", "{7EB8CFF6-D74A-4FE0-A055-2B343376984D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiDebugSample", "AntiDebugSample\AntiDebugSample.csproj", "{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntiDebugSample", "AntiDebugSample\AntiDebugSample.csproj", "{ACD0DE73-7D3F-48DE-AE57-F7FF400246BF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{36D6948F-671E-4007-9ED6-C374E4192EC7} = {36D6948F-671E-4007-9ED6-C374E4192EC7}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StealthModule", "StealthModule.NET\StealthModule\StealthModule.csproj", "{2EFC65A7-0B03-4905-8765-C66792D9F829}"
 EndProject

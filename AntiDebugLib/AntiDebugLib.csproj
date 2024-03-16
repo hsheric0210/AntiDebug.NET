@@ -51,4 +51,8 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Check\Memory\WriteWatchFunctions\" />
+    </ItemGroup>
+
 </Project>

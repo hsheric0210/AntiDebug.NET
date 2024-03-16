@@ -12,6 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.ExceptionServices;
 using System.Threading;
+using AntiDebugLib.Check.Memory;
+using AntiDebugLib.Check.Assembler;
+using AntiDebugLib.Check.ExceptionHandler;
 
 namespace AntiDebugLib
 {
@@ -50,7 +53,8 @@ namespace AntiDebugLib
 
             checks = new List<CheckBase>()
             {
-                new NtSetInformationThreadHookCheck(),
+                //new NtSetInformationThreadHook(),
+                //new QueryDebugObjectCountHook(),
 
                 new NtDllCheck(),
                 new Kernel32Check(),
@@ -58,7 +62,13 @@ namespace AntiDebugLib
                 new User32Check(),
                 new Win32UCheck(),
 
-                /*new Int3(),
+                //new NtSetInformationThreadHook(),
+                //new QueryDebugObjectCountHook(),
+
+                // todo: module bounds checks
+
+
+                new Int3(),
                 new Int3Long(),
                 new Int2D(),
                 new IceBP(),
@@ -69,9 +79,9 @@ namespace AntiDebugLib
                 new DebugRegisterModification(),
 
                 new SEH(),
-                //new UnhandledExceptionFilter(),
+                //new UnhandledExceptionFilter(), // this will crash the program as the top level exception filter is overwritten by .NET process.
                 new RaiseException(),
-                new VEH(),*/
+                new VEH(),
 
                 new BeingDebuggedPeb(),
                 new CheckRemoteDebuggerPresent(),
@@ -89,6 +99,14 @@ namespace AntiDebugLib
                 new ProcessDebugFlags(),
                 new ProcessDebugObject(),
                 new ProcessDebugPort(),
+                new WudfIsDebuggerPresent(),
+                //new WudfIsDebuggerPresent(),
+
+                //new LowFragmentationHeap(),
+                //new PageExecptionBreakpoint(),
+                //new PageGuardBreakpoint(),
+                //new WorkingSetShare(),
+                //new WriteWatch(),
 
                 new CloseHandleInvalidHandle(),
                 new CloseHandleProtectedHandle(),
@@ -106,6 +124,7 @@ namespace AntiDebugLib
                 new Processes(),
                 new Services(),
                 new WmiPortConnectors(),
+                //new ProcessJob(),
             };
 
             timingChecks = new List<CheckBase>()
@@ -115,6 +134,8 @@ namespace AntiDebugLib
 
                 new RdtscDiffLocky(),
                 new RdtscDiffVmExit(),
+
+                //new NtYieldExecution(),
             };
 
             preventions = new List<PreventionBase>()
